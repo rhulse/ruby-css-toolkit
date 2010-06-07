@@ -73,4 +73,16 @@ class TestCssCompressor < Test::Unit::TestCase
     assert_equal(expected, @sc.compress(css))
   end
 
+  def test_cleanup_zeros_and_measures
+    css = <<-CSS
+    a {
+      margin: 0px 0pt 0em 0%;
+      _padding-top: 0ex;
+      background-position: 0 0;
+      padding: 0in 0cm 0mm 0pc
+    }
+    CSS
+    expected = 'a{margin:0;_padding-top:0;background-position:0 0;padding:0}'
+    assert_equal(expected, @sc.compress(css))
+  end
 end

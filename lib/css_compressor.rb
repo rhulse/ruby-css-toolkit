@@ -31,8 +31,21 @@ module CssCompressor
       css.gsub!(/^(.*)(@charset "[^"]*";)/i, '\2\1');
       css.gsub!(/^(\s*@charset [^;]+;\s*)+/i, '\1');
 
+      # Put the space back in some cases, to support stuff like
+      # @media screen and (-webkit-min-device-pixel-ratio:0){
+      css.gsub!(/\band\(/i, "and (")
+
       # remove unnecessary semicolons
       css.gsub!(/;+\}/, '}')
+
+      # Replace 0(%, em, ex, px, in, cm, mm, pt, pc) with just 0.
+      css.gsub!(/([\s:])([+-]?0)(?:%|em|ex|px|in|cm|mm|pt|pc)/i, '\1\2')
+
+      # Replace 0 0 0 0; with 0.
+      css.gsub!(/:(?:0 )+0(;|\})/, ':0\1')
+
+      # Restore background-position:0 0; if required
+      css.gsub!('background-position:0;', 'background-position:0 0;')
 
       # top and tail whitespace
       css.strip!
