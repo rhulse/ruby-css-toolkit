@@ -6,7 +6,8 @@ module CssCompressor
 
   class CSS
     def initialize
-
+      @preservedTokens = []
+      @comments = []
     end
 
     def compress(css)
@@ -83,8 +84,6 @@ module CssCompressor
       endIndex = 0
       i = 0
       max = 0
-      preservedTokens = []
-      comments = []
       token = ''
       totallen = css.length
       placeholder = ''
@@ -95,22 +94,21 @@ module CssCompressor
         unless endIndex
           endIndex = totallen
         end
-        token = css.slice(startIndex..endIndex + 1)
-        comments.push(token)
-        css = css.slice(0..startIndex-1).to_s + "___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_" + (comments.length - 1).to_s + "___" + css.slice(endIndex + 2, totallen).to_s
+        token = css.slice(startIndex+2..endIndex-1)
+        puts token
+        @comments.push(token)
+        css = css.slice(0..startIndex+1).to_s + "___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_" + (@comments.length - 1).to_s + "___" + css.slice(endIndex, totallen).to_s
         startIndex += 2
       end
 
-
-      comments.each_index do |index|
-        token = comments[index]
+      @comments.each_index do |index|
+        token = @comments[index]
         placeholder = "___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_" + index.to_s + "___"
 
         # in all other cases kill the comment
-        css.gsub!( /#{placeholder}/, "");
-
+        css.gsub!( /\/\*#{placeholder}\*\//, "");
+        
       end
-
 
       css
     end
