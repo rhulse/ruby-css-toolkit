@@ -86,6 +86,16 @@ class TestCssCompressor < Test::Unit::TestCase
     assert_equal(expected, @sc.compress(css))
   end
   
+  def test_leading_zero_removal
+    css = <<-CSS
+    ::selection { 
+      margin: 0.6px 0.333pt 1.2em 8.8cm;
+    }
+    CSS
+    expected = '::selection{margin:.6px .333pt 1.2em 8.8cm}'
+    assert_equal(expected, @sc.compress(css))
+  end
+
   def test_background_position_zero_removal
     css = <<-CSS
     a {background-position: 0 0 0 0;}

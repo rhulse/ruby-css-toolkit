@@ -50,8 +50,12 @@ module CssCompressor
       # Replace 0.6 with .6, but only when preceded by : or a space.
       css.gsub!(/(:|\s)0+\.(\d+)/, '\1.\2')
 
-      # Compress color hex values, making sure not to touch values used in IE
-      # filters, since they would break.
+      # Shorten colors from #AABBCC to #ABC. Note that we want to make sure
+      # the color is not preceded by either ", " or =. Indeed, the property
+      #     filter: chroma(color="#FFFFFF");
+      # would become
+      #     filter: chroma(color="#FFF");
+      # which makes the filter break in IE.
       css.gsub!(/([^"'=\s])(\s?)\s*#([0-9a-f])\3([0-9a-f])\4([0-9a-f])\5/i, '\1\2#\3\4\5')
 
 
