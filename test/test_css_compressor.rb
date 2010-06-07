@@ -180,5 +180,35 @@ class TestCssCompressor < Test::Unit::TestCase
     expected = '#elementarr{width:1px;*width:3pt;_width:2em}'
     assert_equal(expected, @sc.compress(css))
   end
+  
+  def test_preserve_special_comments
+    css = <<-CSS
+/*!************88****
+ Preserving comments
+    as they are
+ ********************
+ Keep the initial !
+ *******************/
+#yo {
+    ma: "ma";
+}
+/*!
+I said
+pre-
+serve! */
+CSS
+    expected = <<-CSS
+/*!************88****
+ Preserving comments
+    as they are
+ ********************
+ Keep the initial !
+ *******************/ #yo{ma:"ma"}/*!
+I said
+pre-
+serve! */
+CSS
+assert_equal(expected.strip, @sc.compress(css))
+  end
 
 end

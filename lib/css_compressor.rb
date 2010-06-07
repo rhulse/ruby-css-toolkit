@@ -124,9 +124,18 @@ module CssCompressor
         quote + "___YUICSSMIN_PRESERVED_TOKEN_" + (@preservedTokens.length - 1).to_s + "___" + quote;
       end
 
+      # strings are safe, now wrestle the comments
       @comments.each_index do |index|
         token = @comments[index]
         placeholder = "___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_" + index.to_s + "___"
+
+        # ! in the first position of the comment means preserve
+        # so push to the preserved tokens keeping the !
+        if (token[0,1] === "!")
+            @preservedTokens.push(token)
+            css.gsub!( /#{placeholder}/,  "___YUICSSMIN_PRESERVED_TOKEN_" + (@preservedTokens.length - 1).to_s + "___")
+            next
+        end
 
         # in all other cases kill the comment
         css.gsub!( /\/\*#{placeholder}\*\//, "");
