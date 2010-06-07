@@ -360,6 +360,28 @@ CSS
     expected = '@media screen and/*!YUI-Compresser */(-webkit-min-device-pixel-ratio:0){a{b:1}}@media screen and/*! *//*! */(-webkit-min-device-pixel-ratio:0){a{b:1}}@media -webkit-min-device-pixel-ratio:0{a{b:1}}'
     assert_equal(expected.strip, @sc.compress(css))
   end
+
+  def test_bug_2527998
+    css = <<-CSS
+    /*! special */
+    body {
+
+    }
+    CSS
+    expected = '/*! special */'
+    assert_equal(expected.strip, @sc.compress(css))
+  end
+
+  def test_bug_2528034
+    css = <<-CSS
+    a[href$="/test/"] span:first-child { b:1; }
+    a[href$="/test/"] span:first-child { }
+
+    CSS
+    expected = 'a[href$="/test/"] span:first-child{b:1}'
+    assert_equal(expected.strip, @sc.compress(css))
+  end
+
   # In the following tests the \ in the CSS is escaped
   # Where there is a \\ this is = to one \ in the CSS
 
