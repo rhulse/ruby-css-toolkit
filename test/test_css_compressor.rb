@@ -168,4 +168,17 @@ class TestCssCompressor < Test::Unit::TestCase
     expected = %Q!@font-face{font-family:'gzipper';src:url(yanone.eot);src:local('gzipper'),url(yanone.ttf) format('truetype')}!
     assert_equal(expected, @sc.compress(css))
   end
+
+  def test_star_underscore_hacks
+    css = <<-CSS
+    #elementarr {
+      width: 1px;
+      *width: 3pt;
+      _width: 2em;
+    }
+    CSS
+    expected = '#elementarr{width:1px;*width:3pt;_width:2em}'
+    assert_equal(expected, @sc.compress(css))
+  end
+
 end
