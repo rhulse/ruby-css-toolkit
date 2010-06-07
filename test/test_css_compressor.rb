@@ -139,20 +139,33 @@ class TestCssCompressor < Test::Unit::TestCase
     expected = 'pre{border:solid red;opacity:.8;-ms-filter:"alpha(opacity=80)";filter:alpha(opacity=80);zoom:1}code{-ms-filter:"alpha(opacity=80)";filter:alpha(opacity=80)}'
     assert_equal(expected, @sc.compress(css))
   end
-  
+
   def test_box_model_hack
     css = <<-CSS
-    #elem { 
-     width: 100px; 
-     voice-family: "\"}\""; 
+    #elem {
+     width: 100px;
+     voice-family: "\"}\"";
      voice-family:inherit;
      width: 200px;
     }
     html>body #elem {
      width: 200px;
-    } 
+    }
     CSS
     expected = %Q!#elem{width:100px;voice-family:"\"}\"";voice-family:inherit;width:200px}html>body #elem{width:200px}!
-    assert_equal(expected, @sc.compress(css))  
+    assert_equal(expected, @sc.compress(css))
+  end
+
+  def test_font_face
+    css = <<-CSS
+    @font-face {
+      font-family: 'gzipper';
+      src: url(yanone.eot);
+      src: local('gzipper'),
+              url(yanone.ttf) format('truetype');
+    }
+    CSS
+    expected = %Q!@font-face{font-family:'gzipper';src:url(yanone.eot);src:local('gzipper'),url(yanone.ttf) format('truetype')}!
+    assert_equal(expected, @sc.compress(css))
   end
 end
