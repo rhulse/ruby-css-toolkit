@@ -85,10 +85,10 @@ class TestCssCompressor < Test::Unit::TestCase
     expected = 'a{margin:0;_padding-top:0;background-position:0 0;padding:0}'
     assert_equal(expected, @sc.compress(css))
   end
-  
+
   def test_leading_zero_removal
     css = <<-CSS
-    ::selection { 
+    ::selection {
       margin: 0.6px 0.333pt 1.2em 8.8cm;
     }
     CSS
@@ -104,4 +104,19 @@ class TestCssCompressor < Test::Unit::TestCase
     expected = 'a{background-position:0 0}b{background-position:0 0}'
     assert_equal(expected, @sc.compress(css))
   end
+
+  def test_color_reduction
+    css = <<-CSS
+    .color {
+      me: rgb(123, 123, 123);
+      impressed: #ffeedd;
+      filter: chroma(color="#FFFFFF");
+      background: none repeat scroll 0 0 rgb(255, 0,0);
+      alpha: rgba(1, 2, 3, 4);
+    }
+    CSS
+    expected = '.color{me:#7b7b7b;impressed:#fed;filter:chroma(color="#FFFFFF");background:none repeat scroll 0 0 #f00;alpha:rgba(1,2,3,4)}'
+    assert_equal(expected, @sc.compress(css))
+  end
+
 end

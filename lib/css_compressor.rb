@@ -50,6 +50,12 @@ module CssCompressor
       # Replace 0.6 with .6, but only when preceded by : or a space.
       css.gsub!(/(:|\s)0+\.(\d+)/, '\1.\2')
 
+      # Shorten colors from rgb(51,102,153) to #336699
+      # This makes it more likely that it'll get further compressed in the next step.
+      css.gsub!(/rgb\s*\(\s*([0-9,\s]+)\s*\)/) do |match|
+        '#' << $1.scan(/\d+/).map{|n| n.to_i.to_s(16).rjust(2, '0') }.join
+      end
+
       # Shorten colors from #AABBCC to #ABC. Note that we want to make sure
       # the color is not preceded by either ", " or =. Indeed, the property
       #     filter: chroma(color="#FFFFFF");
