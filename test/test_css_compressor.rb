@@ -223,4 +223,14 @@ CSS
     assert_equal(expected.strip, @sc.compress(css))
   end
 
+  def test_ie7_comment_hack
+    css = <<-CSS
+    html >/**/ body p {
+        color: blue;
+    }
+    CSS
+    expected = 'html>/**/ body p{color:blue}'
+    assert_equal(expected.strip, @sc.compress(css))
+  end
+
 end

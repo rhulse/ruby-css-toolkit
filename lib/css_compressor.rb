@@ -143,7 +143,6 @@ module CssCompressor
 
         # \ in the last position looks like hack for Mac/IE5
         # shorten that to /*\*/ and the next one to /**/
-        puts token
         if (token[-1,1] === "\\")
           @preservedTokens.push("\\")
           css.gsub!( /#{placeholder}/,  "___YUICSSMIN_PRESERVED_TOKEN_" + (@preservedTokens.length - 1).to_s + "___")
@@ -152,6 +151,18 @@ module CssCompressor
           @preservedTokens.push("")
           css.gsub!(/___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_#{index}___/,  "___YUICSSMIN_PRESERVED_TOKEN_" + (@preservedTokens.length - 1).to_s + "___")
           next
+        end
+
+        # keep empty comments after child selectors (IE7 hack)
+        # e.g. html >/**/ body
+        if (token.length === 0)
+            startIndex = css.index( /#{placeholder}/ )
+            if (startIndex > 2)
+                if (css[startIndex - 3,1] === '>')
+                    @preservedTokens.push("")
+                    css.gsub!(/#{placeholder}/,  "___YUICSSMIN_PRESERVED_TOKEN_" + (@preservedTokens.length - 1).to_s + "___")
+                end
+            end
         end
 
         # in all other cases kill the comment
