@@ -14,6 +14,19 @@ module CssCompressor
       # Normalize all whitespace strings to single spaces. Easier to work with that way.
       css.gsub!(/\s+/, ' ');
 
+      # Remove the spaces before the things that should not have spaces before them.
+      # But, be careful not to turn "p :link {...}" into "p:link{...}"
+      # Swap out any pseudo-class colons with the token, and then swap back.
+      css.gsub!(/(?:^|\})[^\{:]+\s+:+[^\{]*\{/) do |match|
+        match.gsub(':', '___PSEUDOCLASSCOLON___')
+      end
+      css.gsub!(/\s+([!\{\};:>+\(\)\],])/, '\1')
+      css.gsub!(/([!\{\}:;>+\(\[,])\s+/, '\1')
+      css.gsub!('___PSEUDOCLASSCOLON___', ':')
+
+      # special case for IE
+      css.gsub!(/:first-(line|letter)(\{|,)/, ':first-\1 \2');
+
       # top and tail whitespace
       css.strip!
 

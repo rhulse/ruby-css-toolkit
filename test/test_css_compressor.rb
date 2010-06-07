@@ -29,5 +29,32 @@ class TestCssCompressor < Test::Unit::TestCase
     assert_equal('a b', @sc.compress("   a  \r\nb "))
   end
 
+  def test_pseudo_class_retention
+    css = <<-CSS
+    p :link {
+      margin:5px;
+      foo:bar;
+    }
+    CSS
+    expected =  'p :link{margin:5px;foo:bar;}'
+    assert_equal(expected, @sc.compress(css))
+  end
+
+  def test_ie_pseudo_first
+    css = <<-CSS
+    p:first-letter{
+      font-weight: bold;
+    }
+    p:first-line{
+      line-height: 1.5;
+    }
+
+    p:first-line,a,p:first-letter,b{
+      color: red;
+    }
+    CSS
+    result = 'p:first-letter {font-weight:bold;}p:first-line {line-height:1.5;}p:first-line ,a,p:first-letter ,b{color:red;}'
+    assert_equal(result, @sc.compress(css))
+  end
 
 end
