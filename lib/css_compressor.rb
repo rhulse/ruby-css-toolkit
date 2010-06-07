@@ -11,6 +11,8 @@ module CssCompressor
 
     def compress(css)
 
+      css = process_comments_and_strings(css)
+
       # Normalize all whitespace strings to single spaces. Easier to work with that way.
       css.gsub!(/\s+/, ' ');
 
@@ -64,9 +66,51 @@ module CssCompressor
       # which makes the filter break in IE.
       css.gsub!(/([^"'=\s])(\s?)\s*#([0-9a-f])\3([0-9a-f])\4([0-9a-f])\5/i, '\1\2#\3\4\5')
 
+      # shorter opacity IE filter
+      css.gsub!(/progid:DXImageTransform\.Microsoft\.Alpha\(Opacity=/i, "alpha(opacity=");
+
 
       # top and tail whitespace
       css.strip!
+
+      css
+    end
+
+    def process_comments_and_strings(css_text)
+      css = css_text.clone
+
+      startIndex = 0
+      endIndex = 0
+      i = 0
+      max = 0
+      preservedTokens = []
+      comments = []
+      token = ''
+      totallen = css.length
+      placeholder = ''
+
+      # collect all comment blocks
+      while (startIndex = css.index(/\/\*/, startIndex))
+        endIndex = css.index(/\*\//, startIndex + 2)
+        unless endIndex
+          endIndex = totallen
+        end
+        token = css.slice(startIndex..endIndex + 1)
+        comments.push(token)
+        css = css.slice(0..startIndex-1).to_s + "___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_" + (comments.length - 1).to_s + "___" + css.slice(endIndex + 2, totallen).to_s
+        startIndex += 2
+      end
+
+
+      comments.each_index do |index|
+        token = comments[index]
+        placeholder = "___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_" + index.to_s + "___"
+
+        # in all other cases kill the comment
+        css.gsub!( /#{placeholder}/, "");
+
+      end
+
 
       css
     end

@@ -119,4 +119,24 @@ class TestCssCompressor < Test::Unit::TestCase
     assert_equal(expected, @sc.compress(css))
   end
 
+  def test_opacity_reduction
+    css = <<-CSS
+    /*  example from https://developer.mozilla.org/en/CSS/opacity */
+    pre {                               /* make the box translucent (80% opaque) */
+       border: solid red;
+       opacity: 0.8;                    /* Firefox, Safari(WebKit), Opera */
+       -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)"; /* IE 8 */
+       filter: PROGID:DXImageTransform.Microsoft.Alpha(Opacity=80);       /* IE 4-7 */
+       zoom: 1;       /* set "zoom", "width" or "height" to trigger "hasLayout" in IE 7 and lower */
+    }
+
+    /** and again */
+    code {
+       -ms-filter: "PROGID:DXImageTransform.Microsoft.Alpha(Opacity=80)"; /* IE 8 */
+       filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);       /* IE 4-7 */
+    }
+    CSS
+    expected = 'pre{border:solid red;opacity:.8;-ms-filter:"alpha(opacity=80)";filter:alpha(opacity=80);zoom:1}code{-ms-filter:"alpha(opacity=80)";filter:alpha(opacity=80)}'
+    assert_equal(expected, @sc.compress(css))
+  end
 end
