@@ -71,6 +71,11 @@ module CssCompressor
       css.gsub!(/progid:DXImageTransform\.Microsoft\.Alpha\(Opacity=/i, "alpha(opacity=");
 
 
+      #restore preserved comments and strings
+      @preservedTokens.each_index do |index|
+        css.gsub!( /___YUICSSMIN_PRESERVED_TOKEN_#{index}___/, @preservedTokens[index])
+      end
+
       # top and tail whitespace
       css.strip!
 
@@ -95,10 +100,28 @@ module CssCompressor
           endIndex = totallen
         end
         token = css.slice(startIndex+2..endIndex-1)
-        puts token
         @comments.push(token)
         css = css.slice(0..startIndex+1).to_s + "___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_" + (@comments.length - 1).to_s + "___" + css.slice(endIndex, totallen).to_s
         startIndex += 2
+      end
+
+      # preserve strings so their content doesn't get accidentally minified
+      css.gsub!(/("([^\\"]|\\.|\\)*")|('([^\\']|\\.|\\)*')/) do |match|
+        quote = match[0,1]
+        string = match.slice(1..-2)
+        # maybe the string contains a comment-like substring?
+        # one, maybe more? put'em back then
+        if string =~ /___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_/
+          @comments.each_index do |index|
+            string.gsub!(/___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_#{index.to_s}___/, @comments[index])
+          end
+        end
+
+        # minify alpha opacity in filter strings
+        string.gsub!(/progid:DXImageTransform\.Microsoft\.Alpha\(Opacity=/i, "alpha(opacity=")
+        @preservedTokens.push(string)
+
+        quote + "___YUICSSMIN_PRESERVED_TOKEN_" + (@preservedTokens.length - 1).to_s + "___" + quote;
       end
 
       @comments.each_index do |index|
@@ -107,7 +130,6 @@ module CssCompressor
 
         # in all other cases kill the comment
         css.gsub!( /\/\*#{placeholder}\*\//, "");
-        
       end
 
       css
