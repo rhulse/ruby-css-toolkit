@@ -57,4 +57,20 @@ class TestCssCompressor < Test::Unit::TestCase
     assert_equal(result, @sc.compress(css))
   end
 
+  def test_charset_reduction
+    # this is not valid CSS but can occur when mulitple files are concatenated
+    css = <<-CSS
+    @charset "utf-8";
+    #foo {
+    	border-width:1px;
+    }
+    @charset "another one";
+    #bar {
+    	border-width:10px;
+    }
+    CSS
+    expected = %Q!@charset "utf-8";#foo{border-width:1px;}#bar{border-width:10px;}!
+    assert_equal(expected, @sc.compress(css))
+  end
+
 end

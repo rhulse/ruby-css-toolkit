@@ -27,6 +27,10 @@ module CssCompressor
       # special case for IE
       css.gsub!(/:first-(line|letter)(\{|,)/, ':first-\1 \2');
 
+      # If there is a @charset, then only allow one, and push to the top of the file.
+      css.gsub!(/^(.*)(@charset "[^"]*";)/i, '\2\1');
+      css.gsub!(/^(\s*@charset [^;]+;\s*)+/i, '\1');
+
       # top and tail whitespace
       css.strip!
 
