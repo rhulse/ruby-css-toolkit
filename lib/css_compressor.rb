@@ -31,6 +31,9 @@ module CssCompressor
       css.gsub!(/^(.*)(@charset "[^"]*";)/i, '\2\1');
       css.gsub!(/^(\s*@charset [^;]+;\s*)+/i, '\1');
 
+      # remove unnecessary semicolons
+      css.gsub!(/;+\}/, '}')
+
       # top and tail whitespace
       css.strip!
 
