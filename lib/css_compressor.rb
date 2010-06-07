@@ -11,6 +11,9 @@ module CssCompressor
 
     def compress(css)
 
+      # Normalize all whitespace strings to single spaces. Easier to work with that way.
+      css.gsub!(/\s+/, ' ');
+
       css
     end
   end
