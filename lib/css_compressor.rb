@@ -30,6 +30,9 @@ module CssCompressor
       # special case for IE
       css.gsub!(/:first-(line|letter)(\{|,)/, ':first-\1 \2');
 
+      # no space after the end of a preserved comment
+      css.gsub!(/\*\/ /, '*/');
+
       # If there is a @charset, then only allow one, and push to the top of the file.
       css.gsub!(/^(.*)(@charset "[^"]*";)/i, '\2\1');
       css.gsub!(/^(\s*@charset [^;]+;\s*)+/i, '\1');
@@ -70,6 +73,8 @@ module CssCompressor
       # shorter opacity IE filter
       css.gsub!(/progid:DXImageTransform\.Microsoft\.Alpha\(Opacity=/i, "alpha(opacity=");
 
+      # Remove empty rules.
+      css.gsub!(/[^\};\{\/]+\{\}/, '')
 
       #restore preserved comments and strings
       @preservedTokens.each_index do |index|

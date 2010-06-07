@@ -203,23 +203,11 @@ CSS
     as they are
  ********************
  Keep the initial !
- *******************/ #yo{ma:"ma"}/*!
+ *******************/#yo{ma:"ma"}/*!
 I said
 pre-
 serve! */
 CSS
-    assert_equal(expected.strip, @sc.compress(css))
-  end
-
-  def test_ie5_mac_hack
-    css = <<-CSS
-    /* Ignore the next rule in IE mac \\*/
-    .selector {
-       color: khaki;
-    }
-    /* Stop ignoring in IE mac */
-    CSS
-    expected = '/*\*/ .selector{color:khaki}/**/'
     assert_equal(expected.strip, @sc.compress(css))
   end
 
@@ -229,8 +217,211 @@ CSS
         color: blue;
     }
     CSS
-    expected = 'html>/**/ body p{color:blue}'
+    expected = 'html>/**/body p{color:blue}'
     assert_equal(expected.strip, @sc.compress(css))
+  end
+
+  def test_charset_media
+    css = <<-CSS
+    /* re: 2495387 */
+    @charset 'utf-8';
+    @media all {
+    body {
+    }
+    body {
+    background-color: gold;
+    }
+    }
+    CSS
+    expected = "@charset 'utf-8';@media all{body{background-color:gold}}"
+    assert_equal(expected.strip, @sc.compress(css))
+  end
+
+  def test_dollar_header
+    css = <<-CSS
+/*!
+$Header: /temp/dirname/filename.css 3 2/02/08 3:37p JSmith $
+*/
+
+foo {
+	bar: baz
+}
+CSS
+    expected = <<-CSS
+/*!
+$Header: /temp/dirname/filename.css 3 2/02/08 3:37p JSmith $
+*/foo{bar:baz}
+CSS
+    assert_equal(expected.strip, @sc.compress(css))
+  end
+
+  def test_empty_class
+    css = <<-CSS
+/*! preserved */
+emptiness {}
+
+@import "another.css";
+/* I'm empty - delete me */
+empty { ;}
+
+@media print {
+	.noprint { display: none; }
+}
+
+@media screen {
+	/* this rule should be removed, not simply minified.*/
+	.breakme {}
+	.printonly { display: none; }
+}
+CSS
+    expected = '/*! preserved */@import "another.css";@media print{.noprint{display:none}}@media screen{.printonly{display:none}}'
+    assert_equal(expected.strip, @sc.compress(css))
+  end
+
+  def test_media_multi
+    css = <<-CSS
+    @media only all and (max-width:50em), only all and (max-device-width:800px), only all and (max-width:780px) {
+      some-css : here
+    }
+    CSS
+    expected = '@media only all and (max-width:50em),only all and (max-device-width:800px),only all and (max-width:780px){some-css:here}'
+    assert_equal(expected.strip, @sc.compress(css))
+  end
+
+  def test_media
+    css = <<-CSS
+    @media screen and (-webkit-min-device-pixel-ratio:0) {
+      some-css : here
+    }
+    CSS
+    expected = '@media screen and (-webkit-min-device-pixel-ratio:0){some-css:here}'
+    assert_equal(expected.strip, @sc.compress(css))
+  end
+
+  def test_opacity_filter
+    css = <<-CSS
+    /*  example from https://developer.mozilla.org/en/CSS/opacity */
+    pre {                               /* make the box translucent (80% opaque) */
+       border: solid red;
+       opacity: 0.8;                    /* Firefox, Safari(WebKit), Opera */
+       -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)"; /* IE 8 */
+       filter: PROGID:DXImageTransform.Microsoft.Alpha(Opacity=80);       /* IE 4-7 */
+       zoom: 1;       /* set "zoom", "width" or "height" to trigger "hasLayout" in IE 7 and lower */
+    }
+
+    /** and again */
+    code {
+       -ms-filter: "PROGID:DXImageTransform.Microsoft.Alpha(Opacity=80)"; /* IE 8 */
+       filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);       /* IE 4-7 */
+    }
+    CSS
+    expected = 'pre{border:solid red;opacity:.8;-ms-filter:"alpha(opacity=80)";filter:alpha(opacity=80);zoom:1}code{-ms-filter:"alpha(opacity=80)";filter:alpha(opacity=80)}'
+    assert_equal(expected.strip, @sc.compress(css))
+  end
+
+  def test_bug_2527974
+    css = <<-CSS
+    /*	this file contains no css, it exists purely to put the revision number into the
+    	combined css before uploading it to SiteManager. The exclaimation at the start
+    	of the comment informs yuicompressor not to strip the comment out */
+
+    /*! $LastChangedRevision: 81 $ $LastChangedDate: 2009-05-27 17:41:02 +0100 (Wed, 27 May 2009) $ */
+
+    body {
+        yo: cats;
+    }
+    CSS
+    expected = '/*! $LastChangedRevision: 81 $ $LastChangedDate: 2009-05-27 17:41:02 +0100 (Wed, 27 May 2009) $ */body{yo:cats}'
+    assert_equal(expected.strip, @sc.compress(css))
+  end
+
+  def test_bug_2527991
+    css = <<-CSS
+    @media screen and/*!YUI-Compresser */(-webkit-min-device-pixel-ratio:0) {
+      a{
+        b: 1;
+      }
+    }
+
+
+    @media screen and/*! */ /*! */(-webkit-min-device-pixel-ratio:0) {
+      a{
+        b: 1;
+      }
+    }
+
+
+    @media -webkit-min-device-pixel-ratio:0 {
+      a{
+        b: 1;
+      }
+    }
+    CSS
+    expected = '@media screen and/*!YUI-Compresser */(-webkit-min-device-pixel-ratio:0){a{b:1}}@media screen and/*! *//*! */(-webkit-min-device-pixel-ratio:0){a{b:1}}@media -webkit-min-device-pixel-ratio:0{a{b:1}}'
+    assert_equal(expected.strip, @sc.compress(css))
+  end
+  # In the following tests the \ in the CSS is escaped
+  # Where there is a \\ this is = to one \ in the CSS
+
+  def test_ie5_mac_hack
+    css = <<-CSS
+    /* Ignore the next rule in IE mac \\*/
+    .selector {
+       color: khaki;
+    }
+    /* Stop ignoring in IE mac */
+    CSS
+    expected = '/*\*/.selector{color:khaki}/**/'
+    assert_equal(expected.strip, @sc.compress(css))
+  end
+
+  def test_string_in_comment
+    css = <<-CSS
+/* te " st */
+a{a:1}
+/*!"preserve" me*/
+b{content: "/**/"}
+/* quite " quote ' \\' \\" */
+/* ie mac \\*/
+c {c : 3}
+/* end hiding */
+CSS
+    expected = 'a{a:1}/*!"preserve" me*/b{content:"/**/"}/*\*/c{c:3}/**/'
+    assert_equal(expected.strip, @sc.compress(css))
+  end
+
+  def test_preserve_new_line
+    css = <<-CSS
+#sel-o {
+  content: "on\\"ce upon \
+a time";
+CSS
+ css += <<CSS
+  content: 'once upon \
+a ti\'me';
+}
+CSS
+    expected = <<-CSS
+#sel-o{content:"on\\"ce upon \
+a time";content:'once upon \
+a ti\'me'}
+CSS
+    assert_equal(expected.rstrip, @sc.compress(css))
+  end
+
+  def test_string_in_comment
+    css = <<-CSS
+/* te " st */
+a{a:1}
+/*!"preserve" me*/
+b{content: "/**/"}
+/* quite " quote ' \\' \\" */
+/* ie mac \\*/
+c {c : 3}
+/* end hiding */
+CSS
+    expected = 'a{a:1}/*!"preserve" me*/b{content:"/**/"}/*\*/c{c:3}/**/'
+    assert_equal(expected.rstrip, @sc.compress(css))
   end
 
 end
