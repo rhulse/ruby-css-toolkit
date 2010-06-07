@@ -85,4 +85,13 @@ class TestCssCompressor < Test::Unit::TestCase
     expected = 'a{margin:0;_padding-top:0;background-position:0 0;padding:0}'
     assert_equal(expected, @sc.compress(css))
   end
+  
+  def test_background_position_zero_removal
+    css = <<-CSS
+    a {background-position: 0 0 0 0;}
+    b {BACKGROUND-POSITION: 0 0;}
+    CSS
+    expected = 'a{background-position:0 0}b{background-position:0 0}'
+    assert_equal(expected, @sc.compress(css))
+  end
 end

@@ -45,7 +45,15 @@ module CssCompressor
       css.gsub!(/:(?:0 )+0(;|\})/, ':0\1')
 
       # Restore background-position:0 0; if required
-      css.gsub!('background-position:0;', 'background-position:0 0;')
+      css.gsub!(/background-position:0(;|\})/i, 'background-position:0 0\1')
+
+      # Replace 0.6 with .6, but only when preceded by : or a space.
+      css.gsub!(/(:|\s)0+\.(\d+)/, '\1.\2')
+
+      # Compress color hex values, making sure not to touch values used in IE
+      # filters, since they would break.
+      css.gsub!(/([^"'=\s])(\s?)\s*#([0-9a-f])\3([0-9a-f])\4([0-9a-f])\5/i, '\1\2#\3\4\5')
+
 
       # top and tail whitespace
       css.strip!
