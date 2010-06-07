@@ -124,17 +124,34 @@ module CssCompressor
         quote + "___YUICSSMIN_PRESERVED_TOKEN_" + (@preservedTokens.length - 1).to_s + "___" + quote;
       end
 
+      # used to jump one index in loop
+      ie5_hack = false
       # strings are safe, now wrestle the comments
       @comments.each_index do |index|
+        next if ie5_hack
+
         token = @comments[index]
         placeholder = "___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_" + index.to_s + "___"
 
         # ! in the first position of the comment means preserve
         # so push to the preserved tokens keeping the !
         if (token[0,1] === "!")
-            @preservedTokens.push(token)
-            css.gsub!( /#{placeholder}/,  "___YUICSSMIN_PRESERVED_TOKEN_" + (@preservedTokens.length - 1).to_s + "___")
-            next
+          @preservedTokens.push(token)
+          css.gsub!( /#{placeholder}/i,  "___YUICSSMIN_PRESERVED_TOKEN_" + (@preservedTokens.length - 1).to_s + "___")
+          next
+        end
+
+        # \ in the last position looks like hack for Mac/IE5
+        # shorten that to /*\*/ and the next one to /**/
+        puts token
+        if (token[-1,1] === "\\")
+          @preservedTokens.push("\\")
+          css.gsub!( /#{placeholder}/,  "___YUICSSMIN_PRESERVED_TOKEN_" + (@preservedTokens.length - 1).to_s + "___")
+          # keep the next comment but remove its content
+          index += 1
+          @preservedTokens.push("")
+          css.gsub!(/___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_#{index}___/,  "___YUICSSMIN_PRESERVED_TOKEN_" + (@preservedTokens.length - 1).to_s + "___")
+          next
         end
 
         # in all other cases kill the comment

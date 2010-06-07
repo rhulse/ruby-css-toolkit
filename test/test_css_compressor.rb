@@ -180,7 +180,7 @@ class TestCssCompressor < Test::Unit::TestCase
     expected = '#elementarr{width:1px;*width:3pt;_width:2em}'
     assert_equal(expected, @sc.compress(css))
   end
-  
+
   def test_preserve_special_comments
     css = <<-CSS
 /*!************88****
@@ -208,7 +208,19 @@ I said
 pre-
 serve! */
 CSS
-assert_equal(expected.strip, @sc.compress(css))
+    assert_equal(expected.strip, @sc.compress(css))
+  end
+
+  def test_ie5_mac_hack
+    css = <<-CSS
+    /* Ignore the next rule in IE mac \\*/
+    .selector {
+       color: khaki;
+    }
+    /* Stop ignoring in IE mac */
+    CSS
+    expected = '/*\*/ .selector{color:khaki}/**/'
+    assert_equal(expected.strip, @sc.compress(css))
   end
 
 end
