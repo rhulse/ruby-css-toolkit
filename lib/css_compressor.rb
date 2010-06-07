@@ -14,6 +14,9 @@ module CssCompressor
       # Normalize all whitespace strings to single spaces. Easier to work with that way.
       css.gsub!(/\s+/, ' ');
 
+      # top and tail whitespace
+      css.strip!
+
       css
     end
   end

@@ -14,15 +14,15 @@ class TestCssCompressor < Test::Unit::TestCase
   end
 
   def test_whitespace_reduction
-    assert_equal(' ', @sc.compress(' '))
+    assert_equal('a b', @sc.compress('  a   b  '))
   end
 
   def test_whitespace_and_unix_newline
-    assert_equal(' ', @sc.compress(" \n"))
+    assert_equal('a b', @sc.compress(" a\n b"))
   end
 
   def test_whitespace_and_windows_newline
-    assert_equal(' ', @sc.compress(" \r\n"))
+    assert_equal('a b', @sc.compress("   a  \r\nb "))
   end
 
 
