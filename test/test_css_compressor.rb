@@ -36,7 +36,7 @@ class TestCssCompressor < Test::Unit::TestCase
       foo:bar;
     }
     CSS
-    expected =  'p :link{margin:5px;foo:bar;}'
+    expected =  'p :link{margin:5px;foo:bar}'
     assert_equal(expected, @sc.compress(css))
   end
 
@@ -53,7 +53,7 @@ class TestCssCompressor < Test::Unit::TestCase
       color: red;
     }
     CSS
-    result = 'p:first-letter {font-weight:bold;}p:first-line {line-height:1.5;}p:first-line ,a,p:first-letter ,b{color:red;}'
+    result = 'p:first-letter {font-weight:bold}p:first-line {line-height:1.5}p:first-line ,a,p:first-letter ,b{color:red}'
     assert_equal(result, @sc.compress(css))
   end
 
@@ -69,7 +69,7 @@ class TestCssCompressor < Test::Unit::TestCase
     	border-width:10px;
     }
     CSS
-    expected = %Q!@charset "utf-8";#foo{border-width:1px;}#bar{border-width:10px;}!
+    expected = %Q!@charset "utf-8";#foo{border-width:1px}#bar{border-width:10px}!
     assert_equal(expected, @sc.compress(css))
   end
 
