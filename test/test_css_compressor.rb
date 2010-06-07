@@ -17,6 +17,10 @@ class TestCssCompressor < Test::Unit::TestCase
     assert_equal('a b', @sc.compress('  a   b  '))
   end
 
+  def test_whitespace_reduction_with_tab
+    assert_equal('a b', @sc.compress("  a  \t  b  "))
+  end
+
   def test_whitespace_and_unix_newline
     assert_equal('a b', @sc.compress(" a\n b"))
   end
