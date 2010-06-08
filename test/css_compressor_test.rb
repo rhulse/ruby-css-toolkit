@@ -110,7 +110,7 @@ class TestCssCompressor < Test::Unit::TestCase
     .color {
       me: rgb(123, 123, 123);
       impressed: #ffeedd;
-      filter: chroma(color="#FFFFFF");
+      filter: chroma(color="#808000");
       background: none repeat scroll 0 0 rgb(255, 0,0);
       alpha: rgba(1, 2, 3, 4);
     }

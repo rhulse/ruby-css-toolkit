@@ -76,6 +76,9 @@ module CssCompressor
       # Remove empty rules.
       css.gsub!(/[^\};\{\/]+\{\}/, '')
 
+			# this does some extra smart cleaning of rules to remove redundancy
+			css = tidy_css(css)
+
       #restore preserved comments and strings
 			css = restore_preserved_comments_and_strings(css)
 
@@ -195,6 +198,34 @@ module CssCompressor
 			css
 		end
 
-  end
+		def tidy_css(clean_css)
+			css = clean_css.clone
+
+			# color swaps
+			swaps = {
+				'white' 	=> '#fff',
+				'black' 	=> '#000',
+	      'fuchsia'	=> '#f0f',
+	      'yellow'	=> '#ff0',
+	      '#f00'		=> 'red',
+				'#800000'	=> 'maroon',
+				'#ffa500' => 'orange',
+				'#808000'	=> 'olive',
+				'#800080'	=> 'purple',
+				'#008000' => 'green',
+				'#000080'	=> 'navy',
+				'#008080' => 'teal',
+				'#c0c0c0' => 'silver',
+				'#808080' => 'gray',
+			}
+
+			swaps.each do |from, to|
+				css.gsub!(/:#{from}(;|\})/, "#{to}\1")
+			end
+
+			css
+		end
+
+ end
 
 end
