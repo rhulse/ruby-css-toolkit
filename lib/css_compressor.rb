@@ -220,7 +220,7 @@ module CssCompressor
 			}
 
 			swaps.each do |from, to|
-				css.gsub!(/:#{from}(;|\})/, "#{to}\1")
+				css.gsub!(/:#{from}(;|\})/, ":#{to}\\1")
 			end
 
 			css
