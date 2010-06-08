@@ -448,8 +448,8 @@ CSS
 
   def test_preserve_strings
 		# read this ones in from files because of all the escaping used
-    css = File.read('css/preserve_string.css')
-    expected = File.read('css/preserve_string.css.min')
+    css = File.read(File.join(File.dirname(__FILE__), 'css/preserve_string.css'))
+    expected = File.read(File.join(File.dirname(__FILE__), 'css/preserve_string.css.min'))
     assert_equal(expected, @sc.compress(css))
   end
 
