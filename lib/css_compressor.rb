@@ -77,8 +77,16 @@ module CssCompressor
       css.gsub!(/[^\};\{\/]+\{\}/, '')
 
       #restore preserved comments and strings
+      css_length = css.length
       @preservedTokens.each_index do |index|
-        css.gsub!( /___YUICSSMIN_PRESERVED_TOKEN_#{index}___/, @preservedTokens[index])
+        # slice these back into place rather than regex, because
+        # complex nested strings cause the replacement to fail
+        placeholder = "___YUICSSMIN_PRESERVED_TOKEN_#{index}___"
+        startIndex = css.index(placeholder, 0)
+				next unless startIndex # skip if nil
+        endIndex = startIndex + placeholder.length
+
+        css = css.slice(0..startIndex-1).to_s + @preservedTokens[index] + css.slice(endIndex, css_length).to_s
       end
 
       # top and tail whitespace
@@ -114,6 +122,7 @@ module CssCompressor
       css.gsub!(/("([^\\"]|\\.|\\)*")|('([^\\']|\\.|\\)*')/) do |match|
         quote = match[0,1]
         string = match.slice(1..-2)
+
         # maybe the string contains a comment-like substring?
         # one, maybe more? put'em back then
         if string =~ /___YUICSSMIN_PRESERVE_CANDIDATE_COMMENT_/

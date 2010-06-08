@@ -62,11 +62,11 @@ class TestCssCompressor < Test::Unit::TestCase
     css = <<-CSS
     @charset "utf-8";
     #foo {
-    	border-width:1px;
+      border-width:1px;
     }
     @charset "another one";
     #bar {
-    	border-width:10px;
+      border-width:10px;
     }
     CSS
     expected = %Q!@charset "utf-8";#foo{border-width:1px}#bar{border-width:10px}!
@@ -244,7 +244,7 @@ $Header: /temp/dirname/filename.css 3 2/02/08 3:37p JSmith $
 */
 
 foo {
-	bar: baz
+  bar: baz
 }
 CSS
     expected = <<-CSS
@@ -265,13 +265,13 @@ emptiness {}
 empty { ;}
 
 @media print {
-	.noprint { display: none; }
+  .noprint { display: none; }
 }
 
 @media screen {
-	/* this rule should be removed, not simply minified.*/
-	.breakme {}
-	.printonly { display: none; }
+  /* this rule should be removed, not simply minified.*/
+  .breakme {}
+  .printonly { display: none; }
 }
 CSS
     expected = '/*! preserved */@import "another.css";@media print{.noprint{display:none}}@media screen{.printonly{display:none}}'
@@ -321,9 +321,9 @@ CSS
 
   def test_bug_2527974
     css = <<-CSS
-    /*	this file contains no css, it exists purely to put the revision number into the
-    	combined css before uploading it to SiteManager. The exclaimation at the start
-    	of the comment informs yuicompressor not to strip the comment out */
+    /*  this file contains no css, it exists purely to put the revision number into the
+      combined css before uploading it to SiteManager. The exclaimation at the start
+      of the comment informs yuicompressor not to strip the comment out */
 
     /*! $LastChangedRevision: 81 $ $LastChangedDate: 2009-05-27 17:41:02 +0100 (Wed, 27 May 2009) $ */
 
@@ -444,6 +444,13 @@ c {c : 3}
 CSS
     expected = 'a{a:1}/*!"preserve" me*/b{content:"/**/"}/*\*/c{c:3}/**/'
     assert_equal(expected.rstrip, @sc.compress(css))
+  end
+
+  def test_preserve_strings
+		# read this ones in from files because of all the escaping used
+    css = File.read('css/preserve_string.css')
+    expected = File.read('css/preserve_string.css.min')
+    assert_equal(expected, @sc.compress(css))
   end
 
 end
