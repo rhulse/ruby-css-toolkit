@@ -382,6 +382,21 @@ CSS
     assert_equal(expected.strip, @sc.compress(css))
   end
 
+	def test_removal_of_extra_semicolons
+    css = <<-CSS
+    #elem {
+     width: 100px;;
+		 height: 20px;
+    }
+    .elem {
+     width: 20px;
+     height: 200px;;;
+    }
+    CSS
+    expected = '#elem{width:100px;height:20px}.elem{width:20px;height:200px}'
+    assert_equal(expected, @sc.compress(css))		
+	end
+
   # In the following tests the \ in the CSS is escaped
   # Where there is a \\ this is = to one \ in the CSS
 

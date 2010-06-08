@@ -76,6 +76,10 @@ module CssCompressor
       # Remove empty rules.
       css.gsub!(/[^\};\{\/]+\{\}/, '')
 
+	    # Replace multiple semi-colons in a row by a single one
+	    # See SF bug #1980989
+	    css.gsub!(/[;]+/, ';');
+
 			# this does some extra smart cleaning of rules to remove redundancy
 			css = tidy_css(css)
 
