@@ -77,17 +77,7 @@ module CssCompressor
       css.gsub!(/[^\};\{\/]+\{\}/, '')
 
       #restore preserved comments and strings
-      css_length = css.length
-      @preservedTokens.each_index do |index|
-        # slice these back into place rather than regex, because
-        # complex nested strings cause the replacement to fail
-        placeholder = "___YUICSSMIN_PRESERVED_TOKEN_#{index}___"
-        startIndex = css.index(placeholder, 0)
-				next unless startIndex # skip if nil
-        endIndex = startIndex + placeholder.length
-
-        css = css.slice(0..startIndex-1).to_s + @preservedTokens[index] + css.slice(endIndex, css_length).to_s
-      end
+			css = restore_preserved_comments_and_strings(css)
 
       # top and tail whitespace
       css.strip!
@@ -187,6 +177,23 @@ module CssCompressor
 
       css
     end
+
+		def restore_preserved_comments_and_strings(clean_css)
+			css = clean_css.clone
+      css_length = css.length
+      @preservedTokens.each_index do |index|
+        # slice these back into place rather than regex, because
+        # complex nested strings cause the replacement to fail
+        placeholder = "___YUICSSMIN_PRESERVED_TOKEN_#{index}___"
+        startIndex = css.index(placeholder, 0)
+				next unless startIndex # skip if nil
+        endIndex = startIndex + placeholder.length
+
+        css = css.slice(0..startIndex-1).to_s + @preservedTokens[index] + css.slice(endIndex, css_length).to_s
+      end
+
+			css
+		end
 
   end
 
