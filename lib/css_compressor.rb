@@ -15,7 +15,7 @@ module CssCompressor
       css = process_comments_and_strings(css)
 
       # Normalize all whitespace strings to single spaces. Easier to work with that way.
-      css.gsub!(/\s+/, ' ');
+      css.gsub!(/\s+/, ' ')
 
       # Remove the spaces before the things that should not have spaces before them.
       # But, be careful not to turn "p :link {...}" into "p:link{...}"
@@ -28,14 +28,14 @@ module CssCompressor
       css.gsub!('___PSEUDOCLASSCOLON___', ':')
 
       # special case for IE
-      css.gsub!(/:first-(line|letter)(\{|,)/, ':first-\1 \2');
+      css.gsub!(/:first-(line|letter)(\{|,)/, ':first-\1 \2')
 
       # no space after the end of a preserved comment
-      css.gsub!(/\*\/ /, '*/');
+      css.gsub!(/\*\/ /, '*/')
 
       # If there is a @charset, then only allow one, and push to the top of the file.
-      css.gsub!(/^(.*)(@charset "[^"]*";)/i, '\2\1');
-      css.gsub!(/^(\s*@charset [^;]+;\s*)+/i, '\1');
+      css.gsub!(/^(.*)(@charset "[^"]*";)/i, '\2\1')
+      css.gsub!(/^(\s*@charset [^;]+;\s*)+/i, '\1')
 
       # Put the space back in some cases, to support stuff like
       # @media screen and (-webkit-min-device-pixel-ratio:0){
@@ -71,7 +71,7 @@ module CssCompressor
       css.gsub!(/([^"'=\s])(\s?)\s*#([0-9a-f])\3([0-9a-f])\4([0-9a-f])\5/i, '\1\2#\3\4\5')
 
       # shorter opacity IE filter
-      css.gsub!(/progid:DXImageTransform\.Microsoft\.Alpha\(Opacity=/i, "alpha(opacity=");
+      css.gsub!(/progid:DXImageTransform\.Microsoft\.Alpha\(Opacity=/i, "alpha(opacity=")
 
       # Remove empty rules.
       css.gsub!(/[^\};\{\/]+\{\}/, '')
@@ -182,11 +182,12 @@ module CssCompressor
         end
 
         # in all other cases kill the comment
-        css.gsub!( /\/\*#{placeholder}\*\//, "");
+        css.gsub!( /\/\*#{placeholder}\*\//, "")
       end
 
       css
     end
+
   end
 
 end
