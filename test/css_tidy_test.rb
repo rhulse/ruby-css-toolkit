@@ -5,7 +5,7 @@ class TidyTest < Test::Unit::TestCase
   include CssCompressor
 
   def setup
-    @sc = CSS.new
+    @sc = CSS.new({:use_tidy => true})
   end
 
 	# recheck that MS filters are not mangled by tidy color swapping
