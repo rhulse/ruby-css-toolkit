@@ -6,7 +6,10 @@ module CssCompressor
 
   class CSS
     def initialize(options = {})
-			@options = options
+			@options = {
+				:use_tidy => true,   # use the extra CSS optimisations
+				:tidy_test => false, # used during unit tests only
+			}.merge(options)
       @preservedTokens = []
       @comments = []
     end
