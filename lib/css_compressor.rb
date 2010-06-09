@@ -5,7 +5,8 @@ module CssCompressor
   # Compress CSS rules using a variety of techniques
 
   class CSS
-    def initialize
+    def initialize(options = {})
+			@options = options
       @preservedTokens = []
       @comments = []
     end
@@ -81,7 +82,7 @@ module CssCompressor
 	    css.gsub!(/[;]+/, ';');
 
 			# this does some extra smart cleaning of rules to remove redundancy
-			css = tidy_css(css)
+			css = tidy_css(css) if @options[:use_tidy]
 
       #restore preserved comments and strings
 			css = restore_preserved_comments_and_strings(css)
