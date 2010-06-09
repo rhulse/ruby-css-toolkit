@@ -1,0 +1,63 @@
+#!/usr/bin/env ruby
+# Commandline interface for css-compressor
+
+require 'getoptlong'
+
+require File.join(File.dirname(__FILE__), *%w[.. lib css_compressor])
+
+# options
+
+opts = GetoptLong.new(
+  ['--help', '-h', GetoptLong::NO_ARGUMENT],
+  ['--input', '-i', GetoptLong::REQUIRED_ARGUMENT],
+  ['--output', '-o', GetoptLong::REQUIRED_ARGUMENT])
+
+$infile = nil
+$outfile = nil
+
+# Explain to the user how to use css compressor
+
+def usage
+  puts ' CSS compressor             |'
+  puts '----------------------------|'
+  puts ''
+  puts '--help, -h                  Display this help'
+  puts '--input, -i <file>          The CSS-file to be compressed, if not set stdin is used'
+  puts '--output, -o <file>         The output file, if not set, stdout is used'
+  exit
+end
+
+# The options that will be passed to the compress method
+$options = {}
+
+opts.each do |opt, arg|
+  case opt
+    when '--help'
+      usage()
+    when '--input'
+      $infile = arg
+    when '--output'
+      $outfile = arg   
+  end
+end
+
+# Check if a input file is set, if not than read from stdin
+if $infile == nil
+  $input = STDIN.read
+else
+  $input = File.read($infile)
+end
+
+compressor = CssCompressor::CSS.new
+
+$output = compressor.compress($input)
+
+# Check if a output file is set, if not write to stdout
+if $outfile == nil
+  puts $output
+else 
+  File.open($outfile, 'w') do |f|
+    f.write $output
+  end
+end
+

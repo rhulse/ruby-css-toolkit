@@ -231,6 +231,35 @@ module CssCompressor
 			css
 		end
 
+		def split_lines(clean_css)
+			css = clean_css.clone
+
+      startIndex = 0
+      endIndex = 0
+			totallen = css.length
+
+			css.gsub!("@", "\n@")
+
+			# split @ declarations like @import onto their own lines
+      while (startIndex = css.index("@", startIndex))
+        endIndex = css.index(/;|\{/, startIndex)
+
+        unless endIndex
+          endIndex = totallen
+        end
+        css = css.slice(0..endIndex).to_s + "\n" + css.slice(endIndex+1, totallen).to_s
+				startIndex = endIndex
+				totallen += 1 # to allow for the extra \n
+      end
+			css.gsub!("}", "}\n")
+			css.gsub!("{", "\n{")
+			css.gsub!(/\n+/, "\n")
+			css.strip!
+
+		#	puts css
+			css
+		end
+
  end
 
 end

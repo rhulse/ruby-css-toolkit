@@ -44,4 +44,5 @@ class TidyTest < Test::Unit::TestCase
     expected = 'body{color:red;color:red;color:red;color:#fff;color:#000;color:#f0f;color:#ff0;color:red;color:maroon;color:orange;color:olive;color:purple;color:green;color:navy;color:teal;color:silver;color:gray}'
     assert_equal(expected, @sc.compress(css))
 	end
+
 end
