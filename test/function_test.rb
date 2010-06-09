@@ -54,7 +54,7 @@ CSS
 			}
 		}
 		CSS
-		
+
 		expected = <<-CSS
 h1
 {margin:50px}
@@ -76,6 +76,57 @@ h1
 CSS
 		compressed = @sc.compress(css)
 		assert_equal(expected.rstrip, @sc.split_lines(compressed))
+	end
+
+	def test_charset_and_media_type
+	  css = <<-CSS
+	  @charset 'utf-8';
+	  @media all {
+	  body {
+	  }
+	  body {
+	  background-color: gold;
+	  }
+	  }
+	  CSS
+	  expected = <<-CSS
+@charset 'utf-8';
+@media all
+{
+body
+{background-color:gold}
+}
+CSS
+		compressed = @sc.compress(css)
+	  assert_equal(expected.rstrip, @sc.split_lines(compressed))
+	end
+
+	# check that lines are split when there are preserved tokens
+	def test_at_attributes_and_preserved_strings
+    sc = CSS.new({:tidy_test => true})
+    css = <<-CSS
+		/* te " st */
+		a{a:1}
+		/*!"preserve" me*/
+		b{content: "/**/"}
+		/* quite " quote ' \\' \\" */
+		/* ie mac \\*/
+		c {c : 3}
+		/* end hiding */
+		CSS
+    expected = <<-CSS
+a
+{a:1}
+/*___YUICSSMIN_PRESERVED_TOKEN_1___*/
+b
+{content:"___YUICSSMIN_PRESERVED_TOKEN_0___"}
+/*___YUICSSMIN_PRESERVED_TOKEN_2___*/
+c
+{c:3}
+/*___YUICSSMIN_PRESERVED_TOKEN_3___*/
+CSS
+		compressed = sc.compress(css)
+	  assert_equal(expected.rstrip, sc.split_lines(compressed))
 	end
 
 end
