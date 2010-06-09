@@ -85,7 +85,7 @@ module CssCompressor
 			css = tidy_css(css) if @options[:use_tidy]
 
       #restore preserved comments and strings
-			css = restore_preserved_comments_and_strings(css)
+			css = restore_preserved_comments_and_strings(css) unless @options[:tidy_test]
 
       # top and tail whitespace
       css.strip!
