@@ -228,6 +228,9 @@ module CssCompressor
 				css.gsub!(/:#{from}(;|\})/, ":#{to}\\1")
 			end
 
+			css = split_lines(css)
+			css = restore_lines(css)
+
 			css
 		end
 
@@ -254,12 +257,18 @@ module CssCompressor
 			css.gsub!("}", "}\n")
 			css.gsub!("{", "\n{")
 			css.gsub!(/\n+/, "\n")
+			css.gsub!("*/", "*/\n")
 			css.strip!
 
-		#	puts css
 			css
 		end
 
+		def restore_lines(clean_css)
+			css = clean_css.clone
+			css.gsub!("\n", '')
+
+			css
+		end
  end
 
 end

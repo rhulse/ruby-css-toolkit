@@ -5,7 +5,7 @@ class TestCssCompressor < Test::Unit::TestCase
   include CssCompressor
 
   def setup
-    @sc = CSS.new
+    @sc = CSS.new({:use_tidy => true})
   end
 
   # basic test
