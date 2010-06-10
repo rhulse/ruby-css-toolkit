@@ -144,7 +144,7 @@ class TestCssCompressor < Test::Unit::TestCase
     css = <<-CSS
     #elem {
      width: 100px;
-     voice-family: "\"}\"";
+     voice-family: "\\"}\\"";
      voice-family:inherit;
      width: 200px;
     }
@@ -152,7 +152,7 @@ class TestCssCompressor < Test::Unit::TestCase
      width: 200px;
     }
     CSS
-    expected = %Q!#elem{width:100px;voice-family:"\"}\"";voice-family:inherit;width:200px}html>body #elem{width:200px}!
+    expected = %Q!#elem{width:100px;voice-family:"\\"}\\"";voice-family:inherit;width:200px}html>body #elem{width:200px}!
     assert_equal(expected, @sc.compress(css))
   end
 
