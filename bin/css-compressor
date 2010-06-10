@@ -61,3 +61,6 @@ else
   end
 end
 
+$stderr.puts "Input size : #{compressor.input_size}"
+$stderr.puts "Output size: #{compressor.output_size}"
+

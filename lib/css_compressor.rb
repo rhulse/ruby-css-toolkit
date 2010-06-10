@@ -5,6 +5,7 @@ module CssCompressor
   # Compress CSS rules using a variety of techniques
 
   class CSS
+		attr_reader :input_size, :output_size
     def initialize(options = {})
 			@options = {
 				:use_tidy => true,   # use the extra CSS optimisations
@@ -12,9 +13,12 @@ module CssCompressor
 			}.merge(options)
       @preservedTokens = []
       @comments = []
+			@input_size = 0
+			@output_size = 0
     end
 
     def compress(css)
+			@input_size = css.length
 
       css = process_comments_and_strings(css)
 
@@ -93,6 +97,7 @@ module CssCompressor
       # top and tail whitespace
       css.strip!
 
+			@output_size = css.length
       css
     end
 
