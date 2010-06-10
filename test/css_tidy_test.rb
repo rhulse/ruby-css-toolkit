@@ -22,9 +22,9 @@ class TidyTest < Test::Unit::TestCase
 	def test_color_swaps
 		css = <<-CSS
 		body {
-			color:#ff0000;		
-			color:#f00;		
-			color:#f00;		
+			color:#ff0000;
+			color:#f00;
+			color:#f00;
 			color:white;
 			color:black;
       color:fuchsia;
@@ -42,6 +42,36 @@ class TidyTest < Test::Unit::TestCase
 		}
 		CSS
     expected = 'body{color:red;color:red;color:red;color:#fff;color:#000;color:#f0f;color:#ff0;color:red;color:maroon;color:orange;color:olive;color:purple;color:green;color:navy;color:teal;color:silver;color:gray}'
+    assert_equal(expected, @sc.compress(css))
+	end
+
+	def test_clean_single_quoted_url
+		css = <<-CSS
+		body {
+			background: url('http://www.test.com/testing')
+		}
+		CSS
+    expected = 'body{background:url(http://www.test.com/testing)}'
+    assert_equal(expected, @sc.compress(css))
+	end
+
+	def test_clean_double_quoted_url
+		css = <<-CSS
+		body {
+			background: url("http://www.test.com/testing")
+		}
+		CSS
+    expected = 'body{background:url(http://www.test.com/testing)}'
+    assert_equal(expected, @sc.compress(css))
+	end
+
+	def test_clean_double_quoted_url_with_escape
+		css = <<-CSS
+		body {
+			background: url("http://www.test.com/te\\"sting")
+		}
+		CSS
+    expected = 'body{background:url(http://www.test.com/te\"sting)}'
     assert_equal(expected, @sc.compress(css))
 	end
 
