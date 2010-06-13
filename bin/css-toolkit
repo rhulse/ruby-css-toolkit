@@ -3,7 +3,7 @@
 
 require 'getoptlong'
 
-require File.join(File.dirname(__FILE__), *%w[.. lib css_compressor])
+require File.join(File.dirname(__FILE__), *%w[.. lib css_toolkit])
 
 # options
 
@@ -18,7 +18,7 @@ $outfile = nil
 # Explain to the user how to use css compressor
 
 def usage
-  puts ' CSS compressor             |'
+  puts ' CSS Optimizer              |'
   puts '----------------------------|'
   puts ''
   puts '--help, -h                  Display this help'

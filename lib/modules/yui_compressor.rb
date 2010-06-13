@@ -1,23 +1,19 @@
 # This is a Ruby port of the YUI CSS compressor
 # See LICENSE for license information
 
-module CssCompressor
+module YuiCompressor
   # Compress CSS rules using a variety of techniques
 
-  class CSS
+  class Yui
 		attr_reader :input_size, :output_size
-    def initialize(options = {})
-			@options = {
-				:use_tidy => true,   # use the extra CSS optimisations
-				:tidy_test => false, # used during unit tests only
-			}.merge(options)
+    def initialize()
       @preservedTokens = []
       @comments = []
 			@input_size = 0
 			@output_size = 0
     end
 
-    def compress(css)
+    def compress(css, line_length=0)
 			@input_size = css.length
 
       css = process_comments_and_strings(css)
@@ -88,11 +84,8 @@ module CssCompressor
 	    # See SF bug #1980989
 	    css.gsub!(/[;]+/, ';');
 
-			# this does some extra smart cleaning of rules to remove redundancy
-			css = tidy_css(css) if @options[:use_tidy]
-
       #restore preserved comments and strings
-			css = restore_preserved_comments_and_strings(css) unless @options[:tidy_test]
+			css = restore_preserved_comments_and_strings(css)
 
       # top and tail whitespace
       css.strip!
@@ -207,73 +200,6 @@ module CssCompressor
 
         css = css.slice(0..startIndex-1).to_s + @preservedTokens[index] + css.slice(endIndex, css_length).to_s
       end
-
-			css
-		end
-
-		def tidy_css(clean_css)
-			css = clean_css.clone
-
-			# color swaps
-			swaps = {
-				'white' 	=> '#fff',
-				'black' 	=> '#000',
-	      'fuchsia'	=> '#f0f',
-	      'yellow'	=> '#ff0',
-	      '#f00'		=> 'red',
-				'#800000'	=> 'maroon',
-				'#ffa500' => 'orange',
-				'#808000'	=> 'olive',
-				'#800080'	=> 'purple',
-				'#008000' => 'green',
-				'#000080'	=> 'navy',
-				'#008080' => 'teal',
-				'#c0c0c0' => 'silver',
-				'#808080' => 'gray',
-			}
-
-			swaps.each do |from, to|
-				css.gsub!(/:#{from}(;|\})/, ":#{to}\\1")
-			end
-
-			css = split_lines(css)
-			css = restore_lines(css)
-
-			css
-		end
-
-		def split_lines(clean_css)
-			css = clean_css.clone
-
-      startIndex = 0
-      endIndex = 0
-			totallen = css.length
-
-			css.gsub!("@", "\n@")
-
-			# split @ declarations like @import onto their own lines
-      while (startIndex = css.index("@", startIndex))
-        endIndex = css.index(/;|\{/, startIndex)
-
-        unless endIndex
-          endIndex = totallen
-        end
-        css = css.slice(0..endIndex).to_s + "\n" + css.slice(endIndex+1, totallen).to_s
-				startIndex = endIndex
-				totallen += 1 # to allow for the extra \n
-      end
-			css.gsub!("}", "}\n")
-			css.gsub!("{", "\n{")
-			css.gsub!(/\n+/, "\n")
-			css.gsub!("*/", "*/\n")
-			css.strip!
-
-			css
-		end
-
-		def restore_lines(clean_css)
-			css = clean_css.clone
-			css.gsub!("\n", '')
 
 			css
 		end
