@@ -128,5 +128,8 @@ CSS
 		compressed = sc.compress(css)
 	  assert_equal(expected.rstrip, sc.split_lines(compressed))
 	end
+	
+	def test_sort_rules
 
+	end
 end
