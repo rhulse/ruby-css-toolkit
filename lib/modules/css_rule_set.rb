@@ -9,18 +9,17 @@ module CssToolkit
 			# declarations are made up of:  property S* ':' S* value;
       @properties = []
       @values = []
-			add(opts)
+			add_rule(opts)
 		end
 
-		def add(opts={})
-			if opts[:selector] && opts[:declaration]
-				# only add rules if the declaration is (probably) valid
-				if opts[:declaration] =~ /:/
-					@selectors << opts[:selector]
-					declaration = opts[:declaration].gsub(';', '')
-					property, value = opts[:declaration].split(':')
-					@properties << property
-					@values << value
+		def add_rule(opts={})
+			if opts[:selector] && opts[:declarations]
+			# we assume the declarations are valid, but some cleanup of whitespace is done
+				@selectors << opts[:selector].strip
+				opts[:declarations].strip.split(';').each do |declaration|
+					property, value = declaration.strip.split(':')
+					@properties << property.strip
+					@values << value.strip.gsub(/\s+/, ' ')
 				end
 			end
 		end
