@@ -1,0 +1,52 @@
+= Ruby CSS Toolkit 
+
+This Gem is for optimizing and compressing CSS files.
+
+Version 1.0.0 has a port of the YUI CSS compressor.
+
+This includes the full test suite, so you (and I), can be sure that it 
+behaves as expected.
+
+More stuff will be added in the future.
+
+== Use
+
+
+
+
+== History
+
+
+
+
+== Note on Patches/Pull Requests
+ 
+* Fork the project.
+
+* Make your feature addition or bug fix.
+
+* Add tests for it. This is important so I don't break it in a
+  future version unintentionally.
+  
+  NB: I WILL NOT ACCEPT PATCHES WITHOUT TESTS! :-)
+  
+  See tests section below for information on how tests are done in this project
+  
+* Commit, do not mess with rakefile, version, or history.
+  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
+
+* Send me a pull request. Bonus points for topic branches.
+
+== Tests
+
+See above. No tests, no play.
+
+== Acknowledgements / Inspiration
+
+YUI Compressor (http://developer.yahoo.com/yui/compressor/)
+
+== Copyright
+
+Copyright (c) 2010 Richard Hulse. See LICENSE for details.
+
+YUI CSS files in the test suite are Copyright (c) 2009, Yahoo! Inc. All rights reserved.
