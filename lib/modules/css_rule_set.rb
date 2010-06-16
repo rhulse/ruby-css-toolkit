@@ -24,12 +24,35 @@ module CssToolkit
 			end
 		end
 
+		def << (declaration)
+			property, value = declaration.strip.split(':')
+			@properties << property.strip
+			@values << value.strip.gsub(/\s+/, ' ')
+		end
+
 		def to_hash
 			declarations = []
 			@properties.each_index do |index|
 				declarations << @properties[index] + ':' + @values[index]
 			end
 			{@selectors, declarations}
+		end
+
+		def to_s(format=:one_line)
+			case format
+			when :one_line
+				declarations = [] 
+				@values.each_index do |index|
+					declarations << "#{@properties[index]}:#{@values[index]}"
+				end
+				@selectors.join(',') + '{' + declarations.join(';') + '}'
+			when :multi_line
+				declarations = [] 
+				@values.each_index do |index|
+					declarations << "#{@properties[index]}:#{@values[index]}"
+				end
+				@selectors.join(',') + "{\n  " + declarations.join(";\n  ") + "\n}"
+			end
 		end
 
 	end
