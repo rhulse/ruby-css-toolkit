@@ -60,8 +60,5 @@ module CssToolkit
 				yield @properties[index], @values[index]
 			end
 		end
-
 	end
-
-
 end

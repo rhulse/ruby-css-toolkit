@@ -101,36 +101,4 @@ class CssRuleSetTest < Test::Unit::TestCase
 		assert_equal(expected, rs.to_s(:multi_line))
 	end
 
-	def test_add_node_to_stylesheet
-		sheet = CssToolkit::StyleSheet.new
-		sheet << CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px  5px  3px 8px ; '})
-		sheet << CssToolkit::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
-
-		expected = 'body{margin:20px;padding:10px 5px 3px 8px}p{font-size:20px;margin:5px;border:1px solid #334123}'
-		assert_equal(expected, sheet.to_s)
-	end
-
-	def test_add_node_to_stylesheet
-		sheet = CssToolkit::StyleSheet.new
-		sheet << CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px  5px  3px 8px ; '})
-		sheet << CssToolkit::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
-
-		expected = "body{\n  margin:20px;\n  padding:10px 5px 3px 8px\n}\np{\n  font-size:20px;\n  margin:5px;\n  border:1px solid #334123\n}\n"
-		assert_equal(expected, sheet.to_s(:multi_line))
-	end
-
-	def test_charset
-		charset = CssToolkit::Charset.new
-		expected = '@charset "UTF-8";'
-		assert_equal(expected, charset.to_s)
-
-		charset << 'UTF-16'
-		expected = '@charset "UTF-16";'
-		assert_equal(expected, charset.to_s)
-
-		charset.encoding = 'UTF-32'
-		expected = '@charset "UTF-32";'
-		assert_equal(expected, charset.to_s)
-	end
-
 end
