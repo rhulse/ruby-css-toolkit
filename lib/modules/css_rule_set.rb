@@ -39,22 +39,29 @@ module CssToolkit
 		end
 
 		def to_s(format=:one_line)
+
+			declarations = []
+			each_declaration do |property, value|
+				declarations << "#{property}:#{value}"
+			end
+
 			case format
 			when :one_line
-				declarations = [] 
-				@values.each_index do |index|
-					declarations << "#{@properties[index]}:#{@values[index]}"
-				end
 				@selectors.join(',') + '{' + declarations.join(';') + '}'
 			when :multi_line
-				declarations = [] 
-				@values.each_index do |index|
-					declarations << "#{@properties[index]}:#{@values[index]}"
-				end
 				@selectors.join(',') + "{\n  " + declarations.join(";\n  ") + "\n}"
 			end
 		end
 
+		private
+
+		def each_declaration
+			@values.each_index do |index|
+				yield @properties[index], @values[index]
+			end
+		end
+
 	end
+
 
 end
