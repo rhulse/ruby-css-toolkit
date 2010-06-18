@@ -101,4 +101,21 @@ class CssRuleSetTest < Test::Unit::TestCase
 		assert_equal(expected, rs.to_s(:multi_line))
 	end
 
+	def test_optimse_colors
+		css = <<-CSS
+			  me: rgb(123, 123, 123);
+			  impressed: #ffeedd;
+			  filter: chroma(color="#FFFFFF");
+			  background: none repeat scroll 0 0 rgb(255, 0,0);
+			  alpha: rgba(1, 2, 3, 4);
+		CSS
+		rs = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css})
+
+		rs.optimise_colors
+		expected = '.color{me:#7b7b7b;impressed:#fed;filter:chroma(color="#FFFFFF");background:none repeat scroll 0 0 #f00;alpha:rgba(1, 2, 3, 4)}'
+
+		assert_equal(expected, rs.to_s)
+
+	end
+
 end
