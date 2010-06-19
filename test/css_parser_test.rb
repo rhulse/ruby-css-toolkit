@@ -7,6 +7,30 @@ class TidyTest < Test::Unit::TestCase
 		@parser = CssTidy::Parser.new
 	end
 
+	def test_for_a_char
+		@parser.css 	= "012W45"
+		@parser.index		= 3
+		assert @parser.is_char?('W')
+	end
+
+	def test_for_one_of_a_char
+		@parser.css 	= "012x45"
+		@parser.index		= 3
+		assert @parser.is_char?(['W','x'])
+	end
+
+	def test_for_a_char_next
+		@parser.css 	= "012W45"
+		@parser.index		= 2
+		assert @parser.is_char?('W', 1)
+	end
+
+	def test_for_one_of_a_char_next
+		@parser.css 	= "012x45"
+		@parser.index		= 2
+		assert @parser.is_char?(['W','x'], 1)
+	end
+
 
 	# tests for tokens
 	# %w[/ @ } { , : = ' " ( , \\ ! $ % & ) * + . < > ? [ ] ^ ` | ~]
@@ -68,50 +92,50 @@ class TidyTest < Test::Unit::TestCase
 
 	# test for new lines
 	def test_is_newline
-		@parser.css 	= "1234\n6789/"
+		@parser.css 	= "01234\n6789/"
 		@parser.index		= 5
 		assert @parser.is_newline?
 	end
 
 	def test_is_newline_carriage_return
-		@parser.css 	= "1234\r6789/"
+		@parser.css 	= "01234\r6789/"
 		@parser.index		= 5
 		assert @parser.is_newline?
 	end
 
 	def test_is_newline_carriage_return_not
-		@parser.css 	= "1234\r6789/"
+		@parser.css 	= "01234\r6789/"
 		@parser.index		= 7
 		assert ! @parser.is_newline?
 	end
 
 	# ctype tests - 'space'
 	def test_is_ctype_space
-		@parser.css 	= "1234 6789/"
+		@parser.css 	= "01234 6789/"
 		@parser.index		= 5
 		assert @parser.is_ctype?(:space)
 	end
 
 	def test_is_ctype_space_slash_t
-		@parser.css 	= "1234\t6789/"
+		@parser.css 	= "01234\t6789/"
 		@parser.index		= 5
 		assert @parser.is_ctype?(:space)
 	end
 
 	def test_is_ctype_space_slash_f
-		@parser.css 	= "1234\f6789/"
+		@parser.css 	= "01234\f6789/"
 		@parser.index		= 5
 		assert @parser.is_ctype?(:space)
 	end
 
 	def test_is_ctype_space_slash_v
-		@parser.css 	= "1234\v6789/"
+		@parser.css 	= "01234\v6789/"
 		@parser.index		= 5
 		assert @parser.is_ctype?(:space)
 	end
 
 	def test_is_ctype_space_slash_r
-		@parser.css 	= "1234\r6789/"
+		@parser.css 	= "01234\r6789/"
 		@parser.index		= 5
 		assert @parser.is_ctype?(:space)
 	end
@@ -122,18 +146,29 @@ class TidyTest < Test::Unit::TestCase
 		assert ! @parser.is_ctype?(:space)
 	end
 
+	# NB: Looping tests have one bad char at the start
+	# to test that index inside function points to the
+	# correct character
+
 	# ctype tests - 'xdigit' (hexadecimal)
 	def test_is_ctype_xdigit
-		@parser.css 	= "0123456789abcdefABCDEF"
-		(0..21).each do |index|
+		@parser.css 	= "z0123456789abcdefABCDEF"
+		(1..22).each do |index|
 			@parser.index	= index
 			assert @parser.is_ctype?(:xdigit)
 		end
 	end
 
+	# check the next char after the current index
+	def test_is_next_char_ctype_xdigit
+		@parser.css 	= "zzzzzzzzAzzzzzzzz"
+		@parser.index	= 7
+		assert @parser.is_ctype?(:xdigit, 1)
+	end
+
 	def test_is_ctype_xdigit_not
-		@parser.css 	= "zxvprstlkhkw"
-		(0..11).each do |index|
+		@parser.css 	= "azxvprstlkhkw"
+		(1..12).each do |index|
 			@parser.index	= index
 			assert ! @parser.is_ctype?(:xdigit)
 		end
@@ -141,16 +176,16 @@ class TidyTest < Test::Unit::TestCase
 
 	# ctype tests - alpha
 	def test_is_ctype_alpha
-		@parser.css 	= "aBcDeFgHiJkLmNoPqRsTuVwXyZ"
-		(0..25).each do |index|
+		@parser.css 	= "0aBcDeFgHiJkLmNoPqRsTuVwXyZ"
+		(1..26).each do |index|
 			@parser.index	= index
 			assert @parser.is_ctype?(:alpha)
 		end
 	end
 
 	def test_is_ctype_alpha_not
-		@parser.css 	= '0123456789$#{@!)(*&^%)}'
-		(0..22).each do |index|
+		@parser.css 	= 'a0123456789$#{@!)(*&^%)}'
+		(1..23).each do |index|
 			@parser.index	= index
 			assert ! @parser.is_ctype?(:alpha)
 		end
@@ -180,7 +215,49 @@ class TidyTest < Test::Unit::TestCase
 		assert ! @parser.property_is_next?
 	end
 
+	#	if (code > 47 && code < 58) || (code > 64 && code < 91) || (code > 96 && code < 123)
 
+	def test_convert_unicode_ascii
+		(48..57).each do |code|
+			@parser.css 	= "body{ \\#{code} argin  : 5px; padding:10px;}"
+			@parser.index	= 6
+			expected = code.chr
+			assert_equal(expected, @parser.convert_unicode)
+		end
+		(65..90).each do |code|
+			@parser.css 	= "body{ \\#{code} argin  : 5px; padding:10px;}"
+			@parser.index	= 6
+			expected = code.chr
+			assert_equal(expected, @parser.convert_unicode)
+		end
+		(97..122).each do |code|
+			@parser.css 	= "body{ \\#{code} argin  : 5px; padding:10px;}"
+			@parser.index	= 6
+			expected = code.chr
+			assert_equal(expected, @parser.convert_unicode)
+		end
+	end
+
+	def test_convert_unicode_non_ascii
+		@parser.css 	= 'body{ \\margin  : 5px; padding:10px;}'
+		@parser.index	= 6
+		expected = '\\'
+		assert_equal(expected, @parser.convert_unicode)
+	end
+
+	def test_parser
+		css = <<-CSS
+		body {
+			margin:5px 10px 3px 1px
+		}
+		p     {
+			padding: 2px 3px;
+			font-size:12px;
+		}
+		CSS
+		@parser.parse(css)
+
+	end
 	#   def setup
 	#     @sc = CSS.new({:use_tidy => true})
 	#   end
