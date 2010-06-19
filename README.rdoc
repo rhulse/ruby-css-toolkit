@@ -43,7 +43,8 @@ See above. No tests, no play.
 
 == Acknowledgements / Inspiration
 
-YUI Compressor (http://developer.yahoo.com/yui/compressor/)
+YUI Compressor          (http://developer.yahoo.com/yui/compressor/)
+CSS Min (Ryan Grove)    (http://github.com/rgrove/cssmin)
 
 == Copyright
 
