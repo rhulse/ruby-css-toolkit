@@ -51,9 +51,9 @@ See above. No tests, no play.
 
 == Acknowledgements / Inspiration
 
-YUI Compressor          (http://developer.yahoo.com/yui/compressor/)
-CSS Min (Ryan Grove)    (http://github.com/rgrove/cssmin)
-Rainpress               (http://github.com/sprsquish/rainpress)
+* YUI Compressor          (http://developer.yahoo.com/yui/compressor/)
+* CSS Min (Ryan Grove)    (http://github.com/rgrove/cssmin)
+* Rainpress               (http://github.com/sprsquish/rainpress)
 
 == Copyright
 
