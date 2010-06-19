@@ -53,6 +53,7 @@ See above. No tests, no play.
 
 YUI Compressor          (http://developer.yahoo.com/yui/compressor/)
 CSS Min (Ryan Grove)    (http://github.com/rgrove/cssmin)
+Rainpress               (http://github.com/sprsquish/rainpress)
 
 == Copyright
 
