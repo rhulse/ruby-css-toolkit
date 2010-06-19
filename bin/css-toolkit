@@ -48,9 +48,9 @@ else
   $input = File.read($infile)
 end
 
-compressor = CssCompressor::CSS.new
+yui = CssToolkit::Yui.new()
 
-$output = compressor.compress($input)
+$output = yui.compress($input)
 
 # Check if a output file is set, if not write to stdout
 if $outfile == nil
@@ -61,6 +61,6 @@ else
   end
 end
 
-$stderr.puts "Input size : #{compressor.input_size}"
-$stderr.puts "Output size: #{compressor.output_size}"
+$stderr.puts "Input size : #{yui.input_size}"
+$stderr.puts "Output size: #{yui.output_size}"
 

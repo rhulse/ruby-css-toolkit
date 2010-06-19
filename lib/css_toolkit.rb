@@ -1,3 +1,5 @@
+$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__)))
+
 require 'modules/yui_compressor'
 
 module CssToolkit
