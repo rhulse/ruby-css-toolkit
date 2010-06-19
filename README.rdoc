@@ -2,21 +2,29 @@
 
 This Gem is for optimizing and compressing CSS files.
 
-Version 1.0.0 has a port of the YUI CSS compressor.
+Version 0.9.0 has a port of the YUI CSS compressor.
 
 This includes the full test suite, so you (and I), can be sure that it 
 behaves as expected.
 
 More stuff will be added in the future.
 
+== TODO
+
+* Add back in the line splitting options from YUI
+* complete port/rewrite of CSS Tidy
+
+
 == Use
 
+TODO: Write this.
 
 
 
 == History
 
-
+0.9.0 20 June 2010 Initial Release
+(Still needs line break option added)
 
 
 == Note on Patches/Pull Requests
