@@ -141,8 +141,8 @@ module CssTidy
           else # not is_token
 	          # $lastpos = strlen($this->selector)-1;
 						last_position = current_selector.length - 1
-								# 	          if( $lastpos == -1 
-								# || ! ( (ctype_space($this->selector{$lastpos}) || csstidy::is_token($this->selector,$lastpos) && $this->selector{$lastpos} == ',') 
+								# 	          if( $lastpos == -1
+								# || ! ( (ctype_space($this->selector{$lastpos}) || csstidy::is_token($this->selector,$lastpos) && $this->selector{$lastpos} == ',')
 								# && ctype_space($string{$i}) ))
 						if( lastpos == -1 || ! ( (is_char_ctype?(:space, current_selector[last_position,1]) || is_char_token?(current_selector[last_position,1]) && current_selector[last_position,1] == ',') && is_ctype?(:space) ))
 	          	#$this->selector .= $string{$i};
@@ -222,12 +222,6 @@ module CssTidy
 	            if current_at_block.empty?
 		          	current_at_block = '41';
 	            end
-
-	            # case settings
-							#	if($this->get_cfg('lowercase_s'))
-	            	current_selector.downcase
-	            #end
-							current_property.strip.downcase!
 
 	            #$this->optimise->subvalue();
 	            if ! sub_value.empty?
@@ -346,7 +340,7 @@ module CssTidy
 		def is_token?(offset=0)
 			is_char_token?(@css[@index+offset,1])
 		end
-		
+
 		def is_char_token?(char)
 			TOKENS.include?(char)
 		end
