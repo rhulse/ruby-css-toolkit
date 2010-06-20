@@ -2,12 +2,105 @@
 
 This Gem is for optimizing and compressing CSS files.
 
-Version 1.0.0 has a full port of the YUI CSS compressor.
+== Tools
+
+=== YUI CSS Compressor
+
+This is a complete port of the YUI CSS compressor.
 
 This includes the full test suite, so you (and I), can be sure that it 
 behaves as expected.
 
-More stuff will be added in the future.
+=== CSS Tidy
+
+This is port/rewrite of CSS Tidy
+
+It has the following features:
+
+* Compress colors
+
+ #eeffaa        -> #efa
+ rgb(35,48,98)  -> #233062
+ #colors        -> color names
+ color names    -> #colors
+ 
+ replace invalid color names with valid #color values
+
+* Lowercase selectors
+
+ BODY -> body
+
+* Compress font-weight
+ 
+ bold   -> 700
+ normal -> 400
+
+* Remove last ;
+
+The ; character is a delimiter between CSS declarations, and is not required for the last one in a block.
+
+* Optimise shorthands
+
+merges the following where ALL individual declaration are made in a rule
+ 
+ margin
+ padding
+ background
+
+e.g
+ 	
+ 	padding-top:10px;
+
+	padding-right:20px;
+
+	padding-bottom:50px;
+
+	padding-left:45px;
+	
+gets converted to:
+
+ padding:10px 20px 50px 45px;
+
+* Merge selectors
+
+If you have this rule:
+
+.class1{padding:5px}
+
+and later:
+
+.class2{padding:5px}
+
+this can be shortened to:
+
+.class1,.class2{padding:5px}
+
+In doing this there is no risk in breaking the cascade of selectors.
+
+* add a timestamp
+
+For documentation purposes.
+
+We do not do the following (which the original did):
+
+* sort properties
+
+There is not much point, and it can break hacks like the box model. 
+We try to not break hacks.
+
+* sort selectors
+
+Sorting by selector can causes breakages in the cascade.
+
+* presserve CSS
+
+The point of this seems to be to stop hacks being removed from the file.
+We try to keep hacks
+
+* remove backslash
+
+??
+
 
 == TODO
 
