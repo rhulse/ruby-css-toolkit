@@ -151,11 +151,13 @@ class TidyTest < Test::Unit::TestCase
 	# correct character
 
 	# ctype tests - 'xdigit' (hexadecimal)
-	def test_is_ctype_xdigit
-		@parser.css 	= "z0123456789abcdefABCDEF"
-		(1..22).each do |index|
-			@parser.index	= index
-			assert @parser.is_ctype?(:xdigit)
+	"0123456789abcdefABCDEF".each_char do |char|
+		define_method("test_for_ctype_xdigit_#{char}") do
+			@parser.css 	= "zzzzzz#{char}zzzzzz"
+			@parser.index	= 6
+			assert_block "CTYPE xdigit test for '#{char}' failed" do
+				@parser.is_ctype?(:xdigit)
+			end
 		end
 	end
 
@@ -166,28 +168,35 @@ class TidyTest < Test::Unit::TestCase
 		assert @parser.is_ctype?(:xdigit, 1)
 	end
 
-	def test_is_ctype_xdigit_not
-		@parser.css 	= "azxvprstlkhkw"
-		(1..12).each do |index|
-			@parser.index	= index
-			assert ! @parser.is_ctype?(:xdigit)
+	# test for not xdigit
+	"zxvprstlkhkw".each_char do |char|
+		define_method("test_for_ctype_xdigit_not_#{char}") do
+			@parser.css 	= "zzzzzz#{char}zzzzzz"
+			@parser.index	= 6
+			assert_block "CTYPE NOT xdigit test for '#{char}' failed" do
+				! @parser.is_ctype?(:xdigit)
+			end
 		end
 	end
 
 	# ctype tests - alpha
-	def test_is_ctype_alpha
-		@parser.css 	= "0aBcDeFgHiJkLmNoPqRsTuVwXyZ"
-		(1..26).each do |index|
-			@parser.index	= index
-			assert @parser.is_ctype?(:alpha)
+	"aBcDeFgHiJkLmNoPqRsTuVwXyZ".each_char do |char|
+		define_method("test_for_ctype_alpha_#{char}") do
+			@parser.css 	= "zzzzzz#{char}zzzzzz"
+			@parser.index	= 6
+			assert_block "CTYPE alpha test for '#{char}' failed" do
+				@parser.is_ctype?(:alpha)
+			end
 		end
 	end
 
-	def test_is_ctype_alpha_not
-		@parser.css 	= 'a0123456789$#{@!)(*&^%)}'
-		(1..23).each do |index|
-			@parser.index	= index
-			assert ! @parser.is_ctype?(:alpha)
+	'0123456789$#{@!)(*&^%)}'.each_char do |char|
+		define_method("test_for_ctype_alpha_#{char}") do
+			@parser.css 	= "zzzzzz#{char}zzzzzz"
+			@parser.index	= 6
+			assert_block "CTYPE NOT alpha test for '#{char}' failed" do
+				! @parser.is_ctype?(:alpha)
+			end
 		end
 	end
 
@@ -216,25 +225,33 @@ class TidyTest < Test::Unit::TestCase
 	end
 
 	#	if (code > 47 && code < 58) || (code > 64 && code < 91) || (code > 96 && code < 123)
+	(48..57).each do |code|
+		define_method("test_for_convert_unicode_ascii_#{code}") do
+			@parser.css 	= "zzzzzz#{code}zzzzzz"
+			@parser.index	= 6
+			assert_block "Unicode conversion of '#{code}' failed" do
+				! @parser.is_ctype?(:alpha)
+			end
+		end
+	end
 
-	def test_convert_unicode_ascii
-		(48..57).each do |code|
-			@parser.css 	= "body{ \\#{code} argin  : 5px; padding:10px;}"
+	(65..90).each do |code|
+		define_method("test_for_convert_unicode_ascii_#{code}") do
+			@parser.css 	= "zzzzzz#{code}zzzzzz"
 			@parser.index	= 6
-			expected = code.chr
-			assert_equal(expected, @parser.convert_unicode)
+			assert_block "Unicode conversion of '#{code}' failed" do
+				! @parser.is_ctype?(:alpha)
+			end
 		end
-		(65..90).each do |code|
-			@parser.css 	= "body{ \\#{code} argin  : 5px; padding:10px;}"
+	end
+
+	(97..122).each do |code|
+		define_method("test_for_convert_unicode_ascii_#{code}") do
+			@parser.css 	= "zzzzzz#{code}zzzzzz"
 			@parser.index	= 6
-			expected = code.chr
-			assert_equal(expected, @parser.convert_unicode)
-		end
-		(97..122).each do |code|
-			@parser.css 	= "body{ \\#{code} argin  : 5px; padding:10px;}"
-			@parser.index	= 6
-			expected = code.chr
-			assert_equal(expected, @parser.convert_unicode)
+			assert_block "Unicode conversion of '#{code}' failed" do
+				! @parser.is_ctype?(:alpha)
+			end
 		end
 	end
 
