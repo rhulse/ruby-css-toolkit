@@ -6,20 +6,6 @@ class YuiCompressorTest < Test::Unit::TestCase
 
   def setup
     @yui = Yui.new()
-
-		# build our tests based on the available files
-		# test_files = Dir.glob(File.join(File.dirname(__FILE__), 'yuicss/*.css'))
-		# test_files.each do |file|
-		# 	base_name = File.basename(file, ".css")
-		# 	class self <<
-		# 		def test_yui_#{basename}
-		# 			test_css 			= File.read(file)
-		# 			expected_css 	= File.read(file + '.min')
-		# 			assert_equal(expected_css, @yui.compress(test_css))
-		# 		end
-		#
-		# end
-
   end
 
   # basic test
@@ -43,18 +29,18 @@ class YuiCompressorTest < Test::Unit::TestCase
     assert_equal('a b', @yui.compress("   a  \r\nb "))
   end
 
-	# test all the files in the yui directory
-	def test_yui_css
-		test_files = Dir.glob(File.join(File.dirname(__FILE__), 'yuicss/*.css'))
-		test_files.each do |file|
-	    test_css 			= File.read(file)
-	    expected_css 	= File.read(file + '.min')
-
+	# build our YUI tests based on the available files
+	# the tests are run as per normal
+	test_files = Dir.glob(File.join(File.dirname(__FILE__), 'yuicss/*.css'))
+	test_files.each_with_index do |file, idx|
+  	test_css 			= File.read(file)
+  	expected_css 	= File.read(file + '.min')
+		test_name = File.basename(file, ".css")
+		define_method("test_yui_css_#{test_name}") do
 			test_name = File.basename(file, ".css")
-			assert_block "Couldn't do the thing - #{test_name}" do
-				expected_css == @yui.compress(test_css) #    do_the_thing
+			assert_block "YUI test #{test_name} failed" do
+				expected_css == @yui.compress(test_css)
 			end
-#			assert_equal(), "'yui-#{test_name}' failed" )
 		end
 	end
 
