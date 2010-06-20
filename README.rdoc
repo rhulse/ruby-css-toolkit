@@ -2,7 +2,7 @@
 
 This Gem is for optimizing and compressing CSS files.
 
-Version 0.9.0 has a port of the YUI CSS compressor.
+Version 1.0.0 has a full port of the YUI CSS compressor.
 
 This includes the full test suite, so you (and I), can be sure that it 
 behaves as expected.
@@ -11,7 +11,6 @@ More stuff will be added in the future.
 
 == TODO
 
-* Add back in the line splitting options from YUI
 * Make into a gem
 * complete port/rewrite of CSS Tidy
 
@@ -22,28 +21,28 @@ More stuff will be added in the future.
 
 == Use
 
-TODO: Write this.
+TODO
 
 
 
 == History
 
+1.0.0 20 June 2010 Release of full implementation of compressor
+
 0.9.0 20 June 2010 Initial Release
 (Still needs line break option added)
 
 
+
 == Note on Patches/Pull Requests
  
-* Fork the project.
+* Fork the project on github.
 
-* Make your feature addition or bug fix.
+* Make your change or bug fix.
 
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
+* Add tests for the change. Better still write the tests first!
   
   NB: I WILL NOT ACCEPT PATCHES WITHOUT TESTS! :-)
-  
-  See tests section below for information on how tests are done in this project
   
 * Commit, do not mess with rakefile, version, or history.
   (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
