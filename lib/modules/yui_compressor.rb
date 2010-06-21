@@ -98,7 +98,7 @@ module YuiCompressor
 
 	    # Replace multiple semi-colons in a row by a single one
 	    # See SF bug #1980989
-	    css.gsub!(/[;]+/, ';');
+	    css.gsub!(/[;]+/, ';')
 
       #restore preserved comments and strings
 			css = restore_preserved_comments_and_strings(css)
@@ -150,7 +150,7 @@ module YuiCompressor
         string.gsub!(/progid:DXImageTransform\.Microsoft\.Alpha\(Opacity=/i, "alpha(opacity=")
         @preservedTokens.push(string)
 
-        quote + "___YUICSSMIN_PRESERVED_TOKEN_" + (@preservedTokens.length - 1).to_s + "___" + quote;
+        quote + "___YUICSSMIN_PRESERVED_TOKEN_" + (@preservedTokens.length - 1).to_s + "___" + quote
       end
 
       # used to jump one index in loop
