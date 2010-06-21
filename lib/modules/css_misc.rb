@@ -2,6 +2,22 @@ module CssTidy
 
 	class Parser
 
+		SHORTEN_COLORS = {
+      'white' 	=> '#fff',
+      'black' 	=> '#000',
+      'fuchsia' => '#f0f',
+      'yellow' 	=> '#ff0',
+      '#f00'		=> 'red',
+      '#800000' => 'maroon',
+      '#ffa500' => 'orange',
+      '#808000' => 'olive',
+      '#800080' => 'purple',
+      '#008000' => 'green',
+      '#000080' => 'navy',
+      '#008080' => 'teal',
+      '#c0c0c0' => 'silver',
+      '#808080' => 'gray'
+		}
 
 		# A list of non-W3C color names which get replaced by their hex-codes
 		INVALID_COLORS = {
