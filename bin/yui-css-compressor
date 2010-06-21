@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# Commandline interface for css-compressor
+# Commandline interface for yui-css-compressor
 
 require 'getoptlong'
 
@@ -18,7 +18,7 @@ $outfile = nil
 # Explain to the user how to use css compressor
 
 def usage
-  puts ' CSS Optimizer              |'
+  puts ' YUI CSS Compressor         |'
   puts '----------------------------|'
   puts ''
   puts '--help, -h                  Display this help'
