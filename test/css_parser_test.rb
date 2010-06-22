@@ -262,19 +262,6 @@ class TidyTest < Test::Unit::TestCase
 		assert_equal(expected, @parser.convert_unicode)
 	end
 
-	def test_parser
-		css = <<-CSS
-		body {
-			margin:5px 10px 3px 1px
-		}
-		p     {
-			padding: 2px 3px;
-			font-size:12px;
-		}
-		CSS
-		@parser.parse(css)
-
-	end
 	#   def setup
 	#     @sc = CSS.new({:use_tidy => true})
 	#   end

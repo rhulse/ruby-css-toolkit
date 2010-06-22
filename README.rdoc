@@ -114,6 +114,13 @@ We try to keep hacks
 
 == Use
 
+Note that Tidy expects your CSS to be valid. This means:
+
+* strings make sense (they open and close correctly, and have escapes internally as needed)
+* media blocks and declarations open and close with braces
+
+=== Command Line
+
 TODO
 
 
