@@ -95,7 +95,7 @@ module CssTidy
 	       		if is_comment? && current_selector.empty?
 							@context << IN_COMMENT
 							@index += 1
-	       		elsif is_char?('@') && current_selector.empty?
+	       		elsif is_current_char?('@') && current_selector.empty?
 	            # # Check for at-rule
 	            # $this->invalid_at = true;
 	            # foreach($at_rules as $name => $type)
@@ -123,31 +123,31 @@ module CssTidy
 	            #     }
 	            #     $this->log('Invalid @-rule: '.$invalid_at_name.' (removed)','Warning');
 	            # }
-	          elsif is_char?('"') || is_char?("'")
+	          elsif is_current_char?('"') || is_current_char?("'")
 							@context << IN_STRING
 	            # $this->cur_string = $string{$i};
 	            # $this->str_char = $string{$i};
 							current_string = current_char
 							string_char = current_char
-	          elsif invalid_at && is_char?(';')
+	          elsif invalid_at && is_current_char?(';')
 							invalid_at = false
 							@context << IN_SELECTOR
-	          elsif is_char?('{')
+	          elsif is_current_char?('{')
 							@context << IN_PROPERTY
               # $this->_add_token(SEL_START, $this->selector);
               added = false
-	          elsif is_char?('}')
+	          elsif is_current_char?('}')
 	            # $this->_add_token(AT_END, $this->at);
 							current_at_block = ''
 							current_selector = ''
 	            # $this->sel_separate = array();
-	          elsif is_char?(',')
+	          elsif is_current_char?(',')
 							current_selector = current_selector.strip + ','
 	            #$this->sel_separate[] = strlen($this->selector);
-	          elsif is_char?('\\')
+	          elsif is_current_char?('\\')
 	            #$this->selector .= $this->_unicode($string,$i);
 	          #remove unnecessary universal selector,  FS#147
-						#elseif ! (is_char?('*') && @in_array($string{$i+1}, array('.', '#', '[', ':'))))
+						#elseif ! (is_current_char?('*') && @in_array($string{$i+1}, array('.', '#', '[', ':'))))
 						else
 							current_selector << current_char
 						end
@@ -165,7 +165,7 @@ module CssTidy
 
 				when IN_PROPERTY
 					if is_token?
-						if (is_char?(':') || is_char?('=')) && ! current_property.empty?
+						if (is_current_char?(':') || is_current_char?('=')) && ! current_property.empty?
 							@context << IN_VALUE
 	            #if(! $this->get_cfg('discard_invalid_properties') || csstidy::property_is_valid($this->property)) {
 	            if is_property_valid?(current_property)
@@ -174,16 +174,16 @@ module CssTidy
 	          elsif is_comment? && current_property.empty?
 							@context << IN_COMMENT
 							@index += 1 # move past '*'
-	          elsif is_char?('}')
+	          elsif is_current_char?('}')
 	            # $this->explode_selectors();
 							@context << IN_SELECTOR
 							invalid_at = false
 	            # $this->_add_token(SEL_END, $this->selector);
 							current_selector = ''
 							current_property = ''
-	          elsif is_char?(';')
+	          elsif is_current_char?(';')
 							current_property = ''
-	          elsif is_char?('\\')
+	          elsif is_current_char?('\\')
 	            #  $this->property .= $this->_unicode($string,$i);
 	          end
           elsif ! is_ctype?(:space)
@@ -196,17 +196,17 @@ module CssTidy
 	          if is_comment?
 							@context << IN_COMMENT
 							@index += 1
-	          elsif is_char?('"') || is_char?("'") || is_char?('(')
+	          elsif is_current_char?('"') || is_current_char?("'") || is_current_char?('(')
 	            # $this->cur_string = $string{$i};
 	            # $this->str_char = ($string{$i} == '(') ? ')' : $string{$i};
 							current_string = current_char
-							string_char = is_char?('(') ? ')' : current_char
+							string_char = is_current_char?('(') ? ')' : current_char
 	            @context << IN_STRING
-	          elsif is_char?(',')
+	          elsif is_current_char?(',')
 	          	sub_value = sub_value.strip + ','
-	          elsif is_char?('\\')
+	          elsif is_current_char?('\\')
 	             # $this->sub_value .= $this->_unicode($string,$i);
-	          elsif is_char?(';') || property_next
+	          elsif is_current_char?(';') || property_next
 							if current_selector[0,1] == '@'
 	            # if($this->selector{0} == '@' && isset($at_rules[substr($this->selector,1)]) && $at_rules[substr($this->selector,1)] == 'iv')
 	            # {
@@ -229,11 +229,11 @@ module CssTidy
 	            else
 	            	@context << IN_PROPERTY
             	end
-	          elsif ! is_char?('}')
+	          elsif ! is_current_char?('}')
 	            sub_value << current_char
 	          end
 
-	          if (is_char?('}') || is_char?(';') || property_next) && ! current_selector.empty?
+	          if (is_current_char?('}') || is_current_char?(';') || property_next) && ! current_selector.empty?
 	            if current_at_block.empty?
 		          	current_at_block = '41';
 	            end
@@ -275,7 +275,7 @@ module CssTidy
 	            current_value = ''
 	          end
 
-	          if is_char?('}')
+	          if is_current_char?('}')
               # $this->explode_selectors();
               # $this->_add_token(SEL_END, $this->selector);
 							@context << IN_SELECTOR
@@ -298,14 +298,14 @@ module CssTidy
           end
 
 				when IN_STRING
-					if string_char === ')' && (is_char?('"') || is_char?("'")) && ! str_in_str && ! is_escaped?
+					if string_char === ')' && (is_current_char?('"') || is_current_char?("'")) && ! str_in_str && ! is_escaped?
 						str_in_str = true
-					elsif string_char === ')' && (is_char?('"') || is_char?("'")) && str_in_str && ! is_escaped?
+					elsif string_char === ')' && (is_current_char?('"') || is_current_char?("'")) && str_in_str && ! is_escaped?
 						str_in_str = false
 					end
 					temp_add = current_char	# // ...and no not-escaped backslash at the previous position
 
-					if is_newline? && !is_char?('\\') && ! is_escaped?(-1)
+					if is_newline? && !is_current_char?('\\') && ! is_escaped?(-1)
 						temp_add = "\\A "
            	#$this->log('Fixed incorrect newline in string','Warning');
 					end
@@ -314,7 +314,7 @@ module CssTidy
 						current_string << temp_add
 	        end
 
-          if is_char?(string_char) && !is_escaped? && !str_in_str
+          if is_current_char?(string_char) && !is_escaped? && !str_in_str
 						@context.pop
 
 						if is_css_whitespace?(current_string) && current_property != 'content'
@@ -461,7 +461,7 @@ module CssTidy
 		end
 
 		# any sort of character - use for readability
-		def is_char?(char,offset=0)
+		def is_current_char?(char,offset=0)
 			case char.class.to_s
 			when 'String'
 				@css[@index+offset,1] == char
