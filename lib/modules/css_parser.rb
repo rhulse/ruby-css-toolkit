@@ -213,7 +213,7 @@ module CssTidy
 	            end
 
 	            if ! sub_value.empty?
-	              sub_value_array << sub_value
+	              sub_value_array << sub_value.strip
 	              sub_value = ''
 	            end
 
@@ -240,7 +240,7 @@ module CssTidy
 
 	          if is_ctype?(:space)
 							if ! sub_value.empty?
-	              sub_value_array << sub_value
+	              sub_value_array << sub_value.strip
 	              sub_value = ''
 	            end
 	          end
