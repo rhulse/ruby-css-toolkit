@@ -72,19 +72,16 @@ module CssTidy
 							@index += 1 # move past '*'
 						elsif is_char '{'
 							@context << IN_SELECTOR
-							# $this->_add_token(AT_START, $this->at);
-							@context << IN_SELECTOR
 						elsif is_char ','
 							current_at_block = current_at_block.strip + ','
 						elsif is_char '\\'
-							# $this->at .= $this->_unicode($string,$i);
+							current_at_block << convert_unicode
 						end # of is_comment
 					else # not token
 	          lastpos = current_at_block.length - 1
-	          # if(!( (ctype_space($this->at{$lastpos}) || csstidy::is_token($this->at,$lastpos) && $this->at{$lastpos} == ',') && ctype_space($string{$i})))
-	          #if !( (ctype_space($this->at{$lastpos}) || csstidy::is_token($this->at,$lastpos) && $this->at{$lastpos} == ',') && ctype_space($string{$i}))
+						if( (is_char_ctype?(:space, current_at_block[last_position,1]) || is_char_token?(current_at_block[last_position,1]) && current_at_block[last_position,1] == ',') && is_ctype?(:space) )
 	          	current_at_block << current_char
-	          #end
+	          end
 					end
 
 				when IN_SELECTOR
@@ -122,8 +119,6 @@ module CssTidy
 	            # }
 	          elsif is_current_char?('"') || is_current_char?("'")
 							@context << IN_STRING
-	            # $this->cur_string = $string{$i};
-	            # $this->str_char = $string{$i};
 							current_string = current_char
 							string_char = current_char
 	          elsif invalid_at && is_current_char?(';')
@@ -131,28 +126,21 @@ module CssTidy
 							@context << IN_SELECTOR
 	          elsif is_current_char?('{')
 							@context << IN_PROPERTY
-              # $this->_add_token(SEL_START, $this->selector);
 	          elsif is_current_char?('}')
-	            # $this->_add_token(AT_END, $this->at);
 							current_at_block = ''
 							current_selector = ''
-	            # $this->sel_separate = array();
 	          elsif is_current_char?(',')
 							current_selector = current_selector.strip + ','
-	            #$this->sel_separate[] = strlen($this->selector);
 	          elsif is_current_char?('\\')
-	            #$this->selector .= $this->_unicode($string,$i);
+							current_selector << convert_unicode
 	          #remove unnecessary universal selector,  FS#147
 						#elseif ! (is_current_char?('*') && @in_array($string{$i+1}, array('.', '#', '[', ':'))))
 						else
 							current_selector << current_char
 						end
           else # not is_token
-	          # $lastpos = strlen($this->selector)-1;
 						last_position = current_selector.length - 1
-						#if( $lastpos == -1 || ! ( (ctype_space($this->selector{$lastpos}) || csstidy::is_token($this->selector,$lastpos) && $this->selector{$lastpos} == ',') && ctype_space($string{$i}) ))
 						if( lastpos == -1 || ! ( (is_char_ctype?(:space, current_selector[last_position,1]) || is_char_token?(current_selector[last_position,1]) && current_selector[last_position,1] == ',') && is_ctype?(:space) ))
-	          	#$this->selector .= $string{$i};
 	          	current_selector << current_char
 	          end
           end
@@ -161,24 +149,18 @@ module CssTidy
 					if is_token?
 						if (is_current_char?(':') || is_current_char?('=')) && ! current_property.empty?
 							@context << IN_VALUE
-	            #if(! $this->get_cfg('discard_invalid_properties') || csstidy::property_is_valid($this->property)) {
-	            if is_property_valid?(current_property)
-	            	#$this->_add_token(PROPERTY, $this->property);
-	            end
 	          elsif is_comment? && current_property.empty?
 							@context << IN_COMMENT
 							@index += 1 # move past '*'
 	          elsif is_current_char?('}')
-	            # $this->explode_selectors();
 							@context << IN_SELECTOR
 							invalid_at = false
-	            # $this->_add_token(SEL_END, $this->selector);
 							current_selector = ''
 							current_property = ''
 	          elsif is_current_char?(';')
 							current_property = ''
 	          elsif is_current_char?('\\')
-	            #  $this->property .= $this->_unicode($string,$i);
+							current_property << convert_unicode
 	          end
           elsif ! is_ctype?(:space)
 						current_property << current_char
@@ -191,15 +173,13 @@ module CssTidy
 							@context << IN_COMMENT
 							@index += 1
 	          elsif is_current_char?('"') || is_current_char?("'") || is_current_char?('(')
-	            # $this->cur_string = $string{$i};
-	            # $this->str_char = ($string{$i} == '(') ? ')' : $string{$i};
 							current_string = current_char
 							string_char = is_current_char?('(') ? ')' : current_char
 	            @context << IN_STRING
 	          elsif is_current_char?(',')
 	          	sub_value = sub_value.strip + ','
 	          elsif is_current_char?('\\')
-	             # $this->sub_value .= $this->_unicode($string,$i);
+							sub_value << convert_unicode
 	          elsif is_current_char?(';') || property_next
 							if current_selector[0,1] == '@'
 	            # if($this->selector{0} == '@' && isset($at_rules[substr($this->selector,1)]) && $at_rules[substr($this->selector,1)] == 'iv')
@@ -232,35 +212,17 @@ module CssTidy
 		          	current_at_block = '41';
 	            end
 
-	            #$this->optimise->subvalue();
 	            if ! sub_value.empty?
-	              # $this->sub_value_arr[] = $this->sub_value;
-	              # $this->sub_value = '';
 	              sub_value_array << sub_value
 	              sub_value = ''
 	            end
 
 	            current_value = sub_value_array.join(' ')
-	            # $this->optimise->value();
 
 	            valid = is_property_valid?(current_property)
-	            #if((!$this->invalid_at || $this->get_cfg('preserve_css')) && (!$this->get_cfg('discard_invalid_properties') || $valid))
 	            if (! invalid_at || valid)
                 #$this->css_add_property($this->at,$this->selector,$this->property,$this->value);
 								@sheet << "#{current_at_block.strip} | #{current_selector.strip} | #{current_property.strip} | #{current_value.strip}"
-	                # $this->_add_token(VALUE, $this->value);
-	                # $this->optimise->shorthands();
-	            end
-
-	            if ! valid
-	                # if($this->get_cfg('discard_invalid_properties'))
-	                # {
-	                #     $this->log('Removed invalid property: '.$this->property,'Warning');
-	                # }
-	                # else
-	                # {
-	                #     $this->log('Invalid property in '.strtoupper($this->get_cfg('css_level')).': '.$this->property,'Warning');
-	                # }
 	            end
 
 	            current_property = ''
@@ -269,8 +231,6 @@ module CssTidy
 	          end
 
 	          if is_current_char?('}')
-              # $this->explode_selectors();
-              # $this->_add_token(SEL_END, $this->selector);
 							@context << IN_SELECTOR
 							invalid_at = false
 							current_selector = ''
@@ -279,11 +239,7 @@ module CssTidy
 	          sub_value << current_char
 
 	          if is_ctype?(:space)
-	            # $this->optimise->subvalue();
-	            # if($this->sub_value != '')
 							if ! sub_value.empty?
-	            #    $this->sub_value_arr[] = $this->sub_value;
-	            #     $this->sub_value = '';
 	              sub_value_array << sub_value
 	              sub_value = ''
 	            end
@@ -333,14 +289,10 @@ module CssTidy
 
 				when IN_COMMENT
 					if is_comment_end?
-            #$this->status = $this->from;
 						@context.pop # go back to previous context
-            #$i++;
 						@index += 1 # skip the '/'
-            #$this->_add_token(COMMENT, $cur_comment);
 						current_comment = ''
           else
-            #$cur_comment .= $string{$i};
 						current_comment << current_char
           end
 
