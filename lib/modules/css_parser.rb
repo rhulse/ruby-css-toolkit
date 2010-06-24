@@ -56,12 +56,9 @@ module CssTidy
 			string_char = ''
 			str_in_str = false
 
-			added = false
 			current_comment = ''
 
 			while @index < css_length
-				# puts context_name
-				# puts @css[@index,1]
 
 				if is_newline?
 					@line_number += 1
@@ -92,7 +89,7 @@ module CssTidy
 
 				when IN_SELECTOR
           if is_token?
-	       		if is_comment? && current_selector.empty?
+						if is_comment? && current_selector.strip.empty?
 							@context << IN_COMMENT
 							@index += 1
 	       		elsif is_current_char?('@') && current_selector.empty?
@@ -135,7 +132,6 @@ module CssTidy
 	          elsif is_current_char?('{')
 							@context << IN_PROPERTY
               # $this->_add_token(SEL_START, $this->selector);
-              added = false
 	          elsif is_current_char?('}')
 	            # $this->_add_token(AT_END, $this->at);
 							current_at_block = ''
@@ -154,9 +150,7 @@ module CssTidy
           else # not is_token
 	          # $lastpos = strlen($this->selector)-1;
 						last_position = current_selector.length - 1
-								# 	          if( $lastpos == -1
-								# || ! ( (ctype_space($this->selector{$lastpos}) || csstidy::is_token($this->selector,$lastpos) && $this->selector{$lastpos} == ',')
-								# && ctype_space($string{$i}) ))
+						#if( $lastpos == -1 || ! ( (ctype_space($this->selector{$lastpos}) || csstidy::is_token($this->selector,$lastpos) && $this->selector{$lastpos} == ',') && ctype_space($string{$i}) ))
 						if( lastpos == -1 || ! ( (is_char_ctype?(:space, current_selector[last_position,1]) || is_char_token?(current_selector[last_position,1]) && current_selector[last_position,1] == ',') && is_ctype?(:space) ))
 	          	#$this->selector .= $string{$i};
 	          	current_selector << current_char
@@ -191,7 +185,7 @@ module CssTidy
           end
 
 				when IN_VALUE
-          property_next = ( is_newline? && (property_is_next? || @index == css_length-1))
+          property_next = is_newline? && property_is_next? || @index == css_length-1
           if is_token? || property_next
 	          if is_comment?
 							@context << IN_COMMENT
@@ -250,11 +244,10 @@ module CssTidy
 	            # $this->optimise->value();
 
 	            valid = is_property_valid?(current_property)
-
 	            #if((!$this->invalid_at || $this->get_cfg('preserve_css')) && (!$this->get_cfg('discard_invalid_properties') || $valid))
 	            if (! invalid_at || valid)
                 #$this->css_add_property($this->at,$this->selector,$this->property,$this->value);
-								@sheet << "#{current_at_block.strip}, #{current_selector.strip}, #{current_property.strip}, #{current_value.strip}"
+								@sheet << "#{current_at_block.strip} | #{current_selector.strip} | #{current_property.strip} | #{current_value.strip}"
 	                # $this->_add_token(VALUE, $this->value);
 	                # $this->optimise->shorthands();
 	            end
@@ -348,7 +341,7 @@ module CssTidy
 						current_comment = ''
           else
             #$cur_comment .= $string{$i};
-						current_comment = current_char
+						current_comment << current_char
           end
 
 				end
