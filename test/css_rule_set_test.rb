@@ -10,7 +10,7 @@ class CssRuleSetTest < Test::Unit::TestCase
 	end
 
 	def test_rule_set_basic_with_spaces
-		rs = CssToolkit::RuleSet.new({:selector => ' body ', :declarations => ' margin   :  20px '})
+		rs = CssToolkit::RuleSet.new({:selector => ' body ', :declarations => ' margin:20px '})
 		expected = {['body']=>['margin:20px']}
 		assert_equal(expected, rs.to_hash)
 	end
@@ -22,7 +22,7 @@ class CssRuleSetTest < Test::Unit::TestCase
 	end
 
 	def test_rule_set_longer_with_spaces
-		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px  5px  3px 8px ; '})
+		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin:20px ; padding: 10px 5px 3px 8px; '})
 		expected = {['body']=>['margin:20px','padding:10px 5px 3px 8px']}
 		assert_equal(expected, rs.to_hash)
 	end
@@ -31,7 +31,7 @@ class CssRuleSetTest < Test::Unit::TestCase
 		css = <<-CSS
 			background-color: #123abc;
 			margin : 20px ;
-			padding: 10px  5px  3px 8px ;
+			padding: 10px 5px 3px 8px ;
 		 	width: 100px;
 		CSS
 		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => css})
@@ -46,8 +46,8 @@ class CssRuleSetTest < Test::Unit::TestCase
 		# extra escaped are for Ruby
 		css = <<-CSS
 			background-color: #123abc;
-			margin : 20px ;
-			padding: 10px  5px  3px 8px ;
+			margin : 20px;
+			padding: 10px 5px 3px 8px ;
 			width: 100px;
 			voice-family: "\\"}\\"";
 			voice-family:inherit;
@@ -60,7 +60,7 @@ class CssRuleSetTest < Test::Unit::TestCase
 	end
 
 	def test_add_a_declaration
-		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px  5px  3px 8px ; '})
+		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
 		expected = {['body']=>['margin:20px','padding:10px 5px 3px 8px']}
 		assert_equal(expected, rs.to_hash)
 
@@ -70,7 +70,7 @@ class CssRuleSetTest < Test::Unit::TestCase
 	end
 
 	def test_to_s_one_line_format
-		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px  5px  3px 8px ; '})
+		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
 		expected = 'body{margin:20px;padding:10px 5px 3px 8px}'
 		assert_equal(expected, rs.to_s)
 	end
@@ -79,7 +79,7 @@ class CssRuleSetTest < Test::Unit::TestCase
 		css = <<-CSS
 			background-color: #123abc;
 			margin : 20px ;
-			padding: 10px  5px  3px 8px ;
+			padding: 10px 5px 3px 8px ;
 		 	width: 100px;
 		CSS
 		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => css})
@@ -92,7 +92,7 @@ class CssRuleSetTest < Test::Unit::TestCase
 		css = <<-CSS
 			background-color: #123abc;
 			margin : 20px ;
-			padding: 10px  5px  3px 8px ;
+			padding: 10px 5px 3px 8px ;
 		 	width: 100px;
 		CSS
 		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => css})
@@ -111,7 +111,7 @@ class CssRuleSetTest < Test::Unit::TestCase
 		CSS
 		rs = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css})
 
-		rs.optimise_colors
+		rs.optimize_colors
 		expected = '.color{me:#7b7b7b;impressed:#fed;filter:chroma(color="#FFFFFF");background:none repeat scroll 0 0 #f00;alpha:rgba(1, 2, 3, 4)}'
 
 		assert_equal(expected, rs.to_s)

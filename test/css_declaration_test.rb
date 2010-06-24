@@ -5,7 +5,7 @@ class CssDeclarationTest < Test::Unit::TestCase
 
 	def test_declaration
 		declaration = CssToolkit::Declaration.new('margin', '5px')
-		expected = 'margin:5px;'
+		expected = 'margin:5px'
 		assert_equal(expected, declaration.to_s)
 	end
 
