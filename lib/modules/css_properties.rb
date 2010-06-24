@@ -5,8 +5,7 @@ module CssTidy
 		WHITESPACE = [' ',"\n","\t","\r","\x0B"]
 
 		# All CSS tokens used by tidy
-		TOKENS = %w[/ @ } { , : = ' " ( , \\ ! $ % & ) * + . < > ? [ ] ^ ` | ~]
-
+		TOKENS = %w[/ @ } { ; : = ' " ( , \\ ! $ % & ) * + . < > ? [ ] ^ ` | ~]
 		# All CSS units (CSS 3 units included)
 		units = ['in','cm','mm','pt','pc','px','rem','em','%','ex','gd','vw','vh','vm','deg','grad','rad','ms','s','khz','hz']
 
