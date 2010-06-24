@@ -10,25 +10,25 @@ class TidyTest < Test::Unit::TestCase
 	def test_for_a_char
 		@parser.css 	= "012W45"
 		@parser.index		= 3
-		assert @parser.is_char?('W')
+		assert @parser.is_current_char?('W')
 	end
 
 	def test_for_one_of_a_char
 		@parser.css 	= "012x45"
 		@parser.index		= 3
-		assert @parser.is_char?(['W','x'])
+		assert @parser.is_current_char?(['W','x'])
 	end
 
 	def test_for_a_char_next
 		@parser.css 	= "012W45"
 		@parser.index		= 2
-		assert @parser.is_char?('W', 1)
+		assert @parser.is_current_char?('W', 1)
 	end
 
 	def test_for_one_of_a_char_next
 		@parser.css 	= "012x45"
 		@parser.index		= 2
-		assert @parser.is_char?(['W','x'], 1)
+		assert @parser.is_current_char?(['W','x'], 1)
 	end
 
 
@@ -82,6 +82,12 @@ class TidyTest < Test::Unit::TestCase
 		@parser.css 	= '01234/* comment */'
 		@parser.index		= 7
 		assert ! @parser.is_comment?
+	end
+
+	def test_is_end_comment
+		@parser.css 	= '01234/* comment */18 19 20'
+		@parser.index		= 16
+		assert @parser.is_comment_end?
 	end
 
 	def test_forward_slash_at_end_is_not_comment
