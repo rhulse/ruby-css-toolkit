@@ -15,13 +15,20 @@ module CssToolkit
 
 		def add_rule(opts={})
 			if opts[:selector] && opts[:declarations]
-			# we assume the declarations are valid, but some cleanup of whitespace is done
-				@selectors << opts[:selector].strip
+			# we assume the declarations are valid, but top and tail whitespace
+			# and avoid duplicate selectors
+				@selectors << opts[:selector].strip unless @selectors.member?( opts[:selector])
+	      opts[:declarations].strip.split(/[\;$]+/m).each do |declaration|
+	        if matches = declaration.match(/(.[^:]*)\:(.[^;]*)(;|\Z)/i)
+	          property, value, end_of_declaration = matches.captures
+						@declarations << CssToolkit::Declaration.new(property.strip, value.strip)
+	        end
+	      end
 				opts[:declarations].strip.split(';').each do |declaration|
-					property, value = declaration.strip.split(':')
-					@declarations << CssToolkit::Declaration.new(property.strip, value.strip)
+					property, value = declaration.strip.split(/:/)
 				end
 			end
+			self
 		end
 
 		def << (declaration)

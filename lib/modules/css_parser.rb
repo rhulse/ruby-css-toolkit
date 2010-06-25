@@ -1,5 +1,8 @@
 $:.unshift File.dirname(__FILE__)
 require 'css_properties'
+require 'css_stylesheet'
+require 'css_rule_set'
+require 'css_declaration'
 
 module CssTidy
 
@@ -20,7 +23,7 @@ module CssTidy
 		def initialize
 
 			# temporary array to hold data during development
-			@sheet = []
+			@stylesheet = CssToolkit::StyleSheet.new
 
 			# the raw, unprocessed css
 			@raw_css = ''
@@ -47,6 +50,7 @@ module CssTidy
 			invalid_at = false
 			current_selector = ''
 			current_property = ''
+			current_ruleset = CssToolkit::RuleSet.new
 
 			current_value = ''
 			sub_value = ''
@@ -129,6 +133,10 @@ module CssTidy
 	          elsif is_current_char?('}')
 							current_at_block = ''
 							current_selector = ''
+							# save the last set
+							@stylesheet << current_ruleset
+							# start a new one
+							current_ruleset = CssToolkit::RuleSet.new 
 	          elsif is_current_char?(',')
 							current_selector = current_selector.strip + ','
 	          elsif is_current_char?('\\')
@@ -157,6 +165,8 @@ module CssTidy
 							invalid_at = false
 							current_selector = ''
 							current_property = ''
+							@stylesheet << current_ruleset
+							current_ruleset = CssToolkit::RuleSet.new
 	          elsif is_current_char?(';')
 							current_property = ''
 	          elsif is_current_char?('\\')
@@ -222,7 +232,11 @@ module CssTidy
 	            valid = is_property_valid?(current_property)
 	            if (! invalid_at || valid)
                 #$this->css_add_property($this->at,$this->selector,$this->property,$this->value);
-								@sheet << "#{current_at_block.strip} | #{current_selector.strip} | #{current_property.strip} | #{current_value.strip}"
+								current_ruleset.add_rule({:selector => current_selector.strip, :declarations => "#{current_property}:#{current_value}" })
+								#  = CssToolkit::RuleSet.new
+								# ruleset = CssToolkit::RuleSet.new
+								# @stylesheet << ruleset								# add_rule
+								# 	@sheet << "#{current_at_block.strip} | #{current_selector.strip} | #{current_property.strip} | #{current_value.strip}"
 	            end
 
 	            current_property = ''
@@ -300,7 +314,7 @@ module CssTidy
 				@index += 1
 			end
 
-			@sheet
+			@stylesheet
 		end
 
 		def current_char
