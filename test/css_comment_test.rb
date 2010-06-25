@@ -16,4 +16,28 @@ class CssCommentTest < Test::Unit::TestCase
 
 	end
 
+	def test_special_comment
+		comment = CssToolkit::Comment.new
+		comment << '! A special comment '
+		assert comment.is_special?
+	end
+
+	def test_not_a_special_comment
+		comment = CssToolkit::Comment.new
+		comment << ' A plain comment '
+		assert ! comment.is_special?
+	end
+
+	def test_for_an_ie5_hack
+		comment = CssToolkit::Comment.new
+		comment << ' A hack comment \\'
+		assert comment.is_ie5_hack?
+	end
+
+	def test_for_not_an_ie5_hack
+		comment = CssToolkit::Comment.new
+		comment << ' A plain comment '
+		assert ! comment.is_ie5_hack?
+	end
+
 end
