@@ -42,7 +42,7 @@ module CssToolkit
 				@value.gsub!(/(0 )+0/, '0 0')
 			else
 	      # Replace 0 0 0 0; with 0.
-	      @value.gsub!(/(0 )+0/, '0')
+	      @value.gsub!(/\A(?:0 )+0\Z/, '0')
 			end
 			# Replace 0.6 with .6, but only when it is the first rule or preceded by a space.
       @value.gsub!(/(\s|\A)0+\.(\d+)/, '\1.\2')

@@ -115,11 +115,11 @@ class CssRuleSetTest < Test::Unit::TestCase
 		expected = '.color{me:#7b7b7b;impressed:#fed;filter:chroma(color="#FFFFFF");background:none repeat scroll 0 0 #f00;alpha:rgba(1, 2, 3, 4)}'
 
 		assert_equal(expected, rs.to_s)
-
 	end
 
 	def test_empty
 		rs = CssToolkit::RuleSet.new()
 		assert rs.empty?
 	end
+
 end
