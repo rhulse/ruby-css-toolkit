@@ -135,7 +135,7 @@ module CssTidy
 							current_at_block = ''
 							current_selector = ''
 							# when there is a new selector we save the last set
-							@stylesheet << current_ruleset
+							@stylesheet << current_ruleset unless current_ruleset.empty?
 							# and start a new one
 							current_ruleset = CssToolkit::RuleSet.new
 	          elsif is_current_char?(',')
@@ -167,7 +167,7 @@ module CssTidy
 							current_property = ''
 							current_selector = ''
 							# when there is a new selector we save the last set
-							@stylesheet << current_ruleset
+							@stylesheet << current_ruleset unless current_ruleset.empty?
 							# and start a new one
 							current_ruleset = CssToolkit::RuleSet.new
 	          elsif is_current_char?(';')
@@ -249,7 +249,7 @@ module CssTidy
 							invalid_at = false
 							current_selector = ''
 							# when there is a new selector we save the last set
-							@stylesheet << current_ruleset
+							@stylesheet << current_ruleset unless current_ruleset.empty?
 							# and start a new one
 							current_ruleset = CssToolkit::RuleSet.new
 	          end
