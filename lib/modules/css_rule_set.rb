@@ -67,6 +67,13 @@ module CssToolkit
 				declaration.downcase_property
 				declaration.optimize_zeros
 			end
+			optimize_selectors
+		end
+
+		def optimize_selectors
+			@selectors.map do |selector|
+				selector.gsub!(/\s*>\s*\/\*\s*\*\/\s*/, '>/**/' )
+			end
 		end
 
 		# starting with colors
