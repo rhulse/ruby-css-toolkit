@@ -40,4 +40,11 @@ class CssCommentTest < Test::Unit::TestCase
 		assert ! comment.is_ie5_hack?
 	end
 
+	def test_print_supression
+		comment = CssToolkit::Comment.new
+		comment << ' A plain comment '
+		comment.printable = false
+		assert_equal('', comment.to_s)
+	end
+
 end

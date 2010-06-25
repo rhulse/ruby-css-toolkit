@@ -1,11 +1,12 @@
 module CssToolkit
 
 	class Comment
-		attr_accessor :text
+		attr_accessor :text, :printable
 
 		def initialize(text='')
 			@text = text
 			self
+			@printable = true
 		end
 
 		def <<(text)
@@ -13,7 +14,11 @@ module CssToolkit
 		end
 
 		def to_s(format=nil)
-			"/*#{@text}*/"
+			if @printable
+				"/*#{@text}*/"
+			else
+				''
+			end
 		end
 
 		# special comments start with a ! and should not be deleted
