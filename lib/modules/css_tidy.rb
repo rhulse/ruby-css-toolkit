@@ -7,9 +7,9 @@ module CssTidy
 			@parser = Parser.new
 		end
 
-		def tidy(css)
+		def tidy(css, format=:one_line)
 			stylesheet = @parser.parse(css)
-			stylesheet.to_s
+			stylesheet.to_s(format)
 		end
 
 	end
