@@ -66,6 +66,7 @@ module CssToolkit
 				declaration.optimize_colors
 				declaration.downcase_property
 				declaration.optimize_zeros
+				declaration.optimize_filters
 			end
 			optimize_selectors
 		end

@@ -121,4 +121,25 @@ class CssDeclarationTest < Test::Unit::TestCase
 		assert_equal(expected, declaration.to_s)
 	end
 
+	def test_optimize_modern_filters
+		declaration = CssToolkit::Declaration.new('opacity', '0.8')
+		declaration.optimize_filters
+		expected = 'opacity:0.8'
+		assert_equal(expected, declaration.to_s)
+	end
+
+	def test_optimize_ie8_filters
+		declaration = CssToolkit::Declaration.new('-ms-filter', 'progid:DXImageTransform.Microsoft.Alpha(Opacity=80)')
+		declaration.optimize_filters
+		expected = '-ms-filter:alpha(opacity=80)'
+		assert_equal(expected, declaration.to_s)
+	end
+
+	def test_optimize_ie4_to_7_filters
+		declaration = CssToolkit::Declaration.new('filter', 'PROGID:DXImageTransform.Microsoft.Alpha(Opacity=80)')
+		declaration.optimize_filters
+		expected = 'filter:alpha(opacity=80)'
+		assert_equal(expected, declaration.to_s)
+	end
+
 end

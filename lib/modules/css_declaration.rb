@@ -48,6 +48,11 @@ module CssToolkit
       @value.gsub!(/(\s|\A)0+\.(\d+)/, '\1.\2')
 		end
 
+		def optimize_filters
+      # shorter opacity IE filter
+      @value.gsub!(/progid:DXImageTransform\.Microsoft\.Alpha\(Opacity=/i, "alpha(opacity=")
+		end
+
 		def downcase_property
 			@property.downcase!
 		end
