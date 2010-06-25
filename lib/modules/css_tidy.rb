@@ -8,8 +8,17 @@ module CssTidy
 		end
 
 		def tidy(css, format=:one_line)
-			stylesheet = @parser.parse(css)
-			stylesheet.to_s(format)
+			options = {
+				:downcase_selectors => true,
+				:downcase_properties => true
+			}
+			@stylesheet = @parser.parse(css)
+			optimize(options)
+			@stylesheet.to_s(format)
+		end
+
+		def optimize(options)
+			@stylesheet.optimize
 		end
 
 	end

@@ -61,11 +61,23 @@ module CssToolkit
 
 		# Rule Sets know how to optimise themselves
 
+		def optimize
+			@declarations.each do |declaration|
+				declaration.optimize_colors
+				declaration.downcase_property
+			end
+		end
+
 		# starting with colors
 		def optimize_colors
 			@declarations.each do |declaration|
 				declaration.optimize_colors
 			end
+		end
+
+		# starting with colors
+		def downcase_selectors
+			@selectors.map {|selector| selector.downcase }
 		end
 
 		private

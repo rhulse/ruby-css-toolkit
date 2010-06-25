@@ -22,6 +22,10 @@ module CssToolkit
 			css
 		end
 
+		def optimize
+			@nodes.each {|node| node.optimize}
+		end
+
 	end
 
 end

@@ -33,6 +33,10 @@ module CssToolkit
 				@value.gsub!(/#([0-9a-f])\1([0-9a-f])\2([0-9a-f])\3/i, '#\1\2\3')
 			end
 		end
+
+		def downcase_property
+			@property.downcase!
+		end
 	end
 end
 
