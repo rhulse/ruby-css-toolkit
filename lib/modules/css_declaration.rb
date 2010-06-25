@@ -44,6 +44,8 @@ module CssToolkit
 	      # Replace 0 0 0 0; with 0.
 	      @value.gsub!(/(0 )+0/, '0')
 			end
+			# Replace 0.6 with .6, but only when it is the first rule or preceded by a space.
+      @value.gsub!(/(\s|\A)0+\.(\d+)/, '\1.\2')
 		end
 
 		def downcase_property
