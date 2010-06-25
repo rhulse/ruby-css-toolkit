@@ -34,6 +34,12 @@ module CssToolkit
 			end
 		end
 
+		def optimize_backgrounds
+			if @property =~ /background-position/i
+				@value.gsub!(/(0 )+0/, '0 0')
+     	end 
+		end
+
 		def downcase_property
 			@property.downcase!
 		end
