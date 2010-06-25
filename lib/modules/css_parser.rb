@@ -171,6 +171,8 @@ module CssTidy
 							current_ruleset = CssToolkit::RuleSet.new
 	          elsif is_current_char?(';')
 							current_property = ''
+	          elsif is_current_char?('*') # allow star hack for properties
+							current_property << current_char
 	          elsif is_current_char?('\\')
 							current_property << convert_unicode
 	          end
