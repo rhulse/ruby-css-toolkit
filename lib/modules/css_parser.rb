@@ -133,10 +133,10 @@ module CssTidy
 	          elsif is_current_char?('}')
 							current_at_block = ''
 							current_selector = ''
-							# save the last set
+							# when there is a new selector we save the last set
 							@stylesheet << current_ruleset
-							# start a new one
-							current_ruleset = CssToolkit::RuleSet.new 
+							# and start a new one
+							current_ruleset = CssToolkit::RuleSet.new
 	          elsif is_current_char?(',')
 							current_selector = current_selector.strip + ','
 	          elsif is_current_char?('\\')
@@ -163,9 +163,11 @@ module CssTidy
 	          elsif is_current_char?('}')
 							@context << IN_SELECTOR
 							invalid_at = false
-							current_selector = ''
 							current_property = ''
+							current_selector = ''
+							# when there is a new selector we save the last set
 							@stylesheet << current_ruleset
+							# and start a new one
 							current_ruleset = CssToolkit::RuleSet.new
 	          elsif is_current_char?(';')
 							current_property = ''
@@ -248,6 +250,10 @@ module CssTidy
 							@context << IN_SELECTOR
 							invalid_at = false
 							current_selector = ''
+							# when there is a new selector we save the last set
+							@stylesheet << current_ruleset
+							# and start a new one
+							current_ruleset = CssToolkit::RuleSet.new
 	          end
           elsif ! property_next
 	          sub_value << current_char
