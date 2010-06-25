@@ -23,6 +23,8 @@ module CssToolkit
 		end
 
 		def optimize
+			keep_next_comment = false
+
 			@nodes.each_with_index do |node, idx|
 				if node.class == CssToolkit::Comment
 					if node.is_special?
