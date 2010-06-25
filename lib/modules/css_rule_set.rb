@@ -65,7 +65,7 @@ module CssToolkit
 			@declarations.each do |declaration|
 				declaration.optimize_colors
 				declaration.downcase_property
-				declaration.optimize_backgrounds
+				declaration.optimize_zeros
 			end
 		end
 

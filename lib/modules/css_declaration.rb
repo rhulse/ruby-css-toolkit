@@ -34,10 +34,16 @@ module CssToolkit
 			end
 		end
 
-		def optimize_backgrounds
+		def optimize_zeros
+      # Replace 0(%, em, ex, px, in, cm, mm, pt, pc) with just 0.
+      @value.gsub!(/(\s|\A)([+-]?0)(?:%|em|ex|px|in|cm|mm|pt|pc)/i, '\1\2')
+
 			if @property =~ /background-position/i
 				@value.gsub!(/(0 )+0/, '0 0')
-     	end 
+			else
+	      # Replace 0 0 0 0; with 0.
+	      @value.gsub!(/(0 )+0/, '0')
+			end
 		end
 
 		def downcase_property
