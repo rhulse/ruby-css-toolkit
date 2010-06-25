@@ -118,4 +118,8 @@ class CssRuleSetTest < Test::Unit::TestCase
 
 	end
 
+	def test_empty
+		rs = CssToolkit::RuleSet.new()
+		assert rs.empty?
+	end
 end

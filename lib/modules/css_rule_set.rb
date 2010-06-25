@@ -81,6 +81,10 @@ module CssToolkit
 			@selectors.map {|selector| selector.downcase }
 		end
 
+		def empty?
+			@declarations.empty?
+		end
+
 		private
 
 		def each_declaration
