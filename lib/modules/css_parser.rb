@@ -235,12 +235,7 @@ module CssTidy
 
 	            valid = is_property_valid?(current_property)
 	            if (! invalid_at || valid)
-                #$this->css_add_property($this->at,$this->selector,$this->property,$this->value);
 								current_ruleset.add_rule({:selector => current_selector.strip, :declarations => "#{current_property}:#{current_value}" })
-								#  = CssToolkit::RuleSet.new
-								# ruleset = CssToolkit::RuleSet.new
-								# @stylesheet << ruleset								# add_rule
-								# 	@sheet << "#{current_at_block.strip} | #{current_selector.strip} | #{current_property.strip} | #{current_value.strip}"
 	            end
 
 	            current_property = ''
