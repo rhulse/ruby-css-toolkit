@@ -155,9 +155,11 @@ See above. No tests, no play.
 
 == Acknowledgements / Inspiration
 
-* YUI Compressor          (http://developer.yahoo.com/yui/compressor/)
-* CSS Min (Ryan Grove)    (http://github.com/rgrove/cssmin)
-* Rainpress               (http://github.com/sprsquish/rainpress)
+* YUI Compressor                (http://developer.yahoo.com/yui/compressor/)
+* CSS Min (Ryan Grove)          (http://github.com/rgrove/cssmin)
+* Rainpress (Uwe L. Korn)       (http://github.com/sprsquish/rainpress)
+* CSS Tidy (Florian Schmitz)    (http://csstidy.sourceforge.net/)
+* Ruby CSS Parser (Alex Dunae)  (http://github.com/alexdunae/css_parser)  
 
 == Copyright
 
