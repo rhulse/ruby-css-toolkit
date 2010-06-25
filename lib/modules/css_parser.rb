@@ -3,6 +3,7 @@ require 'css_properties'
 require 'css_stylesheet'
 require 'css_rule_set'
 require 'css_declaration'
+require 'css_comment'
 
 module CssTidy
 
@@ -308,6 +309,7 @@ module CssTidy
 					if is_comment_end?
 						@context.pop # go back to previous context
 						@index += 1 # skip the '/'
+						@stylesheet << CssToolkit::Comment.new(current_comment)
 						current_comment = ''
           else
 						current_comment << current_char
