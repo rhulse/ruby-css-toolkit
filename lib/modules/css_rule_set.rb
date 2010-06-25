@@ -72,7 +72,10 @@ module CssToolkit
 
 		def optimize_selectors
 			@selectors.map do |selector|
+				# squish up IE comment in selector hack
 				selector.gsub!(/\s*>\s*\/\*\s*\*\/\s*/, '>/**/' )
+	      # special case for IE
+	      selector.gsub!(/:first-(line|letter)(,|\Z)/, ':first-\1 \2')
 			end
 		end
 
