@@ -2,7 +2,14 @@
 
 This Gem is for optimizing and compressing CSS files.
 
-== Tools
+== History
+
+1.0.0 20 June 2010 Release of full implementation of yui compressor
+
+0.9.0 20 June 2010 Initial Release
+(Still needs line break option added)
+
+== Available Tools
 
 === YUI CSS Compressor
 
@@ -13,38 +20,62 @@ behaves as expected.
 
 === CSS Tidy
 
-This is port/rewrite of CSS Tidy
+This is port/rewrite of CSS Tidy.
 
-It has the following features:
+Only the PHP version of the current CSS Tidy project is being
+maintained, and so probably won't be used by rubyists, or those
+who need a simple command line interface.
+
+This port/rewrite fills this gap, and also provides a platform
+for future enhancements and CSS3 support.
+
+It stores the parsed CSS using a number of Ruby objects. This is then
+optimised.
+
+This approach allows the use of CSS hacks of various kinds - the optimisation 
+code is hack aware, so (for example) won't merge or override rules in
+a declaration that uses the box model hack.
+
+The use of an object to hold the CSS in a tree structure allows extra
+optimisations to be done beyond what is possible with a pure regex based
+compressor.
+
+This CSS Tidy has the following features:
 
 * Compress colors
 
- #eeffaa        -> #efa
- rgb(35,48,98)  -> #233062
- #colors        -> color names
- color names    -> #colors
+  #eeffaa        -> #efa
+  
+  rgb(35,48,98)  -> #233062
+  
+  #colors        -> color names
+  
+  color names    -> #colors
  
- replace invalid color names with valid #color values
+ also replaces invalid color names with valid #color values
 
 * Lowercase selectors
 
- BODY -> body
+  BODY -> body
 
 * Compress font-weight
  
- bold   -> 700
- normal -> 400
+  bold   -> 700
+  
+  normal -> 400
 
 * Remove last ;
 
-The ; character is a delimiter between CSS declarations, and is not required for the last one in a block.
+  The ; character is a delimiter between CSS declarations, and is not required for the last one in a block.
 
 * Optimise shorthands
 
 merges the following where ALL individual declaration are made in a rule
  
  margin
+ 
  padding
+ 
  background
 
 e.g
@@ -61,6 +92,21 @@ gets converted to:
 
  padding:10px 20px 50px 45px;
 
+and rules that can be shorter also are fixed:
+
+padding:10px 20px 50px 20px;
+
+becomes:
+
+padding:10px 20px 50px;
+
+padding:10px 20px 10px 20px;
+
+becomes:
+
+padding:10px 20px;
+
+
 * Merge selectors
 
 If you have this rule:
@@ -75,27 +121,26 @@ this can be shortened to:
 
 .class1,.class2{padding:5px}
 
-In doing this there is no risk in breaking the cascade of selectors.
+In doing this there is no risk of breaking the cascade of selectors.
 
 * add a timestamp
 
 For documentation purposes.
 
-We do not do the following (which the original did):
+We do NOT do the following (which the original did):
 
 * sort properties
 
-There is not much point, and it can break hacks like the box model. 
-We try to not break hacks.
+There is not much point; it can break hacks like the box model hack. 
+We try to not break hacks(TM).
 
 * sort selectors
 
 Sorting by selector can causes breakages in the cascade.
 
-* presserve CSS
+* preserve CSS
 
 The point of this seems to be to stop hacks being removed from the file.
-We try to keep hacks
 
 * remove backslash
 
@@ -109,7 +154,6 @@ We try to keep hacks
 
 === CSS Tidy TODO
 * port parser to Ruby (including any relevant bug fixes since v1.3)
-* create new node based storage for stylesheet content
 * write new CSS optimizer built on stylesheet container class
 
 == Use
@@ -119,18 +163,11 @@ Note that Tidy expects your CSS to be valid. This means:
 * strings make sense (they open and close correctly, and have escapes internally as needed)
 * media blocks and declarations open and close with braces
 
+It is a good idea to use the W3C validator first.
+
 === Command Line
 
 TODO
-
-
-
-== History
-
-1.0.0 20 June 2010 Release of full implementation of compressor
-
-0.9.0 20 June 2010 Initial Release
-(Still needs line break option added)
 
 
 
@@ -142,10 +179,10 @@ TODO
 
 * Add tests for the change. Better still write the tests first!
   
-  NB: I WILL NOT ACCEPT PATCHES WITHOUT TESTS! :-)
+  NB: I WILL NOT ACCEPT PATCHES WITHOUT GOOD TESTS! :-)
   
 * Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
+  (if you want to have your own version go ahead.)
 
 * Send me a pull request. Bonus points for topic branches.
 
@@ -153,7 +190,18 @@ TODO
 
 See above. No tests, no play.
 
+YUI tests used CSS in files. These are in the form 'name.css' and 'name.css.min'
+for 'css to process' and 'expected result'. The test suite will use any new
+files automatically. This is to make is simpler to pull any changes and test 
+cases over from YUI.
+
+The CSS Tidy module also uses the YUI tests to ensure complete compatibility when 
+a compatible set of parameters are chosen.
+
+
 == Acknowledgements / Inspiration
+
+This project has ported code from, or has used as inspiration the following:
 
 * YUI Compressor                (http://developer.yahoo.com/yui/compressor/)
 * CSS Min (Ryan Grove)          (http://github.com/rgrove/cssmin)
