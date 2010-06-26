@@ -4,6 +4,7 @@ require 'css_stylesheet'
 require 'css_rule_set'
 require 'css_declaration'
 require 'css_comment'
+require 'css_import'
 
 module CssTidy
 
@@ -206,7 +207,7 @@ module CssTidy
 	                  when '@namespace'
 											#$this->namespace = implode(' ',$this->sub_value_arr);
 	                  when '@import'
-											#$this->import[] = implode(' ',$this->sub_value_arr);
+											@stylesheet << CssToolkit::Import.new(sub_value_array.join(' '))
 								end
 
 	              sub_value_array = []

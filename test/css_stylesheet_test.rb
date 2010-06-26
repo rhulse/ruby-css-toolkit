@@ -52,4 +52,29 @@ class CssStyleSheetTest < Test::Unit::TestCase
 		assert_equal('UTF-8', sheet.charset)
 	end
 
+	def test_import
+		sheet = CssToolkit::StyleSheet.new
+		sheet << CssToolkit::Import.new("'test.css'")
+
+		assert_equal("@import 'test.css';", sheet.to_s)
+	end
+
+	def test_two_imports
+		sheet = CssToolkit::StyleSheet.new
+		sheet << CssToolkit::Import.new("'test.css'")
+		sheet << CssToolkit::Import.new("'another.css'")
+
+		assert_equal("@import 'test.css';@import 'another.css';", sheet.to_s)
+	end
+
+	def test_two_imports_with_comment
+		sheet = CssToolkit::StyleSheet.new
+		sheet << CssToolkit::Comment.new(" This is a comment ")
+		sheet << CssToolkit::Import.new("'test.css'")
+		sheet << CssToolkit::Import.new("'another.css'")
+
+
+		assert_equal("/* This is a comment */@import 'test.css';@import 'another.css';", sheet.to_s)
+	end
+
 end
