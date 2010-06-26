@@ -25,7 +25,7 @@ class CssStyleSheetTest < Test::Unit::TestCase
 		sheet = CssToolkit::StyleSheet.new
 		comment = CssToolkit::Comment.new
 
-		sheet.charset = 'UTF-16'
+		sheet.charset = "'UTF-16'"
 
 		comment.text = " This is a comment "
 
@@ -34,7 +34,7 @@ class CssStyleSheetTest < Test::Unit::TestCase
 		sheet << CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
 		sheet << CssToolkit::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
 
-		expected = "@charset \"UTF-16\";\n/* This is a comment */\nbody{\n  margin:20px;\n  padding:10px 5px 3px 8px\n}\np{\n  font-size:20px;\n  margin:5px;\n  border:1px solid #334123\n}\n"
+		expected = "@charset 'UTF-16';\n/* This is a comment */\nbody{\n  margin:20px;\n  padding:10px 5px 3px 8px\n}\np{\n  font-size:20px;\n  margin:5px;\n  border:1px solid #334123\n}\n"
 		assert_equal(expected, sheet.to_s(:multi_line))
 	end
 
