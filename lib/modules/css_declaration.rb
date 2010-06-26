@@ -52,6 +52,11 @@ module CssToolkit
       # shorter opacity IE filter
       @value.gsub!(/progid:DXImageTransform\.Microsoft\.Alpha\(Opacity=/i, "alpha(opacity=")
 		end
+		
+		def optimize_punctuation
+      @value.gsub!(/\s+([!+\(\)\],])/, '\1')
+      @value.gsub!(/([!+\(\[,])\s+/, '\1')
+		end
 
 		def downcase_property
 			@property.downcase!

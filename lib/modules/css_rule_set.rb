@@ -67,6 +67,7 @@ module CssToolkit
 				declaration.downcase_property
 				declaration.optimize_zeros
 				declaration.optimize_filters
+				declaration.optimize_punctuation
 			end
 			optimize_selectors
 		end
