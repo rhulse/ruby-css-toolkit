@@ -5,8 +5,8 @@ module CssToolkit
 
 		def initialize(text='')
 			@text = text
-			self
 			@printable = true
+			self
 		end
 
 		def <<(text)

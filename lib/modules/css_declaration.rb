@@ -8,6 +8,7 @@ module CssToolkit
 		def initialize(property, value)
 			@property = property
 			@value = value
+			self
 		end
 
 		def to_s(format=:one_line)
