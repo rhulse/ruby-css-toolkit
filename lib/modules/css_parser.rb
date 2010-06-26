@@ -11,15 +11,6 @@ module CssTidy
 		# these are used to poke values in for testing instance methods
 		attr_accessor :css, :index, :sheet
 
-		# parser current context
-		NONE				= 0
-		IN_SELECTOR = 1
-		IN_PROPERTY = 2
-		IN_VALUE		= 3
-		IN_STRING		= 4
-		IN_COMMENT	= 5
-		IN_AT_BLOCK	= 6
-
 		# setup the class vars used by Tidy
 		def initialize
 
@@ -49,6 +40,8 @@ module CssTidy
 			# vars used in processing of sheets
 			current_at_block = ''
 			invalid_at = false
+			invalid_at_name = ''
+
 			current_selector = ''
 			current_property = ''
 			current_ruleset = CssToolkit::RuleSet.new
@@ -68,23 +61,24 @@ module CssTidy
 				if is_newline?
 					@line_number += 1
 				end
-
 				case @context.last
 				when IN_AT_BLOCK
-					if is_token
-						if is_comment
+					if is_token?
+						if is_comment?
 							@context << IN_COMMENT
 							@index += 1 # move past '*'
-						elsif is_char '{'
+						elsif is_current_char? '{'
 							@context << IN_SELECTOR
-						elsif is_char ','
+						elsif is_current_char? ','
 							current_at_block = current_at_block.strip + ','
-						elsif is_char '\\'
+						elsif is_current_char? '\\'
 							current_at_block << convert_unicode
+						elsif is_current_char?('(') || is_current_char?(')') || is_current_char?(':')
+							# catch media queries
+	          	current_at_block << current_char
 						end # of is_comment
 					else # not token
-	          lastpos = current_at_block.length - 1
-						if( (is_char_ctype?(:space, current_at_block[last_position,1]) || is_char_token?(current_at_block[last_position,1]) && current_at_block[last_position,1] == ',') && is_ctype?(:space) )
+						if(! ( (is_char_ctype?(:space, current_at_block[-1,1]) || is_char_token?(current_at_block[-1,1]) && current_at_block[-1,1] == ',') && is_ctype?(:space) ))
 	          	current_at_block << current_char
 	          end
 					end
@@ -94,34 +88,38 @@ module CssTidy
 						if is_comment? && current_selector.strip.empty?
 							@context << IN_COMMENT
 							@index += 1
-	       		elsif is_current_char?('@') && current_selector.empty?
-	            # # Check for at-rule
-	            # $this->invalid_at = true;
-	            # foreach($at_rules as $name => $type)
-	            # {
-	            #     if(!strcasecmp(substr($string,$i+1,strlen($name)),$name))
-	            #     {
-	            #         ($type == 'at') ? $this->at = '@'.$name : $this->selector = '@'.$name;
-	            #         $this->status = $type;
-	            #         $i += strlen($name);
-	            #         $this->invalid_at = false;
-	            #     }
-	            # }
-	            #
-	            # if($this->invalid_at)
-	            # {
-	            #     $this->selector = '@';
-	            #     $invalid_at_name = '';
-	            #     for($j = $i+1; $j < $size; ++$j)
-	            #     {
-	            #         if(!ctype_alpha($string{$j}))
-	            #         {
-	            #             break;
-	            #         }
-	            #         $invalid_at_name .= $string{$j};
-	            #     }
-	            #     $this->log('Invalid @-rule: '.$invalid_at_name.' (removed)','Warning');
-	            # }
+	       		elsif is_current_char?('@') && current_selector.strip.empty?
+	            # Check for at-rule
+	            invalid_at = true
+							AT_RULES.each do |name, type|
+								size_of_property = name.length
+								# look ahead for the name
+								property_to_find = (@css[@index+1,size_of_property]).strip.downcase
+								if name == property_to_find
+									if type == IN_AT_BLOCK
+										current_at_block = '@' + name
+									else
+										current_selector = '@' + name
+									end
+									@context << type
+									@index += size_of_property
+									invalid_at = false
+								end
+	            end
+
+							if invalid_at
+	              current_selector = '@'
+	              invalid_at_name = ''
+	              # for($j = $i+1; $j < $size; ++$j)
+	              # {
+	              #     if(!ctype_alpha($string{$j}))
+	              #     {
+	              #         break;
+	              #     }
+	              #     $invalid_at_name .= $string{$j};
+	              # }
+	              # $this->log('Invalid @-rule: '.$invalid_at_name.' (removed)','Warning');
+	            end
 	          elsif is_current_char?('"') || is_current_char?("'")
 							@context << IN_STRING
 							current_string = current_char
@@ -149,7 +147,7 @@ module CssTidy
 						end
           else # not is_token
 						last_position = current_selector.length - 1
-						if( lastpos == -1 || ! ( (is_char_ctype?(:space, current_selector[last_position,1]) || is_char_token?(current_selector[last_position,1]) && current_selector[last_position,1] == ',') && is_ctype?(:space) ))
+						if( last_position == -1 || ! ( (is_char_ctype?(:space, current_selector[last_position,1]) || is_char_token?(current_selector[last_position,1]) && current_selector[last_position,1] == ',') && is_ctype?(:space) ))
 	          	current_selector << current_char
 	          end
           end
@@ -196,25 +194,24 @@ module CssTidy
 	          elsif is_current_char?('\\')
 							sub_value << convert_unicode
 	          elsif is_current_char?(';') || property_next
-							if current_selector[0,1] == '@'
-	            # if($this->selector{0} == '@' && isset($at_rules[substr($this->selector,1)]) && $at_rules[substr($this->selector,1)] == 'iv')
-	            # {
-	            #     $this->sub_value_arr[] = trim($this->sub_value);
-	            #
-	            #     $this->status = 'is';
-	            #
-	            #     switch($this->selector)
-	            #     {
-	            #         case '@charset': $this->charset = $this->sub_value_arr[0]; break;
-	            #         case '@namespace': $this->namespace = implode(' ',$this->sub_value_arr); break;
-	            #         case '@import': $this->import[] = implode(' ',$this->sub_value_arr); break;
-	            #     }
-	            #
-	            #     $this->sub_value_arr = array();
-	            #     $this->sub_value = '';
-	            #     $this->selector = '';
-	            #     $this->sel_separate = array();
-	            # }
+							if current_selector[0,1] == '@' && AT_RULES.has_key?(current_selector[1..-1]) && AT_RULES[current_selector[1..-1]] == IN_VALUE
+								sub_value_array << sub_value.strip
+
+								@context << IN_SELECTOR
+								case current_selector
+	                  when '@charset'
+											unless (@stylesheet.charset = sub_value_array[0])
+												puts "extra charset"
+											end
+	                  when '@namespace'
+											#$this->namespace = implode(' ',$this->sub_value_arr);
+	                  when '@import'
+											#$this->import[] = implode(' ',$this->sub_value_arr);
+								end
+
+	              sub_value_array = []
+	              sub_value = ''
+	              current_selector = ''
 	            else
 	            	@context << IN_PROPERTY
             	end
@@ -227,7 +224,7 @@ module CssTidy
 		          	current_at_block = '41';
 	            end
 
-	            if ! sub_value.empty?
+	            if ! sub_value.strip.empty?
 	              sub_value_array << sub_value.strip
 	              sub_value = ''
 	            end
@@ -257,7 +254,7 @@ module CssTidy
 	          sub_value << current_char
 
 	          if is_ctype?(:space)
-							if ! sub_value.empty?
+							if ! sub_value.strip.empty?
 	              sub_value_array << sub_value.strip
 	              sub_value = ''
 	            end
@@ -467,6 +464,10 @@ module CssTidy
 				puts('Removed unnecessary backslash','Information');
 			end
 			return ''
+		end
+
+		def is_at_rule?(text)
+      #if($this->selector{0} == '@' && isset($at_rules[substr($this->selector,1)]) && $at_rules[substr($this->selector,1)] == 'iv')
 		end
 
 		private

@@ -8,6 +8,7 @@ module CssToolkit
 			# * media (which can contain media or rulesets)
 			# * rulesets
 			@nodes = []
+			@charset = ''
 		end
 
 		def <<(ruleset)
@@ -16,10 +17,27 @@ module CssToolkit
 
 		def to_s(format=:one_line)
 			css = ''
+			if ! @charset.empty?
+				css << "@charset #{@charset};" + ((format == :multi_line) ? "\n" : '')
+			end
+
 			@nodes.each do |node|
 				css << node.to_s(format) + ((format == :multi_line) ? "\n" : '')
 			end
 			css
+		end
+
+		def charset=(charset)
+			if @charset.empty?
+				@charset = charset.strip
+				return true
+			else
+				return false
+			end
+		end
+
+		def charset
+			@charset
 		end
 
 		def optimize

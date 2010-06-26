@@ -1,6 +1,15 @@
 module CssTidy
 
 	class Parser
+		# parser current context
+		NONE				= 0
+		IN_SELECTOR = 1
+		IN_PROPERTY = 2
+		IN_VALUE		= 3
+		IN_STRING		= 4
+		IN_COMMENT	= 5
+		IN_AT_BLOCK	= 6
+
 		# All whitespace allowed in CSS
 		WHITESPACE = [' ',"\n","\t","\r","\x0B"]
 
@@ -11,12 +20,12 @@ module CssTidy
 
 		# Available at-rules
 		AT_RULES = {
-			'page' => 'IN_SELECTOR',
-			'font-face' => 'IN_SELECTOR',
-			'charset' => 'IN_VALUE',
-			'import' => 'IN_VALUE',
-			'namespace' => 'IN_VALUE',
-			'media' => 'IN_AT_BLOCK'
+			'page' => IN_SELECTOR,
+			'font-face' => IN_SELECTOR,
+			'charset' => IN_VALUE,
+			'import' => IN_VALUE,
+			'namespace' => IN_VALUE,
+			'media' => IN_AT_BLOCK
 		}
 
 		# Properties that need a value with unit
