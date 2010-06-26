@@ -269,7 +269,7 @@ module CssTidy
 					end
 					temp_add = current_char	# // ...and no not-escaped backslash at the previous position
 
-					if is_newline? && !is_current_char?('\\') && ! is_escaped?(-1)
+					if is_newline? && !is_current_char?('\\',-1) && ! is_escaped?(-1)
 						temp_add = "\\A "
            	#$this->log('Fixed incorrect newline in string','Warning');
 					end
