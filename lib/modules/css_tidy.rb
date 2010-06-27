@@ -21,6 +21,7 @@ module CssTidy
 				:optimize_colors						=> true,
 				:optimize_decimals					=> true,
 				:optimize_zeros							=> true,
+				:optimize_margin_padding		=> true,
 				:optimize_filters						=> true,
 				:format											=> 0,
 			}.merge(opts)

@@ -142,4 +142,46 @@ class CssDeclarationTest < Test::Unit::TestCase
 		assert_equal(expected, declaration.to_s)
 	end
 
+	def test_optimize_margin_shorthand_4_to_3
+		declaration = CssToolkit::Declaration.new('margin', '0 0 10px 0')
+		expected = "margin:0 0 10px"
+		declaration.optimize_mp_shorthands
+		assert_equal(expected, declaration.to_s)
+	end
+
+	def test_optimize_margin_shorthand_4_to_2
+		declaration = CssToolkit::Declaration.new('margin', '5px 2px 5px 2px')
+		expected = "margin:5px 2px"
+		declaration.optimize_mp_shorthands
+		assert_equal(expected, declaration.to_s)
+	end
+
+	def test_optimize_margin_shorthand_4_to_1
+		declaration = CssToolkit::Declaration.new('margin', '5px 5px 5px 5px')
+		expected = "margin:5px"
+		declaration.optimize_mp_shorthands
+		assert_equal(expected, declaration.to_s)
+	end
+
+	def test_optimize_margin_shorthand_3_to_2
+		declaration = CssToolkit::Declaration.new('margin', '5px 2px 5px')
+		expected = "margin:5px 2px"
+		declaration.optimize_mp_shorthands
+		assert_equal(expected, declaration.to_s)
+	end
+
+	def test_optimize_margin_shorthand_3_to_1
+		declaration = CssToolkit::Declaration.new('margin', '5px 5px 5px')
+		expected = "margin:5px"
+		declaration.optimize_mp_shorthands
+		assert_equal(expected, declaration.to_s)
+	end
+
+	def test_optimize_margin_shorthand_2_to_1
+		declaration = CssToolkit::Declaration.new('margin', '5px 5px')
+		expected = "margin:5px"
+		declaration.optimize_mp_shorthands
+		assert_equal(expected, declaration.to_s)
+	end
+
 end
