@@ -66,7 +66,8 @@ module CssTidy
 				case @context.last
 				when IN_AT_BLOCK
 					if is_token?
-						if is_comment?
+						# current_at_block empty? allows comment inside of selectors to pass
+						if is_comment? && current_at_block.strip.empty?
 							@context << IN_COMMENT
 							@index += 1 # move past '*'
 						elsif is_current_char? '{'
@@ -75,7 +76,7 @@ module CssTidy
 							current_at_block = current_at_block.strip + ','
 						elsif is_current_char? '\\'
 							current_at_block << convert_unicode
-						elsif is_current_char?('(') || is_current_char?(')') || is_current_char?(':')
+						elsif is_current_char? ['(',')',':','/','*','!']
 							# catch media queries
 	          	current_at_block << current_char
 						end # of is_comment
@@ -87,6 +88,7 @@ module CssTidy
 
 				when IN_SELECTOR
           if is_token?
+						# current_selector empty? allows comment inside of selectors to pass
 						if is_comment? && current_selector.strip.empty?
 							@context << IN_COMMENT
 							@index += 1

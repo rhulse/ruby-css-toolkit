@@ -30,6 +30,10 @@ module CssToolkit
 		end
 
 		def optimize
+			# clean up self first
+      @at_media.gsub!(/\*\/\s+\/\*/, '*//*')
+
+			# then do kids
 			keep_next_comment = false
 
 			@nodes.each_with_index do |node, idx|
