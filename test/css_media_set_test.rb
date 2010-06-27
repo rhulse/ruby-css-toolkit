@@ -15,7 +15,6 @@ class CssMediaSetTest < Test::Unit::TestCase
 	def test_add_media_set_to_stylesheet
 		sheet = CssToolkit::StyleSheet.new
 		sheet << CssToolkit::MediaSet.new('@media screen')
-		sheet.in_media = true
 		sheet << CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
 		sheet << CssToolkit::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
 		sheet.in_media = false
@@ -27,13 +26,11 @@ class CssMediaSetTest < Test::Unit::TestCase
 	def test_add_two_media_sets_to_stylesheet
 		sheet = CssToolkit::StyleSheet.new
 		sheet << CssToolkit::MediaSet.new('@media screen')
-		sheet.in_media = true
 		sheet << CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
 		sheet << CssToolkit::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
 		sheet.in_media = false
 
 		sheet << CssToolkit::MediaSet.new('@media print')
-		sheet.in_media = true
 		sheet << CssToolkit::RuleSet.new({:selector => 'p', :declarations => 'font-size : 12pt ; margin: 3pt;'})
 		sheet.in_media = false
 
@@ -44,7 +41,6 @@ class CssMediaSetTest < Test::Unit::TestCase
 	def test_add_media_set_and_some_rules_to_stylesheet
 		sheet = CssToolkit::StyleSheet.new
 		sheet << CssToolkit::MediaSet.new('@media screen')
-		sheet.in_media = true
 		sheet << CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
 		sheet << CssToolkit::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
 		sheet.in_media = false

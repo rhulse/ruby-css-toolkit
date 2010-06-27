@@ -1,6 +1,7 @@
 module CssToolkit
 
 	class StyleSheet
+		attr_accessor :in_media
 
 		def initialize
 			# nodes can contain any kind of object:
@@ -9,10 +10,23 @@ module CssToolkit
 			# * rulesets
 			@nodes = []
 			@charset = ''
+			@in_media = false
 		end
 
-		def <<(ruleset)
-			@nodes << ruleset
+		def << (object)
+			# if we are in media block, then add object to the last node
+			if @in_media
+				if object.class == CssToolkit::MediaSet
+					@nodes << object
+				else
+					@nodes.last << object
+				end
+			else
+				@nodes << object
+				if object.class == CssToolkit::MediaSet
+					@in_media = true
+				end
+			end
 		end
 
 		def to_s(format=:one_line)
