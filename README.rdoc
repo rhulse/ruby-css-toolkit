@@ -1,13 +1,28 @@
 = Ruby CSS Toolkit 
 
-This Gem is for optimizing and compressing CSS files.
+This project is for optimizing and compressing CSS files.
+
+NB: Currently the tidy section is a work-in-progress
 
 == History
 
-1.0.0 20 June 2010 Release of full implementation of yui compressor
+*1.1.0* 27 June 2010 - First release of Ruby Port of CSS Tidy.
+This does not yet have all the optimsisations of the original, and will 
+produce larger files than YUI if there are comments inside selectors
+or at blocks (this will be fixed later)
 
-0.9.0 20 June 2010 Initial Release
+*1.0.0* 20 June 2010 Release of full implementation of yui compressor
+
+*0.9.0* 20 June 2010 Initial Release
 (Still needs line break option added)
+
+== TODO
+
+* Make into a gem
+
+=== CSS Tidy TODO
+* add back in missing optimisations from CSS Tidy (and some additional ones)
+
 
 == Available Tools
 
@@ -23,7 +38,7 @@ behaves as expected.
 This is port/rewrite of CSS Tidy.
 
 Only the PHP version of the current CSS Tidy project is being
-maintained, and so probably won't be used by rubyists, or those
+maintained, and so probably won't be used by rubyists or those
 who need a simple command line interface.
 
 This port/rewrite fills this gap, and also provides a platform
@@ -40,7 +55,9 @@ The use of an object to hold the CSS in a tree structure allows extra
 optimisations to be done beyond what is possible with a pure regex based
 compressor.
 
-This CSS Tidy has the following features:
+Theis CSS Tidy has the following features:
+
+*(NB: Some of these are still planned features)*
 
 * Compress colors
 
@@ -147,28 +164,26 @@ The point of this seems to be to stop hacks being removed from the file.
 ??
 
 
-== TODO
-
-* Make into a gem
-* complete port/rewrite of CSS Tidy
-
-=== CSS Tidy TODO
-* port parser to Ruby (including any relevant bug fixes since v1.3)
-* write new CSS optimizer built on stylesheet container class
-
 == Use
 
 Note that Tidy expects your CSS to be valid. This means:
 
 * strings make sense (they open and close correctly, and have escapes internally as needed)
-* media blocks and declarations open and close with braces
+* media blocks and declarations open and close with braces and have at least on valid CSS ruleset
 
 It is a good idea to use the W3C validator first.
 
 === Command Line
 
-TODO
+yui-css-compressor params
 
+css-tidy params
+
+where params are:
+
+--input, -i <file>          The CSS-file to be compressed, if not set stdin is used
+
+--output, -o <file>         The output file, if not set, stdout is used
 
 
 == Note on Patches/Pull Requests
