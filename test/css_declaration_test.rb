@@ -184,4 +184,18 @@ class CssDeclarationTest < Test::Unit::TestCase
 		assert_equal(expected, declaration.to_s)
 	end
 
+	def test_optimize_urls_double_quotes
+		declaration = CssToolkit::Declaration.new('background', 'url("www.test.com/path/to/image.jpg")')
+		expected = "background:url(www.test.com/path/to/image.jpg)"
+		declaration.optimize_urls
+		assert_equal(expected, declaration.to_s)
+	end
+
+	def test_optimize_urls_single_quotes
+		declaration = CssToolkit::Declaration.new('background', "url('www.test.com/path/to/image.jpg')")
+		expected = "background:url(www.test.com/path/to/image.jpg)"
+		declaration.optimize_urls
+		assert_equal(expected, declaration.to_s)
+	end
+
 end

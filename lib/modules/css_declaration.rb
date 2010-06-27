@@ -92,6 +92,11 @@ module CssToolkit
 			end
 		end
 
+		def optimize_urls
+			# remove the quotes - they are optional
+			@value.gsub!(/url\(('|")(.+?)('|")\)/, 'url(\2)')
+		end
+
 		def downcase_property
 			@property.downcase!
 		end

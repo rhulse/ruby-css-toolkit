@@ -23,6 +23,7 @@ module CssTidy
 				:optimize_zeros							=> true,
 				:optimize_margin_padding		=> true,
 				:optimize_filters						=> true,
+				:optimize_urls							=> true,
 				:format											=> 0,
 			}.merge(opts)
 

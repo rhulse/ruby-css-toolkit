@@ -68,6 +68,7 @@ module CssToolkit
 				declaration.optimize_zeros				 	if options[:optimize_zeros]
 				declaration.optimize_mp_shorthands 	if options[:optimize_margin_padding]
 				declaration.optimize_filters			 	if options[:optimize_filters]
+				declaration.optimize_urls						if options[:optimize_urls]
 				declaration.optimize_punctuation  # no option
 			end
 			optimize_selectors(options)
