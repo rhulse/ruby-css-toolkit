@@ -61,6 +61,6 @@ else
   end
 end
 
-# $stderr.puts "Input size : #{yui.input_size}"
-# $stderr.puts "Output size: #{yui.output_size}"
+$stderr.puts "Input size : #{tidy.input_size}"
+$stderr.puts "Output size: #{tidy.output_size}"
 
