@@ -2,6 +2,7 @@ module CssToolkit
 
 	class StyleSheet
 		attr_accessor :in_media
+		alias :end_at_block :in_media  
 
 		def initialize
 			# nodes can contain any kind of object:

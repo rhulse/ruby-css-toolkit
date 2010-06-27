@@ -2,6 +2,7 @@ $:.unshift File.dirname(__FILE__)
 require 'css_properties'
 require 'css_stylesheet'
 require 'css_rule_set'
+require 'css_media_set'
 require 'css_declaration'
 require 'css_comment'
 require 'css_import'
@@ -111,6 +112,7 @@ module CssTidy
 							if invalid_at
 	              current_selector = '@'
 	              invalid_at_name = ''
+								puts "invalid At rule"
 	              # for($j = $i+1; $j < $size; ++$j)
 	              # {
 	              #     if(!ctype_alpha($string{$j}))
@@ -132,6 +134,7 @@ module CssTidy
 							@context << IN_PROPERTY
 	          elsif is_current_char?('}')
 							current_at_block = ''
+							@stylesheet.end_at_block
 							current_selector = ''
 							# when there is a new selector we save the last set
 							@stylesheet << current_ruleset unless current_ruleset.empty?
@@ -221,8 +224,8 @@ module CssTidy
 	          end
 
 	          if (is_current_char?('}') || is_current_char?(';') || property_next) && ! current_selector.empty?
-	            if current_at_block.empty?
-		          	current_at_block = '41';
+	            unless current_at_block.empty?
+								@stylesheet << CssToolkit::MediaSet.new(current_at_block.strip)
 	            end
 
 	            if ! sub_value.strip.empty?
