@@ -61,23 +61,32 @@ module CssToolkit
 
 		# Rule Sets know how to optimise themselves
 
-		def optimize
+		def optimize(options)
 			@declarations.each do |declaration|
-				declaration.optimize_colors
-				declaration.downcase_property
-				declaration.optimize_zeros
-				declaration.optimize_filters
-				declaration.optimize_punctuation
+				declaration.optimize_colors 			if options[:optimize_colors]
+				declaration.downcase_property 		if options[:downcase_properties]
+				declaration.optimize_zeros				if options[:optimize_zeros]
+				declaration.optimize_filters			if options[:optimize_filters]
+				declaration.optimize_punctuation  # no option
 			end
-			optimize_selectors
+			optimize_selectors(options)
 		end
 
-		def optimize_selectors
+		def optimize_selectors(options)
 			@selectors.map do |selector|
 				# squish up IE comment in selector hack
 				selector.gsub!(/\s*>\s*\/\*\s*\*\/\s*/, '>/**/' )
 	      # special case for IE
 	      selector.gsub!(/:first-(line|letter)(,|\Z)/, ':first-\1 \2')
+				# remove any kind of comment string
+				if options[:keep_ie7_selector_comments]
+					selector.gsub!(/\/\*\*\//, '_IE7_') # protect from next options
+				end
+				if ! options[:keep_selector_comments]
+					selector.gsub!(/(\s+)?\/\*(.|[\r\n])*?\*\/(\s+)?/, '')
+				end
+				selector.gsub!(/_IE7_/, '/**/') # restore hack comments
+
 			end
 		end
 

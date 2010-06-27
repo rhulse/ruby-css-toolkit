@@ -12,7 +12,7 @@ module CssToolkit
 			"@import #{@import};"
 		end
 
-		def optimize
+		def optimize(options)
 		end
 	end
 end

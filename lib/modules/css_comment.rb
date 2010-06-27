@@ -33,7 +33,7 @@ module CssToolkit
 			text[-1,1] == '\\'
 		end
 
-		def optimize
+		def optimize(options)
 		end
 	end
 end

@@ -29,7 +29,7 @@ module CssToolkit
 			css
 		end
 
-		def optimize
+		def optimize(options)
 			# clean up self first
       @at_media.gsub!(/\*\/\s+\/\*/, '*//*')
 
@@ -38,9 +38,9 @@ module CssToolkit
 
 			@nodes.each_with_index do |node, idx|
 				if node.class == CssToolkit::Comment
-					if node.is_special?
+					if node.is_special? && options[:keep_special_comments]
 						next # do nothing
-					elsif node.is_ie5_hack?
+					elsif node.is_ie5_hack? && options[:keep_ie5_comment_hack]
 						node.text = '\\'  # replace it
 						keep_next_comment = true
 					elsif keep_next_comment
@@ -50,7 +50,7 @@ module CssToolkit
 						node.printable = false # don't print this one
 					end
 				end
-				node.optimize
+				node.optimize(options)
 			end
 		end
 
