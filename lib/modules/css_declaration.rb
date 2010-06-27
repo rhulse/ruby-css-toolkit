@@ -67,31 +67,25 @@ module CssToolkit
 				when 4
 						# 4 to 1   margin:5px 5px 5px 5px => margin:5px
 					if values[0] == values[1] && values[0] == values[2] && values[0] == values[3]
-						puts "shortened #{@value}"
 						@value = "#{values[0]}"
 						# 4 to 3     margin:0 0 10px 0 => margin:0 0 10px
 					elsif values[0] == values[2] && values[1] == values[3]
-						puts "shortened #{@value}"
 						@value = "#{values[0]} #{values[1]}"
 					#  4 to 2    margin:5px 0 5px 0 => margin:5px 0
 					elsif values[1] == values[3]
-						puts "shortened #{@value}"
 						@value = "#{values[0]} #{values[1]} #{values[2]}"
 					end
 				when 3
 						# 3 to 1   margin:5px 5px 5px => margin:5px
 					if values[0] == values[1] && values[0] == values[2]
-						puts "shortened #{@value}"
 						@value = "#{values[0]}"
 						# 3 to 2     margin:0 10px 0 => margin:0 10px
 					elsif values[0] == values[2]
-						puts "shortened #{@value}"
 						@value = "#{values[0]} #{values[1]}"
 					end
 				when 2
 						# 2 to 1   margin:5px 5px => margin:5px
 					if values[0] == values[1]
-						puts "shortened #{@value}"
 						@value = "#{values[0]}"
 					end
 				end
