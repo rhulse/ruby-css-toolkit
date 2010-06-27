@@ -22,7 +22,7 @@ class CssTidyTest < Test::Unit::TestCase
 			margin:10px ;
 		}
 		CSS
-		expected_css = %q[body{background:#D6BFDC url('http://this.is-a.test/path/to/image.gif') repeat-x;padding:0;margin:0;color:#727272}p{margin:0;hack:"\\"}";margin:10px}]
+		expected_css = %q[body{background:#D6BFDC url(http://this.is-a.test/path/to/image.gif) repeat-x;padding:0;margin:0;color:#727272}p{margin:0;hack:"\\"}";margin:10px}]
 		resultant_css = @tidy.tidy(css)
 		assert_equal(expected_css, resultant_css)
 	end
