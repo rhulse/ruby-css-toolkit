@@ -59,6 +59,13 @@ module CssToolkit
       @value.gsub!(/([!+\(\[,])\s+/, '\1')
 		end
 
+		def optimize_font_weight
+			if @property =~ /font/
+				@value.gsub!(/bold/, '700')
+				@value.gsub!(/normal/, '400')
+			end
+		end
+
 		def optimize_mp_shorthands
 			if @property == 'margin' || @property == 'padding'
 				values = @value.split(/\s+/)

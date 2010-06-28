@@ -198,4 +198,18 @@ class CssDeclarationTest < Test::Unit::TestCase
 		assert_equal(expected, declaration.to_s)
 	end
 
+	def test_optimize_font_weight_bold
+		declaration = CssToolkit::Declaration.new('font-weight', 'bold')
+		expected = "font-weight:700"
+		declaration.optimize_font_weight
+		assert_equal(expected, declaration.to_s)
+	end
+
+	def test_optimize_font_weight_normal
+		declaration = CssToolkit::Declaration.new('font', '12px normal')
+		expected = "font:12px 400"
+		declaration.optimize_font_weight
+		assert_equal(expected, declaration.to_s)
+	end
+
 end
