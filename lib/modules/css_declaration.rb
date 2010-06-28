@@ -118,6 +118,10 @@ module CssToolkit
 		def downcase_property
 			@property.downcase!
 		end
+
+		def == (other)
+			@property == other.property && @value == other.value
+		end
 	end
 end
 
