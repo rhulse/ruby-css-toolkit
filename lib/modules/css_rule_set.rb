@@ -64,6 +64,7 @@ module CssToolkit
 		def optimize(options)
 			@declarations.each do |declaration|
 				declaration.optimize_colors 			 	if options[:optimize_colors]
+				declaration.fix_invalid_colors 			if options[:fix_invalid_colors]
 				declaration.downcase_property 		 	if options[:downcase_properties]
 				declaration.optimize_zeros				 	if options[:optimize_zeros]
 				declaration.optimize_mp_shorthands 	if options[:optimize_margin_padding]

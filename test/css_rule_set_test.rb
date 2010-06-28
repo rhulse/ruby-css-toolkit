@@ -106,13 +106,13 @@ class CssRuleSetTest < Test::Unit::TestCase
 			  me: rgb(123, 123, 123);
 			  impressed: #ffeedd;
 			  filter: chroma(color="#FFFFFF");
-			  background: none repeat scroll 0 0 rgb(255, 0,0);
+			  background: none repeat scroll 0 0 rgb(255, 255,0);
 			  alpha: rgba(1, 2, 3, 4);
 		CSS
 		rs = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css})
 
 		rs.optimize_colors
-		expected = '.color{me:#7b7b7b;impressed:#fed;filter:chroma(color="#FFFFFF");background:none repeat scroll 0 0 #f00;alpha:rgba(1, 2, 3, 4)}'
+		expected = '.color{me:#7b7b7b;impressed:#fed;filter:chroma(color="#FFFFFF");background:none repeat scroll 0 0 #ff0;alpha:rgba(1, 2, 3, 4)}'
 
 		assert_equal(expected, rs.to_s)
 	end

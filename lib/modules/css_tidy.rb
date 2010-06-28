@@ -19,6 +19,7 @@ module CssTidy
 				:keep_selector_comments			=> false, # other comments in selectors
 				:keep_comments							=> false, # any other comments
 				:optimize_colors						=> true,
+				:fix_invalid_colors					=> false,
 				:optimize_decimals					=> true,
 				:optimize_zeros							=> true,
 				:optimize_font_weight				=> true,

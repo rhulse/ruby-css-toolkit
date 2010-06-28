@@ -32,6 +32,17 @@ module CssToolkit
       # which makes the filter break in IE.
 			if @value !~ /["'=]/
 				@value.gsub!(/#([0-9a-f])\1([0-9a-f])\2([0-9a-f])\3/i, '#\1\2\3')
+				CssTidy::SHORTEN_COLORS.each do |from,to|
+					@value.gsub!(/#{from}/i, to)
+				end
+			end
+		end
+
+		def fix_invalid_colors
+			if @value !~ /["'=]/
+				CssTidy::INVALID_COLORS.each do |from,to|
+					@value.gsub!(/#{from}/i, to)
+				end
 			end
 		end
 

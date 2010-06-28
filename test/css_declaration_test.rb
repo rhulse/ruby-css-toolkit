@@ -66,8 +66,8 @@ class CssDeclarationTest < Test::Unit::TestCase
 	end
 
 	def test_rgb_in_background
-		declaration = CssToolkit::Declaration.new('background', 'none repeat scroll 0 0 rgb(255, 0,0)')
-		expected = 'background:none repeat scroll 0 0 #f00'
+		declaration = CssToolkit::Declaration.new('background', 'none repeat scroll 0 0 rgb(255, 255,0)')
+		expected = 'background:none repeat scroll 0 0 #ff0'
 		declaration.optimize_colors
 		assert_equal(expected, declaration.to_s)
 	end
@@ -76,6 +76,27 @@ class CssDeclarationTest < Test::Unit::TestCase
 		declaration = CssToolkit::Declaration.new('alpha', 'rgba(1, 2, 3, 4)')
 		expected = 'alpha:rgba(1, 2, 3, 4)'
 		declaration.optimize_colors
+		assert_equal(expected, declaration.to_s)
+	end
+
+	def test_color_replacement_short
+		declaration = CssToolkit::Declaration.new('color', '#f00')
+		expected = "color:red"
+		declaration.optimize_colors
+		assert_equal(expected, declaration.to_s)
+	end
+
+	def test_color_replacement_long
+		declaration = CssToolkit::Declaration.new('color', '#ff0000')
+		expected = "color:red"
+		declaration.optimize_colors
+		assert_equal(expected, declaration.to_s)
+	end
+
+	def test_color_fix
+		declaration = CssToolkit::Declaration.new('color', 'brown')
+		expected = "color:#A52A2A"
+		declaration.fix_invalid_colors
 		assert_equal(expected, declaration.to_s)
 	end
 
