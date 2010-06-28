@@ -122,4 +122,133 @@ class CssRuleSetTest < Test::Unit::TestCase
 		assert rs.empty?
 	end
 
+	def test_equality
+		css = <<-CSS
+			background-color: #123abc;
+			margin : 20px ;
+			padding: 10px 5px 3px 8px ;
+		 	width: 100px;
+			font-weight:700;
+			border 1px solid #000
+		CSS
+		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css})
+		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css})
+
+		assert rs1 == rs2
+	end
+
+	def test_inequality
+		css1 = <<-CSS
+			background-color: #123abc;
+			margin : 20px ;
+			padding: 10px 5px 3px 8px ;
+		 	width: 100px;
+			font-weight:700;
+			border: 1px solid #000;
+		CSS
+		css2 = <<-CSS
+			background-color: #123abc;
+			margin : 20px ;
+			padding: 10px 5px 3px 8px ;
+		 	width: 100px;
+			font-weight:700;
+			border: 1px solid #001;
+		CSS
+		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css1})
+		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css2})
+
+		assert rs1 != rs2
+	end
+
+	def test_inequality_shorter
+		css1 = <<-CSS
+			background-color: #123abc;
+			margin : 20px ;
+			padding: 10px 5px 3px 8px ;
+		 	width: 100px;
+			font-weight:700;
+			border: 1px solid #000;
+		CSS
+		css2 = <<-CSS
+			background-color: #123abc;
+			margin : 20px ;
+			padding: 10px 5px 3px 8px ;
+		 	width: 100px;
+			font-weight:700;
+		CSS
+		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css1})
+		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css2})
+
+		assert rs1 != rs2
+	end
+
+	def test_inequality_longer
+		css1 = <<-CSS
+			background-color: #123abc;
+			margin : 20px ;
+			padding: 10px 5px 3px 8px ;
+		 	width: 100px;
+			font-weight:700;
+		CSS
+		css2 = <<-CSS
+			background-color: #123abc;
+			margin : 20px ;
+			padding: 10px 5px 3px 8px ;
+		 	width: 100px;
+			font-weight:700;
+			border: 1px solid #000;
+		CSS
+		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css1})
+		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css2})
+
+		assert rs1 != rs2
+	end
+
+	def test_equality_different_order
+		css1 = <<-CSS
+			border: 1px solid #000;
+			margin : 20px ;
+			background-color: #123abc;
+		 	width: 100px;
+			font-weight:700;
+			padding: 10px 5px 3px 8px ;
+		CSS
+		css2 = <<-CSS
+			background-color: #123abc;
+			margin : 20px ;
+			padding: 10px 5px 3px 8px ;
+		 	width: 100px;
+			font-weight:700;
+			border: 1px solid #000;
+		CSS
+		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css1})
+		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css2})
+
+		assert rs1 == rs2
+	end
+
+	def test_inequality_different_order
+		css1 = <<-CSS
+			border: 1px solid #001;
+			margin : 20px ;
+			background-color: #123abc;
+		 	width: 100px;
+			font-weight:700;
+			padding: 10px 5px 3px 8px ;
+		CSS
+		css2 = <<-CSS
+			background-color: #123abc;
+			margin : 20px ;
+			padding: 10px 5px 3px 8px ;
+		 	width: 100px;
+			font-weight:700;
+			border: 1px solid #000;
+		CSS
+		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css1})
+		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css2})
+
+		assert rs1 != rs2
+	end
+
+
 end

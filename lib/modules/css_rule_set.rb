@@ -3,6 +3,8 @@ module CssToolkit
 	# The RuleSet class takes ONE selector and a set of declarations
 	# Declarations are stored in order to allow for hacks such as the box model hacks
 	class RuleSet
+		attr_accessor :declarations
+
 		def initialize(opts={})
       @selectors = []
 
@@ -109,8 +111,29 @@ module CssToolkit
 		def empty?
 			@declarations.empty?
 		end
+		
+		def == (other_set)
+			# must at least have the same number of declarations
+			if declaration_count == other_set.declaration_count
+				number_of_identical_declations = 0
+				other_set.declarations.each do |other_dec|
+					@declarations.each do |this_dec|
+						if this_dec == other_dec
+							number_of_identical_declations += 1
+						end
+					end
+				
+				end
+				true if declaration_count == number_of_identical_declations
+			end
+		end
+
+		def declaration_count
+			@declarations.length
+		end
 
 		private
+
 
 		def each_declaration
 			@values.each_index do |index|
