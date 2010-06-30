@@ -127,6 +127,11 @@ module CssToolkit
 			end
 		end
 
+		def + (other_set)
+			@selectors += other_set.selectors
+			self
+		end
+
 		def declaration_count
 			@declarations.length
 		end
