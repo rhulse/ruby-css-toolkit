@@ -122,7 +122,6 @@ module CssToolkit
 							number_of_identical_declations += 1
 						end
 					end
-				
 				end
 				true if declaration_count == number_of_identical_declations
 			end
@@ -132,7 +131,7 @@ module CssToolkit
 			@declarations.length
 		end
 		
-		def inspect(indent)
+		def inspect(indent='')
 			puts indent + " + " + @selectors.join(',')
 			 @declarations.each do |decl|
 				puts indent * 2 + "| " + decl.to_s

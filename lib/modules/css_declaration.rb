@@ -122,6 +122,10 @@ module CssToolkit
 		def == (other)
 			@property == other.property && @value == other.value
 		end
+
+		def inspect(indent='')
+			puts indent + @property + ':' + @value
+		end
 	end
 end
 
