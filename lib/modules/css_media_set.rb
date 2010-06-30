@@ -21,6 +21,7 @@ module CssToolkit
 		end
 
 		def to_s(format=:one_line, indent='')
+			return nil if @nodes.empty? || @at_media.empty?
 			css = "#{@at_media}{" + ((format == :multi_line) ? "\n" : '')
 			@nodes.each do |node|
 				css << indent + node.to_s(format) + ((format == :multi_line) ? "\n" : '')
@@ -30,6 +31,7 @@ module CssToolkit
 		end
 
 		def optimize(options)
+			return nil if @nodes.empty? || @at_media.empty?
 			# clean up self first
       @at_media.gsub!(/\*\/\s+\/\*/, '*//*')
 
@@ -53,7 +55,12 @@ module CssToolkit
 				node.optimize(options)
 			end
 		end
-		
+
+		def clear
+			@nodes = []
+			@at_media = ''
+		end
+
 	end
 
 end

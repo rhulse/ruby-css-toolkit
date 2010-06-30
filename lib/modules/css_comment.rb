@@ -32,6 +32,11 @@ module CssToolkit
 		def is_ie5_hack?
 			text[-1,1] == '\\'
 		end
+
+		def clear
+			@text = ''
+			@printable = false
+		end
 	end
 end
 

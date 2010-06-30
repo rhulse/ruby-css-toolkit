@@ -14,6 +14,8 @@ module CssToolkit
 		def to_s(format=:one_line)
 			unless @property.empty? &&  @value.empty?
 				"#{@property}:#{@value}"
+			else
+				''
 			end
 		end
 
@@ -125,6 +127,11 @@ module CssToolkit
 
 		def inspect(indent='')
 			puts indent + @property + ':' + @value
+		end
+
+		def clear
+			@property = ''
+			@value = ''
 		end
 	end
 end

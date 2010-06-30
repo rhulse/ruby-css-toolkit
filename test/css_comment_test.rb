@@ -47,4 +47,17 @@ class CssCommentTest < Test::Unit::TestCase
 		assert_equal('', comment.to_s)
 	end
 
+	def test_clear
+		comment = CssToolkit::Comment.new
+
+		comment << ' A big comment '
+		expected = '/* A big comment */'
+		assert_equal(expected, comment.to_s)
+
+		comment.clear 
+		expected = ''
+		assert_equal(expected, comment.to_s)
+
+	end
+
 end

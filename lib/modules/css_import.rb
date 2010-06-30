@@ -9,7 +9,15 @@ module CssToolkit
 		end
 
 		def to_s(format=nil)
-			"@import #{@import};"
+			unless @import.empty?
+				"@import #{@import};"
+			else
+				''
+			end
+		end
+
+		def clear
+			@import = ''
 		end
 	end
 end

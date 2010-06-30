@@ -232,7 +232,7 @@ class CssDeclarationTest < Test::Unit::TestCase
 		declaration.optimize_font_weight
 		assert_equal(expected, declaration.to_s)
 	end
-	
+
 	def test_equality
 		dec_1 = CssToolkit::Declaration.new('margin', '0 0 10px 0')
 		dec_2 = CssToolkit::Declaration.new('margin', '0 0 10px 0')
@@ -243,6 +243,15 @@ class CssDeclarationTest < Test::Unit::TestCase
 		dec_1 = CssToolkit::Declaration.new('margin', '0 0 10px 0')
 		dec_2 = CssToolkit::Declaration.new('margin', '0 5px 10px 0')
 		assert dec_1 != dec_2
+	end
+
+	def test_clear
+		declaration = CssToolkit::Declaration.new('margin', '5px')
+		expected = 'margin:5px'
+		assert_equal(expected, declaration.to_s)
+
+		declaration.clear
+		assert_equal('', declaration.to_s)
 	end
 
 end

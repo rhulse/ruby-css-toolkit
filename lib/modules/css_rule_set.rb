@@ -10,8 +10,6 @@ module CssToolkit
 
 			# declarations are made up of:  property S* ':' S* value;
 			@declarations = []
-      @properties = []
-      @values = []
 			add_rule(opts)
 		end
 
@@ -47,6 +45,7 @@ module CssToolkit
 		end
 
 		def to_s(format=:one_line)
+			return '' if @selectors.empty? || @declarations.empty?
 
 			declarations = []
 			@declarations.each do |declaration|
@@ -135,12 +134,17 @@ module CssToolkit
 		def declaration_count
 			@declarations.length
 		end
-		
+
 		def inspect(indent='')
 			puts indent + " + " + @selectors.join(',')
 			 @declarations.each do |decl|
 				puts indent * 2 + "| " + decl.to_s
 			end
+		end
+
+		def clear
+      @selectors = []
+			@declarations = []
 		end
 
 		private
