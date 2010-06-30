@@ -63,4 +63,5 @@ end
 
 $stderr.puts "Input size : #{yui.input_size}"
 $stderr.puts "Output size: #{yui.output_size}"
-
+percentage = ( (yui.input_size - yui.output_size).to_f / yui.input_size) * 100
+$stderr.puts "Saving: " + sprintf("%0.2f%%", percentage)

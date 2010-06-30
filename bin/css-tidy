@@ -64,3 +64,5 @@ end
 $stderr.puts "Input size : #{tidy.input_size}"
 $stderr.puts "Output size: #{tidy.output_size}"
 
+percentage = ( (tidy.input_size - tidy.output_size).to_f / tidy.input_size) * 100
+$stderr.puts "Saving: " + sprintf("%0.2f%%", percentage)
