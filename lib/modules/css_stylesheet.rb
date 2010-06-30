@@ -74,6 +74,20 @@ module CssToolkit
 				end
 				node.optimize(options)
 			end
+
+		def inspect
+			indent = '  '
+			puts "Stylesheet"
+			@nodes.each_with_index do |node, idx|
+				case node.class.to_s
+				when 'CssToolkit::RuleSet'
+					puts " + RuleSet"
+				when 'CssToolkit::Comment'
+					puts " + Comment"
+				end
+				node.inspect(indent)
+#				puts node.class
+			end
 		end
 
 	end

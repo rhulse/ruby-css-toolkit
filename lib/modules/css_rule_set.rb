@@ -131,6 +131,13 @@ module CssToolkit
 		def declaration_count
 			@declarations.length
 		end
+		
+		def inspect(indent)
+			puts indent + " + " + @selectors.join(',')
+			 @declarations.each do |decl|
+				puts indent * 2 + "| " + decl.to_s
+			end
+		end
 
 		private
 

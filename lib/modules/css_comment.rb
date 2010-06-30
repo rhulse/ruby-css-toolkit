@@ -35,6 +35,9 @@ module CssToolkit
 
 		def optimize(options)
 		end
+
+		def inspect(indent)
+		end
 	end
 end
 
