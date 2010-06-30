@@ -112,8 +112,8 @@ module CssToolkit
 		end
 
 		def == (other_set)
-			# must at least have the same number of declarations
-			if declaration_count == other_set.declaration_count
+			# must at least have the same number of declarations and be same type of object
+			if other_set.respond_to?(:declaration_count) && declaration_count == other_set.declaration_count
 				number_of_identical_declations = 0
 				other_set.declarations.each do |other_dec|
 					@declarations.each do |this_dec|
