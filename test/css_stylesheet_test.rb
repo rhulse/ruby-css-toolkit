@@ -73,8 +73,17 @@ class CssStyleSheetTest < Test::Unit::TestCase
 		sheet << CssToolkit::Import.new("'test.css'")
 		sheet << CssToolkit::Import.new("'another.css'")
 
-
 		assert_equal("/* This is a comment */@import 'test.css';@import 'another.css';", sheet.to_s)
 	end
 
+	def test_optimise
+		sheet = CssToolkit::StyleSheet.new
+		sheet << CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
+		sheet << CssToolkit::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
+		sheet << CssToolkit::RuleSet.new({:selector => 'dl', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
+
+		sheet.optimize({:optimize_selectors => true})
+		expected = 'body{margin:20px;padding:10px 5px 3px 8px}p,dl{font-size:20px;margin:5px;border:1px solid #334123}'
+		assert_equal(expected, sheet.to_s)
+	end
 end
