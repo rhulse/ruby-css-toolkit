@@ -1,6 +1,6 @@
 module CssToolkit
 
-	class Declaration
+	class Declaration < CssBase
 		attr_accessor :property, :value
 
 		# sets the values

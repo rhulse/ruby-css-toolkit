@@ -1,6 +1,7 @@
 $:.unshift File.dirname(__FILE__)
 require 'css_properties'
 require 'css_misc'
+require 'css_base'
 require 'css_stylesheet'
 require 'css_rule_set'
 require 'css_media_set'

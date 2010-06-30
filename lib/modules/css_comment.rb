@@ -1,6 +1,6 @@
 module CssToolkit
 
-	class Comment
+	class Comment < CssBase
 		attr_accessor :text, :printable
 
 		def initialize(text='')
@@ -9,7 +9,7 @@ module CssToolkit
 			self
 		end
 
-		def <<(text)
+		def << (text)
 			@text << text
 		end
 
@@ -31,12 +31,6 @@ module CssToolkit
 		# why anyone is still doing this, is beyond me! :-)
 		def is_ie5_hack?
 			text[-1,1] == '\\'
-		end
-
-		def optimize(options)
-		end
-
-		def inspect(indent)
 		end
 	end
 end

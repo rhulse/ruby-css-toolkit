@@ -1,6 +1,6 @@
 module CssToolkit
 
-	class Import
+	class Import < CssBase
 		attr_accessor :import
 
 		def initialize(text='')
@@ -10,12 +10,6 @@ module CssToolkit
 
 		def to_s(format=nil)
 			"@import #{@import};"
-		end
-
-		def optimize(options)
-		end
-
-		def inspect(indent)			
 		end
 	end
 end

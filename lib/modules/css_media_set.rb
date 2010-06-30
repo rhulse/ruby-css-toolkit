@@ -4,7 +4,7 @@ module CssToolkit
 	# when a set is added to a style sheet, the sheet
 	# adds all new nodes to the last mediaset
 	#
-	class MediaSet
+	class MediaSet < CssBase
 		attr_accessor :at_media
 
 		def initialize(at_media)
@@ -53,7 +53,7 @@ module CssToolkit
 				node.optimize(options)
 			end
 		end
-
+		
 	end
 
 end
