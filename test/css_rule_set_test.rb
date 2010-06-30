@@ -250,5 +250,49 @@ class CssRuleSetTest < Test::Unit::TestCase
 		assert rs1 != rs2
 	end
 
+	def test_merge_two_sets
+		css = <<-CSS
+			background-color: #123abc;
+			margin : 20px ;
+			padding: 10px 5px 3px 8px ;
+		 	width: 100px;
+			font-weight:700;
+			border 1px solid #000
+		CSS
+		expected = '.color,p{background-color:#123abc;margin:20px;padding:10px 5px 3px 8px;width:100px;font-weight:700}'
+		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css})
+		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css})
+
+		rs1 += rs2
+		assert_equal(expected, rs1.to_s)
+	end
+
+	def test_merge_two_sets
+		css = <<-CSS
+			background-color: #123abc;
+			margin : 20px ;
+			padding: 10px 5px 3px 8px ;
+		 	width: 100px;
+			font-weight:700;
+			border 1px solid #000
+		CSS
+		expected = '.color,p,dl{background-color:#123abc;margin:20px;padding:10px 5px 3px 8px;width:100px;font-weight:700}'
+		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css})
+		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css})
+		rs3 = CssToolkit::RuleSet.new({:selector => 'dl', :declarations => css})
+
+		rs1 += rs2
+		rs1 += rs3
+		assert_equal(expected, rs1.to_s)
+	end
+
+	def test_clear
+		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin:20px'})
+		expected = {['body']=>['margin:20px']}
+		assert_equal(expected, rs.to_hash)
+
+		rs.clear
+		assert_equal('', rs.to_s)
+	end
 
 end
