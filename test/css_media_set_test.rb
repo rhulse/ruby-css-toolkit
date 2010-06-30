@@ -51,4 +51,20 @@ class CssMediaSetTest < Test::Unit::TestCase
 		assert_equal(expected, sheet.to_s)
 	end
 
+	def test_add_complex_media_set_and_rule_after
+		sheet = CssToolkit::StyleSheet.new
+		sheet << CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
+		sheet << CssToolkit::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
+
+		sheet << CssToolkit::MediaSet.new('@media all and (max-width: 750px), all and (max-device-width: 750px)')
+
+		sheet << CssToolkit::RuleSet.new({:selector => 'dl', :declarations => 'font-size : 12px ; margin: 3pt;'})
+		sheet.in_media = false
+
+		sheet << CssToolkit::RuleSet.new({:selector => 'table', :declarations => 'font-size : 20px ; margin: 3pt;'})
+
+		expected = 'body{margin:20px;padding:10px 5px 3px 8px}p{font-size:20px;margin:5px;border:1px solid #334123}@media all and (max-width: 750px), all and (max-device-width: 750px){dl{font-size:12px;margin:3pt}}table{font-size:20px;margin:3pt}'
+		assert_equal(expected, sheet.to_s)
+	end
+
 end

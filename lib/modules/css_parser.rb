@@ -230,6 +230,7 @@ module CssTidy
 	          if (is_current_char?('}') || is_current_char?(';') || property_next) && ! current_selector.empty?
 	            unless current_at_block.empty?
 								@stylesheet << CssToolkit::MediaSet.new(current_at_block.strip)
+								current_at_block = ''
 	            end
 
 	            if ! sub_value.strip.empty?
