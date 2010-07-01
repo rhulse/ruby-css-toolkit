@@ -53,6 +53,29 @@ module CssToolkit
 				end
 				node.optimize(options)
 			end
+
+			if options[:optimize_selectors]
+				nodes_to_remove = []
+				length = @nodes.length
+				@nodes.each_with_index do |node, index|
+					if node.class == CssToolkit::RuleSet
+						idx = index
+						# Check if properties also exist in another RuleSet
+						while idx < length -1
+							idx += 1 # start at the next one
+							# just Rulsets
+							if @nodes[idx].class == CssToolkit::RuleSet
+								if ! node.empty? && node == @nodes[idx]
+									node += @nodes[idx]
+									nodes_to_remove << idx
+									@nodes[idx].clear
+								end
+					 		end
+ 			      end
+					end
+				end
+			end
+
 		end
 
 		def clear
