@@ -26,7 +26,7 @@ module CssTidy
 				:optimize_margin_padding		=> true,
 				:optimize_filters						=> true,
 				:optimize_urls							=> true,
-				:optimize_selectors					=> true,
+				:optimize_selectors					=> false,
 				:format											=> 0,
 			}.merge(opts)
 
