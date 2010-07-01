@@ -261,17 +261,6 @@ class TidyTest < Test::Unit::TestCase
 		end
 	end
 
-	def test_convert_unicode_non_ascii
-		@parser.css 	= 'body{ \\margin  : 5px; padding:10px;}'
-		@parser.index	= 6
-		expected = '\\'
-		assert_equal(expected, @parser.convert_unicode)
-	end
-
-	#   def setup
-	#     @sc = CSS.new({:use_tidy => true})
-	#   end
-	#
 	# # recheck that MS filters are not mangled by tidy color swapping
 	#   def test_color_reduction
 	#     css = <<-CSS

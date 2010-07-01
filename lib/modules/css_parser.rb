@@ -76,10 +76,8 @@ module CssTidy
 							@context << IN_SELECTOR
 						elsif is_current_char? ','
 							current_at_block = current_at_block.strip + ','
-						elsif is_current_char? '\\'
-							current_at_block << convert_unicode
-						elsif is_current_char? ['(',')',':','/','*','!']
-							# catch media queries
+						elsif is_current_char? ['(',')',':','/','*','!','\\']
+							# catch media queries and escapes
 	          	current_at_block << current_char
 						end # of is_comment
 					else # not token
@@ -144,10 +142,8 @@ module CssTidy
 							@stylesheet << current_ruleset unless current_ruleset.empty?
 							# and start a new one
 							current_ruleset = CssToolkit::RuleSet.new
-	          elsif is_current_char?(',')
-							current_selector = current_selector.strip + ','
-	          elsif is_current_char?('\\')
-							current_selector << convert_unicode
+	          elsif is_current_char?([',','\\'])
+							current_selector = current_selector.strip + current_char
 	          #remove unnecessary universal selector,  FS#147
 						#elseif ! (is_current_char?('*') && @in_array($string{$i+1}, array('.', '#', '[', ':'))))
 						else
@@ -178,10 +174,8 @@ module CssTidy
 							current_ruleset = CssToolkit::RuleSet.new
 	          elsif is_current_char?(';')
 							current_property = ''
-	          elsif is_current_char?('*') # allow star hack for properties
+	          elsif is_current_char?(['*','\\']) # allow star hack and \ hack for properties
 							current_property << current_char
-	          elsif is_current_char?('\\')
-							current_property << convert_unicode
 	          end
           elsif ! is_ctype?(:space)
 						current_property << current_char
@@ -197,10 +191,8 @@ module CssTidy
 							current_string = current_char
 							string_char = is_current_char?('(') ? ')' : current_char
 	            @context << IN_STRING
-	          elsif is_current_char?(',')
-	          	sub_value = sub_value.strip + ','
-	          elsif is_current_char?('\\')
-							sub_value << convert_unicode
+	          elsif is_current_char?([',','\\'])
+							sub_value = sub_value.strip + current_char
 	          elsif is_current_char?(';') || property_next
 							if current_selector[0,1] == '@' && AT_RULES.has_key?(current_selector[1..-1]) && AT_RULES[current_selector[1..-1]] == IN_VALUE
 								sub_value_array << sub_value.strip
@@ -438,41 +430,6 @@ module CssTidy
 			when 'Array'
 				char.include?(@css[@index+offset,1])
 			end
-		end
-
-		def convert_unicode
-			@index += 1
-			add = '';
-			replaced = false;
-			length = @css.length
-			# collect the unicode numbers
-			while (@index < length && (is_ctype?(:xdigit)) || (is_ctype?(:space)) && add.length < 6)
-				add << current_char
-				if is_ctype?(:space)
-					break;
-				end
-				@index += 1
-			end
-			code = add.to_i(10)
-			if (code > 47 && code < 58) || (code > 64 && code < 91) || (code > 96 && code < 123)
-				add = code.chr
-				replaced = true
-			else
-				add = '\\' + add.strip
-			end
-
-			if is_ctype?(:xdigit, 1) && is_ctype?(:space) && ( !replaced || !is_ctype?(:space))
-				@index -= 1;
-			end
-
-			if(add != '\\' || ! is_token?(1))
-				return add;
-			end
-
-			if(add == '\\')
-				puts('Removed unnecessary backslash','Information');
-			end
-			return ''
 		end
 
 		def is_at_rule?(text)

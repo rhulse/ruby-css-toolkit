@@ -27,6 +27,24 @@ class CssTidyTest < Test::Unit::TestCase
 		assert_equal(expected_css, resultant_css)
 	end
 
+	def test_escaping_property_hack
+		css = <<-CSS
+		/* \\*/
+		* html #hright {overflow: hidden; ov\\erflow: visible;width: 100%;w\\idth: auto;he\\ight: 1%;}
+		/* the above is for fixing italics bug */
+		CSS
+		expected_css = '/*\\*/* html #hright{overflow:hidden;ov\\erflow:visible;width:100%;w\\idth:auto;he\\ight:1%}/**/'
+		resultant_css = @tidy.tidy(css)
+		assert_equal(expected_css, resultant_css)
+	end
+
+	def test_escaping_property_hack
+		css = 'body{ m\\argin  : 5px; padding:10px;}'
+		expected_css = 'body{m\\argin:5px;padding:10px}'
+		resultant_css = @tidy.tidy(css)
+		assert_equal(expected_css, resultant_css)
+	end
+
 	# build our YUI tests based on the available files
 	# the tests are run as per normal
 	test_files = Dir.glob(File.join(File.dirname(__FILE__), 'yuicss/*.css'))
