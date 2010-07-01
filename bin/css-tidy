@@ -10,7 +10,8 @@ require File.join(File.dirname(__FILE__), *%w[.. lib css_toolkit])
 opts = GetoptLong.new(
   ['--help', '-h', GetoptLong::NO_ARGUMENT],
   ['--input', '-i', GetoptLong::REQUIRED_ARGUMENT],
-  ['--output', '-o', GetoptLong::REQUIRED_ARGUMENT])
+  ['--output', '-o', GetoptLong::REQUIRED_ARGUMENT],
+  ['--optimize-selectors', '-s', GetoptLong::NO_ARGUMENT])
 
 $infile = nil
 $outfile = nil
@@ -27,8 +28,8 @@ def usage
   exit
 end
 
-# The options that will be passed to the compress method
-$options = {}
+# The options that will be passed to the tidy method
+options = {}
 
 opts.each do |opt, arg|
   case opt
@@ -38,6 +39,8 @@ opts.each do |opt, arg|
       $infile = arg
     when '--output'
       $outfile = arg
+    when '--optimize-selectors'
+      options = options.merge({:optimize_selectors => true})
   end
 end
 
@@ -50,7 +53,7 @@ end
 
 tidy = CssTidy::Tidy.new()
 
-$output = tidy.tidy($input)
+$output = tidy.tidy($input, options)
 
 # Check if a output file is set, if not write to stdout
 if $outfile == nil

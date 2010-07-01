@@ -29,7 +29,7 @@ module CssTidy
 				:optimize_selectors					=> false,
 				:format											=> 0,
 			}.merge(opts)
-
+			puts options.inspect
 			case options[:format]
 			when 1
 				format = :multi_line
