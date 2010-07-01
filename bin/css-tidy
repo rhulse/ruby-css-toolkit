@@ -11,7 +11,7 @@ opts = GetoptLong.new(
   ['--help', '-h', GetoptLong::NO_ARGUMENT],
   ['--input', '-i', GetoptLong::REQUIRED_ARGUMENT],
   ['--output', '-o', GetoptLong::REQUIRED_ARGUMENT],
-  ['--optimize-selectors', '-s', GetoptLong::NO_ARGUMENT])
+  ['--no-optimize-selectors', '-s', GetoptLong::NO_ARGUMENT])
 
 $infile = nil
 $outfile = nil
@@ -29,7 +29,7 @@ def usage
 end
 
 # The options that will be passed to the tidy method
-options = {}
+options = {:optimize_selectors => true}
 
 opts.each do |opt, arg|
   case opt
@@ -39,8 +39,8 @@ opts.each do |opt, arg|
       $infile = arg
     when '--output'
       $outfile = arg
-    when '--optimize-selectors'
-      options = options.merge({:optimize_selectors => true})
+    when '--no-optimize-selectors'
+      options = options.merge({:optimize_selectors => false})
   end
 end
 
