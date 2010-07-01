@@ -51,6 +51,9 @@ This approach allows the use of CSS hacks of various kinds - the optimisation
 code is hack aware, so (for example) won't merge or override rules in
 a declaration that uses the box model hack.
 
+It will group selectors with identical rulesets, so you cannot turn this feature on
+and expect the IE5 or IE7 comment hacks to work.
+
 The use of an object to hold the CSS in a tree structure allows extra
 optimisations to be done beyond what is possible with a pure regex based
 compressor.
@@ -139,6 +142,9 @@ this can be shortened to:
 .class1,.class2{padding:5px}
 
 In doing this there is no risk of breaking the cascade of selectors.
+
+BUT, you cannot use hacks like the IE5 comment hack (/*\*/rule/**/) or the IE7 selector comment hack (selector/**/{rules})
+because rules will be move around or be grouped.
 
 * add a timestamp
 
