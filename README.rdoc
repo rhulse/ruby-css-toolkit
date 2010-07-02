@@ -56,16 +56,14 @@ This approach allows the use of CSS hacks of various kinds - the optimisation
 code is hack aware, so (for example) won't merge or override rules in
 a declaration that uses the box model hack.
 
-It will group selectors with identical rulesets, so you cannot turn this feature on
+It will also group selectors with identical rulesets, so you cannot turn this feature on
 and expect the IE5 or IE7 comment hacks to work.
 
 The use of an object to hold the CSS in a tree structure allows extra
 optimisations to be done beyond what is possible with a pure regex based
 compressor.
 
-Theis CSS Tidy has the following features:
-
-*(NB: Some of these are still planned features)*
+====Features done so far:
 
 * Compress colors
 
@@ -77,7 +75,7 @@ Theis CSS Tidy has the following features:
 
   color names    -> #colors
 
- also replaces invalid color names with valid #color values
+also replaces invalid color names with valid #color values
 
 * Lowercase selectors
 
@@ -94,6 +92,49 @@ Theis CSS Tidy has the following features:
   The ; character is a delimiter between CSS declarations, and is not required for the last one in a block.
 
 * Optimise shorthands
+
+padding:10px 20px 50px 20px;
+
+becomes:
+
+padding:10px 20px 50px;
+
+padding:10px 20px 10px 20px;
+
+becomes:
+
+padding:10px 20px;
+
+* Merge selectors
+
+If you have this rule:
+
+.class1{padding:5px}
+
+and later:
+
+.class2{padding:5px}
+
+this can be shortened to:
+
+.class1,.class2{padding:5px}
+
+In doing this there is no risk of breaking the cascade of selectors.
+
+BUT, you cannot use hacks like the IE5 comment hack (/*\*/rule/**/) or the IE7 selector comment hack (selector/**/{rules})
+because rules will be move around or be grouped.
+
+* remove quotes around URLs
+
+These are optional in the CSS spec.
+
+====Features to be added:
+
+* add a timestamp
+
+For documentation purposes.
+
+* more shorthand optimisations
 
 merges the following where ALL individual declaration are made in a rule
 
@@ -117,45 +158,9 @@ gets converted to:
 
  padding:10px 20px 50px 45px;
 
-and rules that can be shorter also are fixed:
+Also font and background optimisation.
 
-padding:10px 20px 50px 20px;
-
-becomes:
-
-padding:10px 20px 50px;
-
-padding:10px 20px 10px 20px;
-
-becomes:
-
-padding:10px 20px;
-
-
-* Merge selectors
-
-If you have this rule:
-
-.class1{padding:5px}
-
-and later:
-
-.class2{padding:5px}
-
-this can be shortened to:
-
-.class1,.class2{padding:5px}
-
-In doing this there is no risk of breaking the cascade of selectors.
-
-BUT, you cannot use hacks like the IE5 comment hack (/*\*/rule/**/) or the IE7 selector comment hack (selector/**/{rules})
-because rules will be move around or be grouped.
-
-* add a timestamp
-
-For documentation purposes.
-
-We do NOT do the following (which the original did):
+====NOT implemented (which the original did):
 
 * sort properties
 
