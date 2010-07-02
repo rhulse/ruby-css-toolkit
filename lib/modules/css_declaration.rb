@@ -81,6 +81,7 @@ module CssToolkit
 
 		def optimize_mp_shorthands
 			if @property == 'margin' || @property == 'padding'
+				important = important? ? '!important' : ''
 				values = @value.split(/\s+/)
 				values
 				case values.length
@@ -109,6 +110,7 @@ module CssToolkit
 						@value = "#{values[0]}"
 					end
 				end
+				@value << important
 			end
 		end
 
@@ -127,6 +129,10 @@ module CssToolkit
 
 		def inspect(indent='')
 			puts indent + @property + ':' + @value
+		end
+
+		def important?
+			@value.gsub!(/!important/, '')
 		end
 
 		def clear

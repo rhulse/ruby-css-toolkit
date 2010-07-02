@@ -27,6 +27,12 @@ class CssRuleSetTest < Test::Unit::TestCase
 		assert_equal(expected, rs.to_hash)
 	end
 
+	def test_rule_set_longer_with_important
+		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin:20px ; padding: 10px 5px 3px 8px !important; '})
+		expected = {['body']=>['margin:20px','padding:10px 5px 3px 8px !important']}
+		assert_equal(expected, rs.to_hash)
+	end
+
 	def test_rule_set_really_long_with_spaces
 		css = <<-CSS
 			background-color: #123abc;

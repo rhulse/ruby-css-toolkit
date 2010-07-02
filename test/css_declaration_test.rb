@@ -245,6 +245,16 @@ class CssDeclarationTest < Test::Unit::TestCase
 		assert dec_1 != dec_2
 	end
 
+	def test_important
+		dec_1 = CssToolkit::Declaration.new('margin', '0 0 10px 0 !important')
+		assert dec_1.important?
+	end
+
+	def test_not_important
+		dec_1 = CssToolkit::Declaration.new('margin', '0 0 10px 0')
+		assert ! dec_1.important?
+	end
+
 	def test_clear
 		declaration = CssToolkit::Declaration.new('margin', '5px')
 		expected = 'margin:5px'

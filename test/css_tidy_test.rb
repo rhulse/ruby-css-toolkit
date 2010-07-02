@@ -112,6 +112,20 @@ class CssTidyTest < Test::Unit::TestCase
 	    assert_equal(expected, @tidy.tidy(css))
 	end
 
+	def test_important
+		css = 'body{ margin  : 5px; padding:10px  !important;}'
+		expected_css = 'body{margin:5px;padding:10px!important}'
+		resultant_css = @tidy.tidy(css)
+		assert_equal(expected_css, resultant_css)
+	end
+
+	def test_important_with_shorthand
+		css = 'body{ margin  : 5px; padding:10px 0 10px 0 !important;}'
+		expected_css = 'body{margin:5px;padding:10px 0!important}'
+		resultant_css = @tidy.tidy(css)
+		assert_equal(expected_css, resultant_css)
+	end
+
 	# build our YUI tests based on the available files
 	# the tests are run as per normal
 	test_files = Dir.glob(File.join(File.dirname(__FILE__), 'yuicss/*.css'))
