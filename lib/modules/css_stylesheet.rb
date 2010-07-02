@@ -62,7 +62,7 @@ module CssToolkit
 				if node.class == CssToolkit::Comment
 					if node.is_special? && options[:keep_special_comments]
 						next # do nothing
-					elsif node.is_ie5_hack? && options[:keep_ie5_comment_hack]
+					elsif node.is_ie5_hack? && options[:keep_ie5_comment_hack] && ! options[:optimize_selectors]
 						node.text = '\\'  # replace it
 						keep_next_comment = true
 					elsif keep_next_comment
