@@ -1,13 +1,18 @@
-= Ruby CSS Toolkit 
+= Ruby CSS Toolkit
 
-This project is for optimizing and compressing CSS files.
+This project contains tools for optimizing and compressing CSS files.
 
-NB: Currently the tidy section is a work-in-progress
+It contains two tools (ported to Ruby from the originals):
+
+1. YUI CSS compressor
+2. CSS Tidy
+
+NB: Currently Tidy is still being worked on.
 
 == History
 
 *1.1.0* 27 June 2010 - First release of Ruby Port of CSS Tidy.
-This does not yet have all the optimsisations of the original, and will 
+This does not yet have all the optimsisations of the original, and will
 produce larger files than YUI if there are comments inside selectors
 or at blocks (this will be fixed later)
 
@@ -30,7 +35,7 @@ or at blocks (this will be fixed later)
 
 This is a complete port of the YUI CSS compressor.
 
-This includes the full test suite, so you (and I), can be sure that it 
+This includes the full test suite, so you (and I), can be sure that it
 behaves as expected.
 
 === CSS Tidy
@@ -47,7 +52,7 @@ for future enhancements and CSS3 support.
 It stores the parsed CSS using a number of Ruby objects. This is then
 optimised.
 
-This approach allows the use of CSS hacks of various kinds - the optimisation 
+This approach allows the use of CSS hacks of various kinds - the optimisation
 code is hack aware, so (for example) won't merge or override rules in
 a declaration that uses the box model hack.
 
@@ -65,13 +70,13 @@ Theis CSS Tidy has the following features:
 * Compress colors
 
   #eeffaa        -> #efa
-  
+
   rgb(35,48,98)  -> #233062
-  
+
   #colors        -> color names
-  
+
   color names    -> #colors
- 
+
  also replaces invalid color names with valid #color values
 
 * Lowercase selectors
@@ -79,9 +84,9 @@ Theis CSS Tidy has the following features:
   BODY -> body
 
 * Compress font-weight
- 
+
   bold   -> 700
-  
+
   normal -> 400
 
 * Remove last ;
@@ -91,15 +96,15 @@ Theis CSS Tidy has the following features:
 * Optimise shorthands
 
 merges the following where ALL individual declaration are made in a rule
- 
+
  margin
- 
+
  padding
- 
+
  background
 
 e.g
- 	
+
  	padding-top:10px;
 
 	padding-right:20px;
@@ -107,7 +112,7 @@ e.g
 	padding-bottom:50px;
 
 	padding-left:45px;
-	
+
 gets converted to:
 
  padding:10px 20px 50px 45px;
@@ -154,7 +159,7 @@ We do NOT do the following (which the original did):
 
 * sort properties
 
-There is not much point; it can break hacks like the box model hack. 
+There is not much point; it can break hacks like the box model hack.
 We try to not break hacks(TM).
 
 * sort selectors
@@ -193,15 +198,15 @@ where params are:
 
 
 == Note on Patches/Pull Requests
- 
+
 * Fork the project on github.
 
 * Make your change or bug fix.
 
 * Add tests for the change. Better still write the tests first!
-  
+
   NB: I WILL NOT ACCEPT PATCHES WITHOUT GOOD TESTS! :-)
-  
+
 * Commit, do not mess with rakefile, version, or history.
   (if you want to have your own version go ahead.)
 
@@ -213,10 +218,10 @@ See above. No tests, no play.
 
 YUI tests used CSS in files. These are in the form 'name.css' and 'name.css.min'
 for 'css to process' and 'expected result'. The test suite will use any new
-files automatically. This is to make is simpler to pull any changes and test 
+files automatically. This is to make is simpler to pull any changes and test
 cases over from YUI.
 
-The CSS Tidy module also uses the YUI tests to ensure complete compatibility when 
+The CSS Tidy module also uses the YUI tests to ensure complete compatibility when
 a compatible set of parameters are chosen.
 
 
@@ -228,7 +233,7 @@ This project has ported code from, or has used as inspiration the following:
 * CSS Min (Ryan Grove)          (http://github.com/rgrove/cssmin)
 * Rainpress (Uwe L. Korn)       (http://github.com/sprsquish/rainpress)
 * CSS Tidy (Florian Schmitz)    (http://csstidy.sourceforge.net/)
-* Ruby CSS Parser (Alex Dunae)  (http://github.com/alexdunae/css_parser)  
+* Ruby CSS Parser (Alex Dunae)  (http://github.com/alexdunae/css_parser)
 
 == Copyright
 
