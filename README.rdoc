@@ -11,7 +11,7 @@ NB: Currently Tidy is still being worked on.
 
 == History
 
-<b>1.2.0</b> 3 July 2010 - Second release of Ruby Port of CSS Tidy.
+<b>1.2.1</b> 3 July 2010 - Second release of Ruby Port of CSS Tidy.
 
 This <b>should</b> be production ready, although not all Tidy optimisations have
 been ported, the most effective ones have been. Please test thoroughly before 
