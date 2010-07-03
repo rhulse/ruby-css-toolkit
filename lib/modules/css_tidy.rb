@@ -43,7 +43,7 @@ module CssTidy
 
 			compressed_css = @stylesheet.to_s(format)
 
-	    if (options[:line_length] > 0 && format = :one_line)
+	    if (options[:line_length] > 0 && format == :one_line)
 				compressed_css = split_lines(compressed_css, options[:line_length])
 			end
 
