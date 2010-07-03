@@ -11,14 +11,20 @@ NB: Currently Tidy is still being worked on.
 
 == History
 
-*1.1.0* 27 June 2010 - First release of Ruby Port of CSS Tidy.
-This does not yet have all the optimsisations of the original, and will
+<b>1.2.0</b> 3 July 2010 - Second release of Ruby Port of CSS Tidy.
+
+This <b>should</b> be production ready, although not all Tidy optimisations have
+been ported, the most effective ones have been. Please test thoroughly before 
+deploying the code and file an issue if you find a bug.
+
+<b>1.1.0</b> 27 June 2010 - First release of Ruby Port of CSS Tidy.
+This does not yet have all the optimisations of the original, and will
 produce larger files than YUI if there are comments inside selectors
 or at blocks (this will be fixed later)
 
-*1.0.0* 20 June 2010 Release of full implementation of yui compressor
+<b>1.0.0</b> 20 June 2010 Release of full implementation of yui compressor
 
-*0.9.0* 20 June 2010 Initial Release
+<b>0.9.0</b> 20 June 2010 Initial Release
 (Still needs line break option added)
 
 == TODO
@@ -26,8 +32,8 @@ or at blocks (this will be fixed later)
 * Make into a gem
 
 === CSS Tidy TODO
-* add back in missing optimisations from CSS Tidy (and some additional ones)
 
+* add back in missing optimisations from CSS Tidy (and some additional ones)
 
 == Available Tools
 
@@ -111,7 +117,11 @@ merges the following where ALL individual declaration are made in a rule
 
  padding
 
- background
+ border-color
+ 
+ border-style
+ 
+ border-width
 
 e.g
 
@@ -231,7 +241,7 @@ Log an issue on the the issue tracker here on Github.
 
 See above. No tests, no play.
 
-YUI tests used CSS in files. These are in the form 'name.css' and 'name.css.min'
+YUI tests use CSS in files. These are in the form 'name.css' and 'name.css.min'
 for 'css to process' and 'expected result'. The test suite will use any new
 files automatically. This is to make is simpler to pull any changes and test
 cases over from YUI.
