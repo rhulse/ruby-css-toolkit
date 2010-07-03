@@ -66,6 +66,7 @@ module CssTidy
 		# Rule Sets know how to optimise themselves
 
 		def optimize(options)
+			merge_4_part_longhands
 			@declarations.each do |declaration|
 				declaration.optimize_colors 			 	if options[:optimize_colors]
 				declaration.fix_invalid_colors 			if options[:fix_invalid_colors]
@@ -78,6 +79,40 @@ module CssTidy
 				declaration.optimize_punctuation  # no option
 			end
 			optimize_selectors(options)
+		end
+
+		def merge_4_part_longhands
+			SHORTHANDS.each do |shorthand, longhands|
+				values = []
+				important_count = 0
+				@declarations.each_with_index do |declaration, idx|
+					# if one is important, the new merged rule will be important.
+					# this will probably break CSS in some rare cases
+					important_count = declaration.important? ? important_count + 1 : important_count + 0
+					case declaration.property
+					when longhands[0]
+						values[0] = declaration.value
+					when longhands[1]
+						values[1] = declaration.value
+					when longhands[2]
+						values[2] = declaration.value
+					when longhands[3]
+						values[3] = declaration.value
+					end
+				end
+				# remove nil values
+				values.compact!
+				if values.size == 4
+					# remove the old ones
+					@declarations.delete_if do |decl|
+						longhands.include?(decl.property)
+					end
+					values.map!{|v| v.gsub(/!important/, '').strip}
+					important = important_count > 0 ? '!important' : ''
+					# add the new rule
+					@declarations << CssTidy::Declaration.new(shorthand, values.join(' ') + important)
+				end
+			end
 		end
 
 		def optimize_selectors(options)

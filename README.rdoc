@@ -105,6 +105,32 @@ becomes:
 
 padding:10px 20px;
 
+merges the following where ALL individual declaration are made in a rule
+
+ margin
+
+ padding
+
+ background
+
+e.g
+
+ 	padding-top:10px;
+
+	padding-right:20px;
+
+	padding-bottom:50px;
+
+	padding-left:45px;
+
+gets converted to:
+
+ padding:10px 20px 50px 45px;
+
+NB: If one of the longhand rules is !important, then the whole new shorthand rule is marked important.
+
+This is the same behaviour as the original CSSTidy
+
 * Merge selectors
 
 If you have this rule:
@@ -135,28 +161,6 @@ These are optional in the CSS spec.
 For documentation purposes.
 
 * more shorthand optimisations
-
-merges the following where ALL individual declaration are made in a rule
-
- margin
-
- padding
-
- background
-
-e.g
-
- 	padding-top:10px;
-
-	padding-right:20px;
-
-	padding-bottom:50px;
-
-	padding-left:45px;
-
-gets converted to:
-
- padding:10px 20px 50px 45px;
 
 Also font and background optimisation.
 
@@ -201,6 +205,12 @@ where params are:
 
 --output, -o <file>         The output file, if not set, stdout is used
 
+== Issues
+
+If you find a bug, but don't know how to fix it, I will need the source and generated
+CSS, plus a description of what is wrong.
+
+Log an issue on the the issue tracker here on Github.
 
 == Note on Patches/Pull Requests
 

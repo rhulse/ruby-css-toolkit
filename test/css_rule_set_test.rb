@@ -36,7 +36,42 @@ class CssRuleSetTest < Test::Unit::TestCase
 	def test_merge_margin_longhand
 		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin-top:20px ; margin-bottom:3px; margin-left: 12px; margin-right:11px;'})
 		expected = {['body']=>['margin:20px 11px 3px 12px']}
-		rs.merge_longhands
+		rs.merge_4_part_longhands
+		assert_equal(expected, rs.to_hash)
+	end
+
+	def test_merge_margin_longhand_optimise
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin-top:20px ; margin-bottom:20px; margin-left: 20px; margin-right:20px;'})
+		expected = {['body']=>['margin:20px']}
+		rs.optimize({:optimize_margin_padding => true})
+		assert_equal(expected, rs.to_hash)
+	end
+
+	def test_not_merge_partial_margin_longhand
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin-bottom:3px; margin-left: 12px; margin-right:11px;'})
+		expected = {['body']=>['margin-bottom:3px', 'margin-left:12px', 'margin-right:11px']}
+		rs.merge_4_part_longhands
+		assert_equal(expected, rs.to_hash)
+	end
+
+	def test_merge_margin_longhand_important
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin-top:20px ; margin-bottom:3px !important; margin-left: 12px; margin-right:11px;'})
+		expected = {['body']=>['margin:20px 11px 3px 12px!important']}
+		rs.merge_4_part_longhands
+		assert_equal(expected, rs.to_hash)
+	end
+
+	def test_merge_padding_longhand
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => 'padding-top:21px ; padding-bottom:9px; padding-left: 45px; padding-right:7px;'})
+		expected = {['body']=>['padding:21px 7px 9px 45px']}
+		rs.merge_4_part_longhands
+		assert_equal(expected, rs.to_hash)
+	end
+
+	def test_merge_padding_longhand_important
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => 'padding-top:21px ; padding-bottom:9px; padding-left: 45px !important; padding-right:7px;'})
+		expected = {['body']=>['padding:21px 7px 9px 45px!important']}
+		rs.merge_4_part_longhands
 		assert_equal(expected, rs.to_hash)
 	end
 

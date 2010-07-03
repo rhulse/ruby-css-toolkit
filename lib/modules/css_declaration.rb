@@ -80,8 +80,8 @@ module CssTidy
 		end
 
 		def optimize_mp_shorthands
-			if @property == 'margin' || @property == 'padding'
-				important = important? ? '!important' : ''
+			if SHORTHANDS.has_key?(@property)
+				important = important! ? '!important' : ''
 				values = @value.split(/\s+/)
 				values
 				case values.length
@@ -131,8 +131,13 @@ module CssTidy
 			puts indent + @property + ':' + @value
 		end
 
-		def important?
+		# remove !important and return true if it was replaced
+		def important!
 			@value.gsub!(/!important/, '')
+		end
+
+		def important?
+			@value =~ /!important/
 		end
 
 		def clear
