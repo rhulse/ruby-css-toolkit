@@ -4,26 +4,26 @@ require File.dirname(__FILE__) + '/test_helper'
 class CssStyleSheetTest < Test::Unit::TestCase
 
 	def test_add_node_to_stylesheet
-		sheet = CssToolkit::StyleSheet.new
-		sheet << CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
-		sheet << CssToolkit::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
+		sheet = CssTidy::StyleSheet.new
+		sheet << CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
+		sheet << CssTidy::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
 
 		expected = 'body{margin:20px;padding:10px 5px 3px 8px}p{font-size:20px;margin:5px;border:1px solid #334123}'
 		assert_equal(expected, sheet.to_s)
 	end
 
 	def test_add_node_to_stylesheet_multiline
-		sheet = CssToolkit::StyleSheet.new
-		sheet << CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
-		sheet << CssToolkit::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
+		sheet = CssTidy::StyleSheet.new
+		sheet << CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
+		sheet << CssTidy::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
 
 		expected = "body{\n  margin:20px;\n  padding:10px 5px 3px 8px\n}\np{\n  font-size:20px;\n  margin:5px;\n  border:1px solid #334123\n}\n"
 		assert_equal(expected, sheet.to_s(:multi_line))
 	end
 
 	def test_add_charset_comments_and_nodes
-		sheet = CssToolkit::StyleSheet.new
-		comment = CssToolkit::Comment.new
+		sheet = CssTidy::StyleSheet.new
+		comment = CssTidy::Comment.new
 
 		sheet.charset = "'UTF-16'"
 
@@ -31,56 +31,56 @@ class CssStyleSheetTest < Test::Unit::TestCase
 
 		sheet << comment
 
-		sheet << CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
-		sheet << CssToolkit::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
+		sheet << CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
+		sheet << CssTidy::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
 
 		expected = "@charset 'UTF-16';\n/* This is a comment */\nbody{\n  margin:20px;\n  padding:10px 5px 3px 8px\n}\np{\n  font-size:20px;\n  margin:5px;\n  border:1px solid #334123\n}\n"
 		assert_equal(expected, sheet.to_s(:multi_line))
 	end
 
 	def test_charset
-		sheet = CssToolkit::StyleSheet.new
+		sheet = CssTidy::StyleSheet.new
 		sheet.charset = '"UTF-8"'
 
 		assert_equal('"UTF-8"', sheet.charset)
 	end
 
 	def test_charset_removes_quotes
-		sheet = CssToolkit::StyleSheet.new
+		sheet = CssTidy::StyleSheet.new
 		sheet.charset = 'UTF-8'
 
 		assert_equal('UTF-8', sheet.charset)
 	end
 
 	def test_import
-		sheet = CssToolkit::StyleSheet.new
-		sheet << CssToolkit::Import.new("'test.css'")
+		sheet = CssTidy::StyleSheet.new
+		sheet << CssTidy::Import.new("'test.css'")
 
 		assert_equal("@import 'test.css';", sheet.to_s)
 	end
 
 	def test_two_imports
-		sheet = CssToolkit::StyleSheet.new
-		sheet << CssToolkit::Import.new("'test.css'")
-		sheet << CssToolkit::Import.new("'another.css'")
+		sheet = CssTidy::StyleSheet.new
+		sheet << CssTidy::Import.new("'test.css'")
+		sheet << CssTidy::Import.new("'another.css'")
 
 		assert_equal("@import 'test.css';@import 'another.css';", sheet.to_s)
 	end
 
 	def test_two_imports_with_comment
-		sheet = CssToolkit::StyleSheet.new
-		sheet << CssToolkit::Comment.new(" This is a comment ")
-		sheet << CssToolkit::Import.new("'test.css'")
-		sheet << CssToolkit::Import.new("'another.css'")
+		sheet = CssTidy::StyleSheet.new
+		sheet << CssTidy::Comment.new(" This is a comment ")
+		sheet << CssTidy::Import.new("'test.css'")
+		sheet << CssTidy::Import.new("'another.css'")
 
 		assert_equal("/* This is a comment */@import 'test.css';@import 'another.css';", sheet.to_s)
 	end
 
 	def test_optimise
-		sheet = CssToolkit::StyleSheet.new
-		sheet << CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
-		sheet << CssToolkit::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
-		sheet << CssToolkit::RuleSet.new({:selector => 'dl', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
+		sheet = CssTidy::StyleSheet.new
+		sheet << CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
+		sheet << CssTidy::RuleSet.new({:selector => 'p', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
+		sheet << CssTidy::RuleSet.new({:selector => 'dl', :declarations => 'font-size : 20px ; margin: 5px; border: 1px solid #334123;'})
 
 		sheet.optimize({:optimize_selectors => true})
 		expected = 'body{margin:20px;padding:10px 5px 3px 8px}p,dl{font-size:20px;margin:5px;border:1px solid #334123}'

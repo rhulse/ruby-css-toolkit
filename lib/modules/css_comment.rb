@@ -1,4 +1,4 @@
-module CssToolkit
+module CssTidy
 
 	class Comment < CssBase
 		attr_accessor :text, :printable

@@ -1,4 +1,4 @@
-module CssToolkit
+module CssTidy
 	class CssBase
 
 		def initialize(args)

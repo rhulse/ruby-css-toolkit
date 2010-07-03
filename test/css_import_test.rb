@@ -4,7 +4,7 @@ require File.dirname(__FILE__) + '/test_helper'
 class CssImportTest < Test::Unit::TestCase
 
 	def test_import
-		import = CssToolkit::Import.new('"import.css"')
+		import = CssTidy::Import.new('"import.css"')
 
 		expected = '@import "import.css";'
 		assert_equal(expected, import.to_s)

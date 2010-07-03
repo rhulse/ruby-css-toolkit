@@ -1,4 +1,4 @@
-module CssToolkit
+module CssTidy
 
 	class Declaration < CssBase
 		attr_accessor :property, :value

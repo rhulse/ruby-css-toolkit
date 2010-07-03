@@ -1,4 +1,4 @@
-module CssToolkit
+module CssTidy
 
 	class Import < CssBase
 		attr_accessor :import

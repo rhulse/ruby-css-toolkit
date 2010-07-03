@@ -1,4 +1,7 @@
-module CssToolkit
+$:.unshift File.dirname(__FILE__)
+require 'css_properties'
+
+module CssTidy
 
 	# The RuleSet class takes ONE selector and a set of declarations
 	# Declarations are stored in order to allow for hacks such as the box model hacks
@@ -21,7 +24,7 @@ module CssToolkit
 	      opts[:declarations].strip.split(/[\;$]+/m).each do |declaration|
 	        if matches = declaration.match(/(.[^:]*)\:(.[^;]*)(;|\Z)/i)
 	          property, value, end_of_declaration = matches.captures
-						@declarations << CssToolkit::Declaration.new(property.strip, value.strip)
+						@declarations << CssTidy::Declaration.new(property.strip, value.strip)
 	        end
 	      end
 				opts[:declarations].strip.split(';').each do |declaration|
@@ -33,7 +36,7 @@ module CssToolkit
 
 		def << (declaration)
 			property, value = declaration.strip.split(':')
-			@declarations << CssToolkit::Declaration.new(property.strip, value.strip)
+			@declarations << CssTidy::Declaration.new(property.strip, value.strip)
 		end
 
 		def to_hash

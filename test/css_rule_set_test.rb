@@ -4,32 +4,39 @@ require File.dirname(__FILE__) + '/test_helper'
 class CssRuleSetTest < Test::Unit::TestCase
 
 	def test_rule_set_basic
-		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin:20px'})
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin:20px'})
 		expected = {['body']=>['margin:20px']}
 		assert_equal(expected, rs.to_hash)
 	end
 
 	def test_rule_set_basic_with_spaces
-		rs = CssToolkit::RuleSet.new({:selector => ' body ', :declarations => ' margin:20px '})
+		rs = CssTidy::RuleSet.new({:selector => ' body ', :declarations => ' margin:20px '})
 		expected = {['body']=>['margin:20px']}
 		assert_equal(expected, rs.to_hash)
 	end
 
 	def test_rule_set_longer
-		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin:20px;padding:10px 5px 3px 8px;'})
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin:20px;padding:10px 5px 3px 8px;'})
 		expected = {['body']=>['margin:20px','padding:10px 5px 3px 8px']}
 		assert_equal(expected, rs.to_hash)
 	end
 
 	def test_rule_set_longer_with_spaces
-		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin:20px ; padding: 10px 5px 3px 8px; '})
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin:20px ; padding: 10px 5px 3px 8px; '})
 		expected = {['body']=>['margin:20px','padding:10px 5px 3px 8px']}
 		assert_equal(expected, rs.to_hash)
 	end
 
-	def test_rule_set_longer_with_important
-		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin:20px ; padding: 10px 5px 3px 8px !important; '})
-		expected = {['body']=>['margin:20px','padding:10px 5px 3px 8px !important']}
+	def test_rule_set_longer
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin:20px;padding:10px 5px 3px 8px;'})
+		expected = {['body']=>['margin:20px','padding:10px 5px 3px 8px']}
+		assert_equal(expected, rs.to_hash)
+	end
+
+	def test_merge_margin_longhand
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin-top:20px ; margin-bottom:3px; margin-left: 12px; margin-right:11px;'})
+		expected = {['body']=>['margin:20px 11px 3px 12px']}
+		rs.merge_longhands
 		assert_equal(expected, rs.to_hash)
 	end
 
@@ -40,7 +47,7 @@ class CssRuleSetTest < Test::Unit::TestCase
 			padding: 10px 5px 3px 8px ;
 		 	width: 100px;
 		CSS
-		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => css})
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => css})
 
 		expected = {['body']=>['background-color:#123abc','margin:20px', 'padding:10px 5px 3px 8px','width:100px']}
 		assert_equal(expected, rs.to_hash)
@@ -59,14 +66,14 @@ class CssRuleSetTest < Test::Unit::TestCase
 			voice-family:inherit;
 			width: 200px;
 		CSS
-		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => css})
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => css})
 
 		expected = {['body']=>['background-color:#123abc','margin:20px', 'padding:10px 5px 3px 8px','width:100px','voice-family:"\\"}\\""','voice-family:inherit','width:200px']}
 		assert_equal(expected, rs.to_hash)
 	end
 
 	def test_add_a_declaration
-		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
 		expected = {['body']=>['margin:20px','padding:10px 5px 3px 8px']}
 		assert_equal(expected, rs.to_hash)
 
@@ -76,7 +83,7 @@ class CssRuleSetTest < Test::Unit::TestCase
 	end
 
 	def test_to_s_one_line_format
-		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin : 20px ; padding: 10px 5px 3px 8px ; '})
 		expected = 'body{margin:20px;padding:10px 5px 3px 8px}'
 		assert_equal(expected, rs.to_s)
 	end
@@ -88,7 +95,7 @@ class CssRuleSetTest < Test::Unit::TestCase
 			padding: 10px 5px 3px 8px ;
 		 	width: 100px;
 		CSS
-		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => css})
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => css})
 
 		expected = 'body{background-color:#123abc;margin:20px;padding:10px 5px 3px 8px;width:100px}'
 		assert_equal(expected, rs.to_s)
@@ -101,7 +108,7 @@ class CssRuleSetTest < Test::Unit::TestCase
 			padding: 10px 5px 3px 8px ;
 		 	width: 100px;
 		CSS
-		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => css})
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => css})
 
 		expected = "body{\n  background-color:#123abc;\n  margin:20px;\n  padding:10px 5px 3px 8px;\n  width:100px\n}"
 		assert_equal(expected, rs.to_s(:multi_line))
@@ -115,7 +122,7 @@ class CssRuleSetTest < Test::Unit::TestCase
 			  background: none repeat scroll 0 0 rgb(255, 255,0);
 			  alpha: rgba(1, 2, 3, 4);
 		CSS
-		rs = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css})
+		rs = CssTidy::RuleSet.new({:selector => '.color', :declarations => css})
 
 		rs.optimize_colors
 		expected = '.color{me:#7b7b7b;impressed:#fed;filter:chroma(color="#FFFFFF");background:none repeat scroll 0 0 #ff0;alpha:rgba(1, 2, 3, 4)}'
@@ -124,7 +131,7 @@ class CssRuleSetTest < Test::Unit::TestCase
 	end
 
 	def test_empty
-		rs = CssToolkit::RuleSet.new()
+		rs = CssTidy::RuleSet.new()
 		assert rs.empty?
 	end
 
@@ -137,8 +144,8 @@ class CssRuleSetTest < Test::Unit::TestCase
 			font-weight:700;
 			border 1px solid #000
 		CSS
-		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css})
-		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css})
+		rs1 = CssTidy::RuleSet.new({:selector => '.color', :declarations => css})
+		rs2 = CssTidy::RuleSet.new({:selector => 'p', :declarations => css})
 
 		assert rs1 == rs2
 	end
@@ -160,8 +167,8 @@ class CssRuleSetTest < Test::Unit::TestCase
 			font-weight:700;
 			border: 1px solid #001;
 		CSS
-		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css1})
-		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css2})
+		rs1 = CssTidy::RuleSet.new({:selector => '.color', :declarations => css1})
+		rs2 = CssTidy::RuleSet.new({:selector => 'p', :declarations => css2})
 
 		assert rs1 != rs2
 	end
@@ -182,8 +189,8 @@ class CssRuleSetTest < Test::Unit::TestCase
 		 	width: 100px;
 			font-weight:700;
 		CSS
-		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css1})
-		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css2})
+		rs1 = CssTidy::RuleSet.new({:selector => '.color', :declarations => css1})
+		rs2 = CssTidy::RuleSet.new({:selector => 'p', :declarations => css2})
 
 		assert rs1 != rs2
 	end
@@ -204,8 +211,8 @@ class CssRuleSetTest < Test::Unit::TestCase
 			font-weight:700;
 			border: 1px solid #000;
 		CSS
-		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css1})
-		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css2})
+		rs1 = CssTidy::RuleSet.new({:selector => '.color', :declarations => css1})
+		rs2 = CssTidy::RuleSet.new({:selector => 'p', :declarations => css2})
 
 		assert rs1 != rs2
 	end
@@ -227,8 +234,8 @@ class CssRuleSetTest < Test::Unit::TestCase
 			font-weight:700;
 			border: 1px solid #000;
 		CSS
-		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css1})
-		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css2})
+		rs1 = CssTidy::RuleSet.new({:selector => '.color', :declarations => css1})
+		rs2 = CssTidy::RuleSet.new({:selector => 'p', :declarations => css2})
 
 		assert rs1 == rs2
 	end
@@ -250,8 +257,8 @@ class CssRuleSetTest < Test::Unit::TestCase
 			font-weight:700;
 			border: 1px solid #000;
 		CSS
-		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css1})
-		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css2})
+		rs1 = CssTidy::RuleSet.new({:selector => '.color', :declarations => css1})
+		rs2 = CssTidy::RuleSet.new({:selector => 'p', :declarations => css2})
 
 		assert rs1 != rs2
 	end
@@ -266,8 +273,8 @@ class CssRuleSetTest < Test::Unit::TestCase
 			border 1px solid #000
 		CSS
 		expected = '.color,p{background-color:#123abc;margin:20px;padding:10px 5px 3px 8px;width:100px;font-weight:700}'
-		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css})
-		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css})
+		rs1 = CssTidy::RuleSet.new({:selector => '.color', :declarations => css})
+		rs2 = CssTidy::RuleSet.new({:selector => 'p', :declarations => css})
 
 		rs1 += rs2
 		assert_equal(expected, rs1.to_s)
@@ -283,9 +290,9 @@ class CssRuleSetTest < Test::Unit::TestCase
 			border 1px solid #000
 		CSS
 		expected = '.color,p,dl{background-color:#123abc;margin:20px;padding:10px 5px 3px 8px;width:100px;font-weight:700}'
-		rs1 = CssToolkit::RuleSet.new({:selector => '.color', :declarations => css})
-		rs2 = CssToolkit::RuleSet.new({:selector => 'p', :declarations => css})
-		rs3 = CssToolkit::RuleSet.new({:selector => 'dl', :declarations => css})
+		rs1 = CssTidy::RuleSet.new({:selector => '.color', :declarations => css})
+		rs2 = CssTidy::RuleSet.new({:selector => 'p', :declarations => css})
+		rs3 = CssTidy::RuleSet.new({:selector => 'dl', :declarations => css})
 
 		rs1 += rs2
 		rs1 += rs3
@@ -293,7 +300,7 @@ class CssRuleSetTest < Test::Unit::TestCase
 	end
 
 	def test_clear
-		rs = CssToolkit::RuleSet.new({:selector => 'body', :declarations => 'margin:20px'})
+		rs = CssTidy::RuleSet.new({:selector => 'body', :declarations => 'margin:20px'})
 		expected = {['body']=>['margin:20px']}
 		assert_equal(expected, rs.to_hash)
 

@@ -1,4 +1,4 @@
-module CssToolkit
+module CssTidy
 
 	class StyleSheet
 		attr_accessor :in_media
@@ -17,14 +17,14 @@ module CssToolkit
 		def << (object)
 			# if we are in media block, then add object to the last node
 			if @in_media
-				if object.class == CssToolkit::MediaSet
+				if object.class == CssTidy::MediaSet
 					@nodes << object
 				else
 					@nodes.last << object
 				end
 			else
 				@nodes << object
-				if object.class == CssToolkit::MediaSet
+				if object.class == CssTidy::MediaSet
 					@in_media = true
 				end
 			end
@@ -59,7 +59,7 @@ module CssToolkit
 			keep_next_comment = false
 
 			@nodes.each_with_index do |node, idx|
-				if node.class == CssToolkit::Comment
+				if node.class == CssTidy::Comment
 					if node.is_special? && options[:keep_special_comments]
 						next # do nothing
 					elsif node.is_ie5_hack? && options[:keep_ie5_comment_hack] && ! options[:optimize_selectors]
@@ -79,13 +79,13 @@ module CssToolkit
 				nodes_to_remove = []
 				length = @nodes.length
 				@nodes.each_with_index do |node, index|
-					if node.class == CssToolkit::RuleSet
+					if node.class == CssTidy::RuleSet
 						idx = index
 						# Check if properties also exist in another RuleSet
 						while idx < length -1
 							idx += 1 # start at the next one
 							# just Rulsets
-							if @nodes[idx].class == CssToolkit::RuleSet
+							if @nodes[idx].class == CssTidy::RuleSet
 								if ! node.empty? && node == @nodes[idx]
 									node += @nodes[idx]
 									nodes_to_remove << idx
@@ -104,9 +104,9 @@ module CssToolkit
 			puts "Stylesheet"
 			@nodes.each_with_index do |node, idx|
 				case node.class.to_s
-				when 'CssToolkit::RuleSet'
+				when 'CssTidy::RuleSet'
 					puts " + RuleSet"
-				when 'CssToolkit::Comment'
+				when 'CssTidy::Comment'
 					puts " + Comment"
 				end
 				node.inspect(indent)

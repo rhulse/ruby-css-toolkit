@@ -1,4 +1,4 @@
-module CssToolkit
+module CssTidy
 
 	# media sets live as nodes in a stylesheet
 	# when a set is added to a style sheet, the sheet
@@ -38,7 +38,7 @@ module CssToolkit
 			keep_next_comment = false
 
 			@nodes.each_with_index do |node, idx|
-				if node.class == CssToolkit::Comment
+				if node.class == CssTidy::Comment
 					if node.is_special? && options[:keep_special_comments]
 						next # do nothing
 					elsif node.is_ie5_hack? && options[:keep_ie5_comment_hack]
@@ -58,13 +58,13 @@ module CssToolkit
 				nodes_to_remove = []
 				length = @nodes.length
 				@nodes.each_with_index do |node, index|
-					if node.class == CssToolkit::RuleSet
+					if node.class == CssTidy::RuleSet
 						idx = index
 						# Check if properties also exist in another RuleSet
 						while idx < length -1
 							idx += 1 # start at the next one
 							# just Rulsets
-							if @nodes[idx].class == CssToolkit::RuleSet
+							if @nodes[idx].class == CssTidy::RuleSet
 								if ! node.empty? && node == @nodes[idx]
 									node += @nodes[idx]
 									nodes_to_remove << idx

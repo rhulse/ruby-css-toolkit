@@ -19,7 +19,7 @@ module CssTidy
 		def initialize
 
 			# temporary array to hold data during development
-			@stylesheet = CssToolkit::StyleSheet.new
+			@stylesheet = CssTidy::StyleSheet.new
 
 			# the raw, unprocessed css
 			@raw_css = ''
@@ -48,7 +48,7 @@ module CssTidy
 
 			current_selector = ''
 			current_property = ''
-			current_ruleset = CssToolkit::RuleSet.new
+			current_ruleset = CssTidy::RuleSet.new
 
 			current_value = ''
 			sub_value = ''
@@ -141,7 +141,7 @@ module CssTidy
 							# when there is a new selector we save the last set
 							@stylesheet << current_ruleset unless current_ruleset.empty?
 							# and start a new one
-							current_ruleset = CssToolkit::RuleSet.new
+							current_ruleset = CssTidy::RuleSet.new
 	          elsif is_current_char?([',','\\'])
 							current_selector = current_selector.strip + current_char
 	          #remove unnecessary universal selector,  FS#147
@@ -171,7 +171,7 @@ module CssTidy
 							# when there is a new selector we save the last set
 							@stylesheet << current_ruleset unless current_ruleset.empty?
 							# and start a new one
-							current_ruleset = CssToolkit::RuleSet.new
+							current_ruleset = CssTidy::RuleSet.new
 	          elsif is_current_char?(';')
 							current_property = ''
 	          elsif is_current_char?(['*','\\']) # allow star hack and \ hack for properties
@@ -206,7 +206,7 @@ module CssTidy
 	                  when '@namespace'
 											#$this->namespace = implode(' ',$this->sub_value_arr);
 	                  when '@import'
-											@stylesheet << CssToolkit::Import.new(sub_value_array.join(' '))
+											@stylesheet << CssTidy::Import.new(sub_value_array.join(' '))
 								end
 
 	              sub_value_array = []
@@ -221,7 +221,7 @@ module CssTidy
 
 	          if (is_current_char?('}') || is_current_char?(';') || property_next) && ! current_selector.empty?
 	            unless current_at_block.empty?
-								@stylesheet << CssToolkit::MediaSet.new(current_at_block.strip)
+								@stylesheet << CssTidy::MediaSet.new(current_at_block.strip)
 								current_at_block = ''
 	            end
 
@@ -249,7 +249,7 @@ module CssTidy
 							# when there is a new selector we save the last set
 							@stylesheet << current_ruleset unless current_ruleset.empty?
 							# and start a new one
-							current_ruleset = CssToolkit::RuleSet.new
+							current_ruleset = CssTidy::RuleSet.new
 	          end
           elsif ! property_next
 	          sub_value << current_char
@@ -307,7 +307,7 @@ module CssTidy
 					if is_comment_end?
 						@context.pop # go back to previous context
 						@index += 1 # skip the '/'
-						@stylesheet << CssToolkit::Comment.new(current_comment)
+						@stylesheet << CssTidy::Comment.new(current_comment)
 						current_comment = ''
           else
 						current_comment << current_char
