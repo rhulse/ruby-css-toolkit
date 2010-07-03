@@ -28,7 +28,11 @@ module CssTidy
 				:optimize_urls							=> true,
 				:optimize_selectors					=> false,
 				:format											=> 0,
+				:line_length								=> 0,
 			}.merge(opts)
+
+			@stylesheet = @parser.parse(css)
+			optimize(options)
 
 			case options[:format]
 			when 1
@@ -37,9 +41,12 @@ module CssTidy
 				format = :one_line
 			end
 
-			@stylesheet = @parser.parse(css)
-			optimize(options)
 			compressed_css = @stylesheet.to_s(format)
+
+	    if (options[:line_length] > 0 && format = :one_line)
+				compressed_css = split_lines(compressed_css, options[:line_length])
+			end
+
 			@output_size = compressed_css.length
 
 			compressed_css
@@ -47,6 +54,24 @@ module CssTidy
 
 		def optimize(options)
 			@stylesheet.optimize(options)
+		end
+
+		def split_lines(compressed_css, line_length)
+			css = compressed_css.clone
+      # Some source control tools don't like it when files containing lines longer
+      # than, say 8000 characters, are checked in. The linebreak option is used in
+      # that case to split long lines after a specific column.
+      startIndex = 0
+      index = 0
+			length = css.length
+      while (index < length)
+        index += 1
+        if (css[index - 1,1] === '}' && index - startIndex > line_length)
+          css = css.slice(0, index) + "\n" + css.slice(index, length)
+          startIndex = index
+        end
+      end
+			css
 		end
 
 	end

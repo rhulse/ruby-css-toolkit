@@ -138,4 +138,52 @@ class CssTidyTest < Test::Unit::TestCase
 			assert_equal(expected_css, @tidy.tidy(test_css), "YUI test #{test_name} failed")
 		end
 	end
+
+	def test_some_css
+		test_css = <<-CSS
+		*{font-size:100%;margin:0;padding:0;}
+		img{border:none;}
+		#cont-pri img, .arc #cont-sec img, embed{border:1px solid #000;}
+		body{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04;}
+		#pw{position:relative;width:960px;text-align:left;}
+		CSS
+		expected_css = %Q(*{font-size:100%;margin:0;padding:0}img{border:none}#cont-pri img,.arc #cont-sec img,embed{border:1px solid #000}body{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04}#pw{position:relative;width:960px;text-align:left})
+		assert_equal(expected_css, @tidy.tidy(test_css))
+	end
+
+	def test_line_length_split_at_50
+		test_css = <<-CSS
+		*{font-size:100%;margin:0;padding:0;}
+		img{border:none;}
+		#cont-pri img, .arc #cont-sec img, embed{border:1px solid #000;}
+		body{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04;}
+		#pw{position:relative;width:960px;text-align:left;}
+		CSS
+		expected_css = %Q(*{font-size:100%;margin:0;padding:0}img{border:none}\n#cont-pri img,.arc #cont-sec img,embed{border:1px solid #000}\nbody{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04}\n#pw{position:relative;width:960px;text-align:left})
+		assert_equal(expected_css, @tidy.tidy(test_css,{:line_length =>50}))
+	end
+
+	def test_line_length_split_at_100
+		test_css = <<-CSS
+		*{font-size:100%;margin:0;padding:0;}
+		img{border:none;}
+		#cont-pri img, .arc #cont-sec img, embed{border:1px solid #000;}
+		body{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04;}
+		#pw{position:relative;width:960px;text-align:left;}
+		CSS
+		expected_css = %Q(*{font-size:100%;margin:0;padding:0}img{border:none}#cont-pri img,.arc #cont-sec img,embed{border:1px solid #000}\nbody{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04}#pw{position:relative;width:960px;text-align:left})
+		assert_equal(expected_css, @tidy.tidy(test_css,{:line_length =>100}))
+	end
+
+	def test_line_length_split_at_300
+		test_css = <<-CSS
+		*{font-size:100%;margin:0;padding:0;}
+		img{border:none;}
+		#cont-pri img, .arc #cont-sec img, embed{border:1px solid #000;}
+		body{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04;}
+		#pw{position:relative;width:960px;text-align:left;}
+		CSS
+		expected_css = %Q(*{font-size:100%;margin:0;padding:0}img{border:none}#cont-pri img,.arc #cont-sec img,embed{border:1px solid #000}body{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04}#pw{position:relative;width:960px;text-align:left})
+		assert_equal(expected_css, @tidy.tidy(test_css,{:line_length =>300}))
+	end
 end
