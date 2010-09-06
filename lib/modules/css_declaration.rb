@@ -120,7 +120,7 @@ module CssTidy
 		end
 
 		def downcase_property
-			@property.downcase!
+			@property.downcase! unless @property.frozen?
 		end
 
 		def == (other)
