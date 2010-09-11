@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.email   = "rhulse@paradise.net.nz"
   s.author  = "Richard Hulse"
 
-  s.description = %q{Provides some tools to minify and compress CSS files}
+  s.description = %q{Provides some tools to minify and compress CSS files - Ruby ports of the YUI CSS Compressor and CSS Tidy}
   s.summary     = %q{CSS minification}
   s.homepage    = %q{http://github.com/rhulse/ruby-css-toolkit}
 
