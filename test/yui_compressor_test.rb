@@ -52,7 +52,7 @@ class YuiCompressorTest < Test::Unit::TestCase
 		body{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04;}
 		#pw{position:relative;width:960px;text-align:left;}
 		CSS
-		expected_css = %Q(*{font-size:100%;margin:0;padding:0}img{border:none}\n#cont-pri img,.arc #cont-sec img,embed{border:1px solid #000}\nbody{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04}\n#pw{position:relative;width:960px;text-align:left})
+		expected_css = %Q(*{font-size:100%;margin:0;padding:0}img{border:0}#cont-pri img,.arc #cont-sec img,embed{border:1px solid #000}\nbody{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04}\n#pw{position:relative;width:960px;text-align:left})
 		assert_equal(expected_css, @yui.compress(test_css,50))
 	end
 
@@ -64,7 +64,7 @@ class YuiCompressorTest < Test::Unit::TestCase
 		body{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04;}
 		#pw{position:relative;width:960px;text-align:left;}
 		CSS
-		expected_css = %Q(*{font-size:100%;margin:0;padding:0}img{border:none}#cont-pri img,.arc #cont-sec img,embed{border:1px solid #000}\nbody{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04}#pw{position:relative;width:960px;text-align:left})
+		expected_css = %Q(*{font-size:100%;margin:0;padding:0}img{border:0}#cont-pri img,.arc #cont-sec img,embed{border:1px solid #000}\nbody{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04}#pw{position:relative;width:960px;text-align:left})
 		assert_equal(expected_css, @yui.compress(test_css,100))
 	end
 
@@ -76,7 +76,7 @@ class YuiCompressorTest < Test::Unit::TestCase
 		body{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04;}
 		#pw{position:relative;width:960px;text-align:left;}
 		CSS
-		expected_css = %Q(*{font-size:100%;margin:0;padding:0}img{border:none}#cont-pri img,.arc #cont-sec img,embed{border:1px solid #000}body{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04}#pw{position:relative;width:960px;text-align:left})
+		expected_css = %Q(*{font-size:100%;margin:0;padding:0}img{border:0}#cont-pri img,.arc #cont-sec img,embed{border:1px solid #000}body{background:#F5F1DA;font:small Verdana,Helvetica,Arial,sans-serif;color:#310C04}#pw{position:relative;width:960px;text-align:left})
 		assert_equal(expected_css, @yui.compress(test_css,300))
 	end
 

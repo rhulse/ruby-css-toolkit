@@ -55,7 +55,7 @@ module YuiCompressor
       css.gsub!(/:(?:0 )+0(;|\})/, ':0\1')
 
       # Restore background-position:0 0; if required
-      css.gsub!(/background-position:0(;|\})/i, 'background-position:0 0\1')
+      css.gsub!(/(background-position|transform-origin|webkit-transform-origin|moz-transform-origin|o-transform-origin|ms-transform-origin):0(;|\})/i){ "#{$1.downcase}:0 0#{$2}" } 
 
       # Replace 0.6 with .6, but only when preceded by : or a space.
       css.gsub!(/(:|\s)0+\.(\d+)/, '\1.\2')
@@ -73,6 +73,9 @@ module YuiCompressor
       #     filter: chroma(color="#FFF");
       # which makes the filter break in IE.
       css.gsub!(/([^"'=\s])(\s?)\s*#([0-9a-f])\3([0-9a-f])\4([0-9a-f])\5/i, '\1\2#\3\4\5')
+
+      # border: none -> border:0
+      css.gsub!(/(border|border-top|border-right|border-bottom|border-right|outline|background):none(;|\})/i){ "#{$1.downcase}:0#{$2}" }
 
       # shorter opacity IE filter
       css.gsub!(/progid:DXImageTransform\.Microsoft\.Alpha\(Opacity=/i, "alpha(opacity=")
