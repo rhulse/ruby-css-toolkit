@@ -11,6 +11,14 @@ NB: Currently Tidy is still being worked on.
 
 == History
 
+<b>1.4</b> 27 April 2011 - Update Port of YUI CSS compressor.
+
+This now works the same as YUI compressor v2.4.6
+
+At this stage the Tidy port fails some of the YUI tests.
+
+I might not fix these for a while.
+
 <b>1.2.1</b> 3 July 2010 - Second release of Ruby Port of CSS Tidy.
 
 This <b>should</b> be production ready, although not all Tidy optimisations have
