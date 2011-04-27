@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name    = 'css_toolkit'
-  s.version = '1.3'
+  s.version = '1.4'
   s.email   = "rhulse@paradise.net.nz"
   s.author  = "Richard Hulse"
 
